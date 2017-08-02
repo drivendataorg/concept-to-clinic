@@ -1,0 +1,69 @@
+Local development with Docker
+=============================
+
+Docker Compose is the only officially supported development configuration. We're doing this to stay focused on the project goals rather than triage lots of "not working on my machine" issues. If you wish to use virtualenvs instead, please ensure that you run all of the tests with Docker Compose before opening any Pull Requests.
+
+
+The steps below will get you up and running with a local development environment.
+
+**Note:** All of these commands assume you are in the root of your generated project.
+
+
+## Prerequisites
+
+### Install Docker
+
+You'll need a recent version of Docker. If you don't already have it installed, follow the instructions for your OS:
+
+- On Mac OS X, you'll need [`Docker for Mac`](https://docs.docker.com/engine/installation/mac/)
+- On Windows, you'll need [`Docker for Windows`](https://docs.docker.com/engine/installation/windows/)
+- On Linux, you'll need [`docker-engine`](https://docs.docker.com/engine/installation/)
+
+Docker for Mac and Windows include Docker Compose, so most Mac and Windows users do not need to install it separately. For Linux users, follow the instructions for Linux installation in the [Docker documentation](https://docs.docker.com/compose/install/)
+
+
+## Build the Stack
+
+This can take a while, especially the first time you run this particular command
+on your development system:
+
+    $ docker-compose -f local.yml build
+
+
+## Boot the System
+
+This brings up the `interface app` (running Django), `prediction app` (running Flask), and PostgreSQL.
+
+The first time it is run it might take a while to get started, but subsequent
+runs will occur more quickly.
+
+Open a terminal at the project root and run the following for local development:
+
+    $ docker-compose -f local.yml up
+
+You can also set the environment variable `COMPOSE_FILE` pointing to `local.yml` like this:
+
+    $ export COMPOSE_FILE=local.yml
+
+And then run:
+
+    $ docker-compose up
+
+You should now be able to open a browser and view the interface at http://localhost:8000 and the prediction API at http://localhost:8001.
+
+
+## Code changes
+
+Because `local.yml` has the volume mappings `./interface/:/app` and `./prediction/:/app` (the project dirs containing all of the code into the container's source code directory), changes made to files during development should be reflected in the running `interface` or `prediction` container as soon as the dev server process restarts.
+
+## Other notes
+
+### Detached Mode
+
+If you want to run the stack in detached mode (in the background without console output), use the `-d` argument:
+
+    $ docker-compose -f local.yml up -d
+
+### Production Mode
+
+In general, this is not relevant for project contributors and only exists for hosting demo instances of the software. Nonetheless, instead of using `local.yml`, you would use `production.yml`.

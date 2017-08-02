@@ -1,0 +1,64 @@
+# Basics
+*.py[cod]
+*.pyc
+__pycache__
+
+# OSX
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+logs
+*.log
+pip-log.txt
+npm-debug.log*
+
+# Unit test / coverage reports
+.coverage
+.tox
+htmlcov/
+
+# Pycharm
+.idea
+
+# Vim
+*~
+*.swp
+*.swo
+
+# SublimeText
+# cache files for sublime text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+
+# workspace files are user-specific
+*.sublime-workspace
+
+# npm
+node_modules/
+dist/
+npm-debug.log
+selenium-debug.log
+
+# Docker
+.cache/
+
+# Keep .env out of version control
+.env
+.env*
+
+# Keep raw data out of version control (except gitkeep so the folder sticks around)
+prediction/data/*
+!prediction/data/.gitkeep
+
+# ignore redis database dumps
+*.rdb
+
+# ignore local db
+*.sqlite
+*.db
+
+# ignore data
+data/
