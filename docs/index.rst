@@ -7,13 +7,14 @@ Welcome to Concept to Clinic's documentation!
 =============================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
 
-   developing-locally-docker
-   contribute
-   report-issues
    design-doc
+   contribute
+   project-structure
+   developing-locally-docker
+   report-issues
    challenge-rules-link
    code-of-conduct-link
    contributor-license-agreement-link
