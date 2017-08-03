@@ -170,3 +170,6 @@ source_parsers = {
    '.md': 'recommonmark.parser.CommonMarkParser',
 }
 
+
+def setup(app):
+    app.add_stylesheet('c2c_custom.css')

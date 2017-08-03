@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:300,500|Roboto:400,700');
+
+.wy-side-nav-search {
+    background-color: #5770f9;
+}
+
+.wy-nav-side {
+   background-color: #272822;
+}
+
+body, .wy-nav-content-wrap {
+   background-color: #fff;
+}
+
+p {
+   font-family: "Roboto", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+nav {
+   font-family: "Roboto Mono", monospace;
+}
