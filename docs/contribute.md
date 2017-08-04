@@ -36,7 +36,7 @@ We didn't think of everything beforehand, so contribute your ideas to the cause.
  - Wait for review and acceptance by the project maintainers
 
 
-# Filing an issue
+## Filing an issue
 
 Creating issues is encouraged! When you create a new issue, you'll see a pre-populated template — please fill this out as carefully and thoroughly as possible. Vague or insufficient issues will be closed quickly to help keep the project on track.
 
@@ -44,7 +44,7 @@ Creating issues is encouraged! When you create a new issue, you'll see a pre-pop
 
 Upon review, project admins may tweak the issue or ask for more clarification, or may attach the `official` label to demonstrate both agreement and that supplying a PR that closes the issue will result in an award of points.
 
-# Opening a Pull Request
+## Opening a Pull Request
 
 It's beyond the scope of this document to explain pull requests in detail, but Github has some great [resources](https://help.github.com/articles/creating-a-pull-request/) to help people new to git and Github.
 

@@ -56,6 +56,14 @@ You should now be able to open a browser and view the interface at http://localh
 
 Because `local.yml` has the volume mappings `./interface/:/app` and `./prediction/:/app` (the project dirs containing all of the code into the container's source code directory), changes made to files during development should be reflected in the running `interface` or `prediction` container as soon as the dev server process restarts.
 
+## Running the tests
+
+The `tests/test_docker.sh` shows you how to run the tests for both the prediciton and interface applications.
+
+For example, if you are actively developing the prediction app, you could run the following to execute the tests:
+
+    $ docker-compose -f local.yml run prediction pytest
+
 ## Other notes
 
 ### Detached Mode
