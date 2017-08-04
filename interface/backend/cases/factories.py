@@ -42,12 +42,3 @@ class NoduleFactory(factory.django.DjangoModelFactory):
         y=factory.SelfAttribute('..candidate.centroid.y'),
         z=factory.SelfAttribute('..candidate.centroid.z')
     )
-
-    # centroid = factory.SubFactory(
-    #     ImageLocationFactory,
-    #     series=factory.LazyAttribute(lambda o: o.factory_parent.candidate.centroid.series),
-    #     x=factory.LazyAttribute(lambda o: o.factory_parent.candidate.centroid.x),
-    #     y=factory.LazyAttribute(lambda o: o.factory_parent.candidate.centroid.y),
-    #     z=factory.LazyAttribute(lambda o: o.factory_parent.candidate.centroid.z),
-    # )
-
