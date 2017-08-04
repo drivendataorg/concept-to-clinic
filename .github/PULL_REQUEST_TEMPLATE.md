@@ -19,3 +19,7 @@
 <!--- see how your change affects other areas of the code, etc. -->
 
 ## Screenshots (if appropriate):
+
+
+## CLA
+- [ ] I have signed the CLA; if other committers are in the commit history, they have signed the CLA as well
