@@ -1,0 +1,5 @@
+# Try not to put much here. There should not be many dependencies in production
+# that aren't in development.
+-r base.txt
+
+gunicorn==19.6.0

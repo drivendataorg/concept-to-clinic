@@ -1,0 +1,9 @@
+# for local development
+-r base.txt
+
+coverage
+factory_boy==2.8.1
+ipython==6.1.0
+werkzeug==0.12.2
+django-debug-toolbar==1.7
+django-extensions==1.7.8

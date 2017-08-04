@@ -1,0 +1,4 @@
+-r base.txt
+gunicorn==19.7.1
+gevent==1.2.1
+greenlet==0.4.12

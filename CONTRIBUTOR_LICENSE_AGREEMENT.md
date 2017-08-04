@@ -10,7 +10,7 @@ your protection as a Contributor as well as the protection of the
 Company and its users; it does not change your rights to use your own
 Contributions for any other purpose.
 
-Please read this document carefully before agreeing to this CLA at
+Please read this document carefully before agreeing to this CLA 
 using the Project website (https://concepttoclinic.drivendata.org/)
 and keep a copy for your records.
 

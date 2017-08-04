@@ -1,0 +1,44 @@
+version: '2'
+
+volumes:
+  postgres_data_dev: {}
+
+services:
+  postgres:
+    image: postgres:9.6
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=concepttoclinic
+
+  interface:
+    build:
+      context: .
+      dockerfile: ./compose/interface/Dockerfile-dev
+    command: /start-dev.sh
+    depends_on:
+      - postgres
+      - prediction
+    environment:
+      - POSTGRES_USER=concepttoclinic
+      - USE_DOCKER=yes
+      - SECRET_KEY=notverysecret
+      - DEBUG=True
+      - DJANGO_SETTINGS_MODULE=config.settings.local
+    volumes:
+      - ./interface/:/app
+    ports:
+      - "8000:8000"
+
+  prediction:
+    build:
+      context: .
+      dockerfile: ./compose/prediction/Dockerfile-dev
+    command: flask run --host=0.0.0.0 --port=8001
+    environment:
+      - FLASK_DEBUG=1
+      - FLASK_APP=src/factory.py
+    volumes:
+      - ./prediction/:/app
+    ports:
+      - "8001:8001"

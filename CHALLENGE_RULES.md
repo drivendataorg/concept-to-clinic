@@ -1,4 +1,5 @@
-# Concept to Clinic Official Rules
+Concept to Clinic Official Rules
+================================
 
 Guidelines
 ----------
@@ -52,19 +53,20 @@ FULL RULES
 ----------
 
 These are the complete, official rules for the Competition (the
-"**Competition Rules**") and incorporate by reference the contents
-of the Competition Website as defined below.
+"**Competition Rules**") and incorporate by reference the contents of
+the Competition Website as defined below.
 
 The Competition will consist of developing and submitting Contributions
-(each such submission, a "**Pull Request**") to an open source
-software project (the "**Project**") the goal of which is to use machine
-learning to develop a real-word software tool to aid clinicians in
-catching lung cancer early enough to manage its impact on patients and
-save lives. For the purposes of this Competition, "**Contribution**"
-means any and all submissions to the Competition through the Competition
-Website (as defined below) or otherwise, whether in the form of code,
-comments, or other work product. DrivenData will produce a "**Design Document**," which describes the goals of the Project, the anticipated
-Project structure, and necessary features of the Project.
+(each such submission, a "**Pull Request**") to an open source software
+project (the "**Project**") the goal of which is to use machine learning
+to develop a real-word software tool to aid clinicians in catching lung
+cancer early enough to manage its impact on patients and save lives. For
+the purposes of this Competition, "**Contribution**" means any and all
+submissions to the Competition through the Competition Website (as
+defined below) or otherwise, whether in the form of code, comments, or
+other work product. DrivenData will produce a "**Design Document**,"
+which describes the goals of the Project, the anticipated Project
+structure, and necessary features of the Project.
 
 By submitting a Pull Request or other Contribution or executing the
 Contibutor License Agreement ("**CLA**") in this Competition, you are
@@ -78,13 +80,12 @@ Website (the "**Competition Period**").
 
 Each registered individual is referred to as a **Participant**. You may
 only compete using a single, unique account registered on GitHub
-(<https://www.github.com>), the online
-code collaboration platform used to host the Project’s version control
-repositories (the "**Competition Repos**"). Competing using more
-than one account per individual is a breach of these Competition Rules
-and DrivenData and the Competition Sponsor reserve the right to
-disqualify any Participant who is found to breach these Competition
-Rules.
+(<https://www.github.com>), the online code collaboration platform used
+to host the Project’s version control repositories (the "**Competition
+Repos**"). Competing using more than one account per individual is a
+breach of these Competition Rules and DrivenData and the Competition
+Sponsor reserve the right to disqualify any Participant who is found to
+breach these Competition Rules.
 
 ### Eligibility
 
@@ -109,10 +110,10 @@ Office of Foreign Assets Control.
 If you meet the eligibility requirements and would like to participate,
 then you must first complete the CLA signing process
 at <https://concepttoclinic.drivendata.org/> (the "**Competition
-Website**") and register an account on GitHub such that you can
-submit pull requests to the Competition Repos within the Competition
-Period. All Contributions must be received during the Competition Period
-in order to be eligible for any consideration. All of the registration
+Website**") and register an account on GitHub such that you can submit
+pull requests to the Competition Repos within the Competition Period.
+All Contributions must be received during the Competition Period in
+order to be eligible for any consideration. All of the registration
 information that you provide is collectively referred to as your
 "Account".
 
@@ -193,8 +194,8 @@ CONTRIBUTION FOR THIS COMPETITION:
 -   Does not contain any claims that are not and cannot be substantiated
     or that would be false and/or misleading to a reasonable consumer.
 
--   Does not violate the project’s Code of
-    Conduct at <http://concepttoclinic.drivendata.org/code-of-conduct/>.
+-   Does not violate the project’s Code of Conduct at
+    <http://concepttoclinic.drivendata.org/code-of-conduct/>.
 
 ### JUDGING CONTRIBUTIONS – AWARDING OF POINTS
 
@@ -207,9 +208,9 @@ and reviewed and approved by a panel of technical experts (the
 "**Technical Panel**"). Points may be awarded for Contributions that
 solve a specific technical issue or implement a particular feature (each
 an "**Issue**") called out in the Design Document or otherwise set forth
-on the Competition Website ("**Issue Points**"). The number of
-Points to be awarded for resolution of any Issue will be set forth on
-the Competition Website, and partial Points or Points divided amongst
+on the Competition Website ("**Issue Points**"). The number of Points to
+be awarded for resolution of any Issue will be set forth on the
+Competition Website, and partial Points or Points divided amongst
 several contributors may be awarded in the discretion of DrivenData and
 the Technical Panel.
 
@@ -248,7 +249,7 @@ Competition Rules. In the event that the Contribution demonstrates a
 breach of these Competition Rules, Competition Sponsor or DrivenData may
 at its discretion take either of the following actions:
 
--   **disqualify your Contribution(s)**; or 
+-   **disqualify your Contribution(s)**; or
 
 -   require that you remediate within one week all issues identified in
     your Contribution(s) (including, without limitation, the resolution
@@ -325,66 +326,70 @@ compensation. If you are awarded a Prize, you may also be required to
 sign and return a release of liability, declaration of eligibility and,
 where lawful, a publicity consent agreement, as conditions of receiving
 that prize. Failure to comply with the aforementioned conditions shall
-be grounds for forfeiture of a Prize. If you are awarded an in-kind prize
-from a Competition sponsor, you give permission for the Company to share
-your contact information with the sponsor in order to receive the prize.
+be grounds for forfeiture of a Prize. If you are awarded an in-kind
+prize from a Competition sponsor, you give permission for the Company to
+share your contact information with the sponsor in order to receive the
+prize.
 
 ### Data use and code sharing
 
 -   **DATA**
-    
-    "Data" means the data or datasets linked from the Competition Website
-    for use by you in the Competition. For the avoidance of doubt, Data is
-    deemed for the purpose of these Competition Rules to include any
-    prototype or executable code provided to you by DrivenData via the
-    Competition Website. You must use the Data only as permitted by these
-    Competition Rules and any associated data use rules specified on the
-    Competition Website.
-    
-    Unless otherwise permitted by the terms of the Competition Website, you
-    must use the Data solely for the purpose and duration of the
-    Competition, including but not limited to reading and learning from the
-    Data, analyzing the Data, modifying the Data and generally preparing
-    your Contributions and any underlying models and participating in forum
-    discussions on the Competition Website. You agree to use suitable
-    measures to prevent persons who have not formally agreed to these
-    Competition Rules from gaining access to the Data and agree not to
-    transmit, duplicate, publish, redistribute or otherwise provide or make
-    available the Data to any party not participating in the Competition.
-    You agree to notify DrivenData immediately upon learning of any possible
-    unauthorized transmission or unauthorized access of the Data and agree
-    to work with DrivenData to rectify any unauthorized transmission. You
-    agree that participation in the Competition shall not be construed as
-    having or being granted a license (expressly, by implication, estoppel,
+
+    "Data" means the data or datasets linked from the Competition
+    Website for use by you in the Competition. For the avoidance of
+    doubt, Data is deemed for the purpose of these Competition Rules to
+    include any prototype or executable code provided to you by
+    DrivenData via the Competition Website. You must use the Data only
+    as permitted by these Competition Rules and any associated data use
+    rules specified on the Competition Website.
+
+    Unless otherwise permitted by the terms of the Competition Website,
+    you must use the Data solely for the purpose and duration of the
+    Competition, including but not limited to reading and learning from
+    the Data, analyzing the Data, modifying the Data and generally
+    preparing your Contributions and any underlying models and
+    participating in forum discussions on the Competition Website. You
+    agree to use suitable measures to prevent persons who have not
+    formally agreed to these Competition Rules from gaining access to
+    the Data and agree not to transmit, duplicate, publish, redistribute
+    or otherwise provide or make available the Data to any party not
+    participating in the Competition. You agree to notify DrivenData
+    immediately upon learning of any possible unauthorized transmission
+    or unauthorized access of the Data and agree to work with DrivenData
+    to rectify any unauthorized transmission. You agree that
+    participation in the Competition shall not be construed as having or
+    being granted a license (expressly, by implication, estoppel,
     or otherwise) under, or any right of ownership in, any of the Data.
 
 -   **EXTERNAL DATA**
-    
-    Unless otherwise expressly stated on the Competition Website, you must
-    not use data other than the Data to develop and test your models and
-    Contributions, unless data used is made available to the public under an
-    open source license compatible with the open source license selected for
-    this project and freely available to all contributors without the need
-    to execute any data usage agreements or other authorizations. DrivenData
-    and the Competition Sponsor reserve the right in their sole discretion
-    to disqualify you if it is discovered that you have undertaken or
-    attempted to undertake the use of the Data or external data other than
-    as permitted according to the Competition Website and in these
-    Competition Rules, in the course of the Competition.
+
+    Unless otherwise expressly stated on the Competition Website, you
+    must not use data other than the Data to develop and test your
+    models and Contributions, unless data used is made available to the
+    public under an open source license compatible with the open source
+    license selected for this project and freely available to all
+    contributors without the need to execute any data usage agreements
+    or other authorizations. DrivenData and the Competition Sponsor
+    reserve the right in their sole discretion to disqualify you if it
+    is discovered that you have undertaken or attempted to undertake the
+    use of the Data or external data other than as permitted according
+    to the Competition Website and in these Competition Rules, in the
+    course of the Competition.
 
 -   **OPEN-SOURCE CODE**
-    
-    A Submission will be ineligible to win a prize if it was developed using
-    code containing or depending on software licensed under an open source
-    license:
 
-    *   other than an Open Source Initiative-approved license (see <http://opensource.org/>);
-    
-    *   an open source license incompatible, in the discretion of
+    A Submission will be ineligible to win a prize if it was developed
+    using code containing or depending on software licensed under an
+    open source license:
+
+    -   other than an Open Source Initiative-approved license (see
+        <http://opensource.org/>);
+
+    -   an open source license incompatible, in the discretion of
         DrivenData, with the Project license or the Contributor License
         Agreement; or
-    
-    *   an open source license that prohibits commercial use.
+
+    -   an open source license that prohibits commercial use.
 
 ### Participant warranties and obligations
 
@@ -421,40 +426,85 @@ make the Contributions (including any underlying code and model) on your
 own behalf or on behalf of the persons and entities that you specify
 within the Contributions, and that your Contributions:
 
-- complies with all applicable federal, state, local and international laws and regulations;
+-   complies with all applicable federal, state, local and international
+    laws and regulations;
 
-- is your own original work, or is used by permission, in which case full and proper credit and identify is given and the third party contributions are clearly identified within your Contributions;
+-   is your own original work, or is used by permission, in which case
+    full and proper credit and identify is given and the third party
+    contributions are clearly identified within your Contributions;
 
-- does not contain confidential information or trade secrets and is not the subject of a registered patent or pending patent application;
+-   does not contain confidential information or trade secrets and is
+    not the subject of a registered patent or pending patent
+    application;
 
-- does not violate or infringe upon the patent rights, industrial design rights, copyrights, trademarks, rights of privacy, publicity or other intellectual property or other rights of any person or entity;
+-   does not violate or infringe upon the patent rights, industrial
+    design rights, copyrights, trademarks, rights of privacy, publicity
+    or other intellectual property or other rights of any person or
+    entity;
 
-- does not contain malicious code, such as viruses, timebombs, cancelbots, worms, Trojan horses or other potentially harmful programs or other material or information; 
+-   does not contain malicious code, such as viruses, timebombs,
+    cancelbots, worms, Trojan horses or other potentially harmful
+    programs or other material or information;
 
-- does not and will not violate any applicable law, statute, ordinance, rule or regulation;
+-   does not and will not violate any applicable law, statute,
+    ordinance, rule or regulation;
 
-- does not trigger any reporting or royalty obligation to any third party; and
+-   does not trigger any reporting or royalty obligation to any third
+    party; and
 
-- was not previously published and has not won any other prize/award. 
+-   was not previously published and has not won any other prize/award.
 
-**A breach of any of these warranties will result in the corresponding Contributions being invalid.**
+**A breach of any of these warranties will result in the corresponding
+Contributions being invalid.**
 
 ### Confidentiality
 
 The following sections define
 
-- **Confidential Information Defined**. As used in this Section, "Confidential Information" means the Data, and any information provided by DrivenData hereunder, whether of a technical, business, or other nature (including, without limitation, information relating to a party’s technology, software, products, services, designs, methodologies, business plans, finances, marketing plans, Sponsors, prospects, or other affairs), that you receive. 
+-   **Confidential Information Defined**. As used in this Section,
+    "Confidential Information" means the Data, and any information
+    provided by DrivenData hereunder, whether of a technical, business,
+    or other nature (including, without limitation, information relating
+    to a party’s technology, software, products, services, designs,
+    methodologies, business plans, finances, marketing plans, Sponsors,
+    prospects, or other affairs), that you receive.
 
-- **Exclusions**. Your obligations under this Section as to the disclosing party’s Confidential Information does not include any information that you can document: (a) was known to you prior to receiving the same from the disclosing party in connection with this Competition; (b) is independently developed by you without use of or reference to the Confidential Information of the disclosing party; (c) is acquired by you from another source without restriction as to use or disclosure; or (d) is or becomes part of the public domain through no fault or action of yours.
+-   **Exclusions**. Your obligations under this Section as to the
+    disclosing party’s Confidential Information does not include any
+    information that you can document: (a) was known to you prior to
+    receiving the same from the disclosing party in connection with this
+    Competition; (b) is independently developed by you without use of or
+    reference to the Confidential Information of the disclosing
+    party; (c) is acquired by you from another source without
+    restriction as to use or disclosure; or (d) is or becomes part of
+    the public domain through no fault or action of yours.
 
-- **Nondisclosure**. In consideration of the terms and conditions of this Agreement, and for other good and valuable consideration, the receipt and sufficiency of which is acknowledged, during and after the Competition Period you will: (a) use the disclosing party’s Confidential Information solely for the purpose for which it is provided; (b) not disclose the disclosing party’s Confidential Information to a third party; and (c) maintain the secrecy of, and protect from unauthorized use and disclosure, the disclosing party’s Confidential Information to the same extent (but using no less than a reasonable degree of care) that you protect your own Confidential Information of a similar nature. If you are required by law or by any governmental or semi-governmental agency or court to disclose the disclosing party’s Confidential Information you must give prompt written notice of such requirement to the disclosing party before such disclosure and assist the disclosing party in attempting to obtain an order protecting the Confidential Information from public disclosure. 
+-   **Nondisclosure**. In consideration of the terms and conditions of
+    this Agreement, and for other good and valuable consideration, the
+    receipt and sufficiency of which is acknowledged, during and after
+    the Competition Period you will: (a) use the disclosing party’s
+    Confidential Information solely for the purpose for which it is
+    provided; (b) not disclose the disclosing party’s Confidential
+    Information to a third party; and (c) maintain the secrecy of, and
+    protect from unauthorized use and disclosure, the disclosing party’s
+    Confidential Information to the same extent (but using no less than
+    a reasonable degree of care) that you protect your own Confidential
+    Information of a similar nature. If you are required by law or by
+    any governmental or semi-governmental agency or court to disclose
+    the disclosing party’s Confidential Information you must give prompt
+    written notice of such requirement to the disclosing party before
+    such disclosure and assist the disclosing party in attempting to
+    obtain an order protecting the Confidential Information from
+    public disclosure.
 
-- **Return of Information**. Upon request, you will destroy or deliver to the disclosing party all Confidential Information Participant may have in its possession or control. 
+-   **Return of Information**. Upon request, you will destroy or deliver
+    to the disclosing party all Confidential Information Participant may
+    have in its possession or control.
 
-- **Injunctive Relief**. Participant acknowledges that any violation or
-  threatened violation of this Section may cause irreparable injury to
-  the other party, entitling the disclosing party to obtain injunctive
-  relief in addition to all legal remedies.
+-   **Injunctive Relief**. Participant acknowledges that any violation
+    or threatened violation of this Section may cause irreparable injury
+    to the other party, entitling the disclosing party to obtain
+    injunctive relief in addition to all legal remedies.
 
 ### Delivery and receipt of Contributions
 
