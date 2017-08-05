@@ -230,6 +230,8 @@ Jobs to be done
 
 Task areas: `IMPORTING`
 
+![](_static/wireframe-0-open.svg)
+
 #### Prediction service
 
 RESERVED
