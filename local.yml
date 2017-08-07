@@ -27,6 +27,7 @@ services:
       - DJANGO_SETTINGS_MODULE=config.settings.local
     volumes:
       - ./interface/:/app
+      - ./tests/assets/:/images
     ports:
       - "8000:8000"
 
@@ -40,5 +41,6 @@ services:
       - FLASK_APP=src/factory.py
     volumes:
       - ./prediction/:/app
+      - ./tests/assets/:/images
     ports:
       - "8001:8001"
