@@ -18,7 +18,8 @@ Contribute now by [grabbing an issue](https://concepttoclinic.drivendata.org/iss
 
  - [Sign up for the challenge](https://concepttoclinic.drivendata.org/login)
  - Find an [open issue](https://concepttoclinic.drivendata.org/issues) you're interested in working on
- - Get your local environment running with the [developer documentation](https://concepttoclinic.drivendata.org/documentation)
+ - Get your local environment running with the [instructions for setting up Docker](https://concept-to-clinic.readthedocs.io/en/latest/developing-locally-docker.html)
+ - Read [Concept to Clinic’s documentation](https://concepttoclinic.drivendata.org/documentation)
  - Submit your [pull request to the GitHub repo](https://github.com/concept-to-clinic/concept-to-clinic/pulls)
 
 If you need any help, [jump into the forums](https://community.drivendata.org/c/concept-to-clinic) and ask away!
