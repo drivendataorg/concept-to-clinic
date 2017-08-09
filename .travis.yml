@@ -1,42 +1,36 @@
-# Config file for automatic testing at travis-ci.org
-#   adapted from pydanny/cookiecutter-django
-
 sudo: required
-
 env:
   global:
-    - COMMIT=${TRAVIS_COMMIT::8}
-
+  - COMMIT=${TRAVIS_COMMIT::8}
 services:
-  - docker
-
+- docker
 language: python
-
 python: 3.6
-
 before_install:
-  - sudo sh -c 'echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" > /etc/apt/sources.list.d/docker.list'
-  - sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-  - sudo apt-get update
-  - sudo apt-key update
-  - sudo apt-get --force-yes -qqy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install docker-engine=17.05.0~ce-0~ubuntu-trusty
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/1.14.0/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-  - docker-compose -v
-  - docker -v
-
+- sudo sh -c 'echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" > /etc/apt/sources.list.d/docker.list'
+- sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+- sudo apt-get update
+- sudo apt-key update
+- sudo apt-get --force-yes -qqy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
+  install docker-engine=17.05.0~ce-0~ubuntu-trusty
+- sudo rm /usr/local/bin/docker-compose
+- curl -L https://github.com/docker/compose/releases/download/1.14.0/docker-compose-`uname
+  -s`-`uname -m` > docker-compose
+- chmod +x docker-compose
+- sudo mv docker-compose /usr/local/bin
+- docker-compose -v
+- docker -v
 install:
-  - pip install flake8
-
+- pip install flake8
 before_script:
-  - docker-compose -f local.yml build
-
+- docker-compose -f local.yml build
 script:
-  - flake8 interface
-  - flake8 prediction
-  - sh tests/test_docker.sh
-
+- flake8 interface
+- flake8 prediction
+- sh tests/test_docker.sh
 notifications:
   webhooks: https://app.fossa.io/hooks/travisci
+  email: false
+  slack:
+    rooms:
+      secure: d/3HSFNM8Z6+Cs6dyeVn9DyJo9xf+N6BL6MuEksvTo5lrx7xGp/heZzZglyXyOysxmoqTghKBsWKt1GXlRqeMcHciuZIe8tgoYr8/kDPUGiUT8w32AOA13mSaAnDc8szjTGZwGuqIm1qV4Ixwg+hwgO5LATRhnu5N1iWpiXmXanVJ1toBJEWfj6OrlHKgE8hFvhkGD1LvWL4BkeVhH5dMGWtTgQe+dAtqXd/R0YRkV9TbhJsZt2oQR9PKabJqpK5J6aUG2RdB3AIXNyrE6b3dZbGX3GrJIhce7e4e4ORIJn/wEAdejVwL0YllX5j27oZGiXfzbw2zdGLC9K8GQEMOuq92X+vuV+jsO2D8CPOl+fPnsgHq3UkQcFYTtRCk9WQQqDv5QksfvRH/2pI9H4DkW+h/oAmkLiPvg0/E9AH6Q3N9pEFGZnWaGaPG6BcgnXsMn9XwGa4UP/R6btZKEnuoQD73nT8DnjDnsLbz3y3fAA0hyAlYrZ1nF4SA0qvqqC2H2Mae3Lk9FN0MjZHsVrHmOJNyEZHDXhbQmDpHe67YVpeoY4gGPFAHxosszUp5Svkfv8SWyZAcxPsOx+hDaDLgSEFsCtDCnm9X7iT3ksGhubzHCFJI+xe0u/nZ5D3xPemrZQTu+sgqRswvaQa5/naOL1HwQtHq9raOC/KfbbjoAw=
