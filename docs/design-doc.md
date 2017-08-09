@@ -232,11 +232,11 @@ Task areas: `IMPORTING`
 
 ![](_static/wireframe-0-open.svg)
 
-#### Prediction service
+#### Imagery - Prediction service
 
 RESERVED
 
-#### Interface API
+#### Imagery - Interface API
 
 1.  List available DICOM images on local filesystem.
 2.  Display such details as may be available (e.g. metadata) for any
@@ -248,7 +248,7 @@ RESERVED
 5.  Items 1-3, but connecting to a DICOM server running in a
     separate container.
 
-#### Interface frontend
+#### Imagery - Interface frontend
 
 1.  List available DICOM images on local filesystem.
 2.  Display such details as may be available (e.g. metadata) for any
@@ -263,7 +263,7 @@ Task areas: `IDENTIFICATION`, `CLASSIFICATION`
 
 ![](_static/wireframe-1-detect-and-select.svg)
 
-#### Prediction service
+#### Detect - Prediction service
 
 1.  Given a pointer to a DICOM image on the local filesystem, generate a
     response with an array of predicted nodules (“candidates”). Each
@@ -286,7 +286,7 @@ Task areas: `IDENTIFICATION`, `CLASSIFICATION`
     DICOM image and implement fetching so that a DICOM server running in
     a separate container may be used in place of the local filesystem.
 
-#### Interface API
+#### Detect - Interface API
 
 1.  Act as the data broker for the image being worked on (selected in
     our current session), requesting predictions from the Prediction
@@ -300,7 +300,7 @@ Task areas: `IDENTIFICATION`, `CLASSIFICATION`
     the user are presumably concerning). Persist this location list to
     the database attached to the current Case.
 
-#### Interface frontend
+#### Detect - Interface frontend
 
 1.  List all available predicted candidate sites. Allow each to be
     selected to view details.
@@ -325,11 +325,11 @@ Task areas: `CLASSIFICATION`, `REPORTING`
 ![](_static/wireframe-2-1-annotation-and-segmentation-classify.svg)
 
 
-#### Prediction service
+#### Annotate - Prediction service
 
 RESERVED
 
-#### Interface API
+#### Annotate - Interface API
 
 1.  List nodules identified as part of the current Case for detail view.
 2.  Receive and persist to the database a radiologist-supplied label for
@@ -346,7 +346,7 @@ RESERVED
     unchanged/increased/decreased/new; and a field for text entry
     of notes. These should all be persisted to the database.
 
-#### Interface frontend
+#### Annotate - Interface frontend
 
 1.  Provide UI controls for adding sending general RSNA template notes
     for the case.
@@ -368,14 +368,14 @@ Task areas: `SEGMENTATION`
 
 ![](_static/wireframe-2-2-annotation-and-segmentation-segment.svg)
 
-#### Prediction service
+#### Segment - Prediction service
 
 1.  Given a nodule centroid location tuple (X \# voxels from left, Y \#
     voxels from top, Z as slice number), return a 3D boolean mask with
     true values for voxels associated with that nodule and false values
     for other tissue or voids.
 
-#### Interface API
+#### Segment - Interface API
 
 1.  For any given slice of any given nodule, transform the true values
     in the binary mask from the Prediction service into a series of
@@ -395,7 +395,7 @@ Task areas: `SEGMENTATION`
 5.  Provide an endpoint that allows a 3D visualization of each nodule to
     be viewed in an interactive format.
 
-#### Interface frontend
+#### Segment - Interface frontend
 
 1.  Display an image view of a given slice of the selected nodule. Allow
     navigation between slices.
@@ -416,11 +416,11 @@ Task areas: `REPORTING`, `EXPORTING`
 
 ![](_static/wireframe-3-report-and-export.svg)
 
-#### Prediction service
+#### Results - Prediction service
 
 RESERVED
 
-#### Interface API
+#### Results - Interface API
 
 1.  Summarize all of the data from the Case, including the general
     notes, and details for each nodule into a single JSON report.
@@ -433,7 +433,7 @@ RESERVED
 5.  Allow export of 3D nodule reconstructions in STL format.
 6.  Allow export of 3D nodule reconstructions in SHP format.
 
-#### Interface frontend
+#### Results - Interface frontend
 
 1.  Display all of the results from the case matching the RSNA format in
     a clean, organized, and hyperlinked report.
