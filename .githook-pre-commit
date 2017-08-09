@@ -1,0 +1,5 @@
+#!/bin/sh
+# run flake8 on uncommitted and staged python files with changes
+flake8 $(git status -s | grep -E '\.py$' | cut -c 4-)
+# run the tests within the docker
+sh ./tests/test_docker.sh
