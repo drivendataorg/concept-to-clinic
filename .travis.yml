@@ -33,6 +33,7 @@ install:
 
 before_script:
   - license-cli auth $FOSSA_API_CLIENT
+  - docker-compose -f local.yml build
 
 script:
   - flake8 interface
