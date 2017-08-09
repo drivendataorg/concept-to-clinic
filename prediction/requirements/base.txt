@@ -1,2 +1,4 @@
+dicom_numpy==0.1.1
 Flask==0.12.2
+numpy==1.13.1
 pydicom==0.9.9
