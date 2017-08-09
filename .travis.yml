@@ -38,5 +38,3 @@ script:
   - flake8 interface
   - flake8 prediction
   - sh tests/test_docker.sh
-  - license-cli scan -r $TRAVIS_COMMIT
-
