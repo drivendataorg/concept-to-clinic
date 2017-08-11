@@ -3,8 +3,8 @@
 Contributing is as easy as [submitting a PR to the GitHub repository](https://github.com/concept-to-clinic/concept-to-clinic)! If you're already a GitHub pro, you can get started just with the repo in the way you would with any open source project. If you're not sure how to get started:
 
  - [Sign up](/login) for the challenge
- - Find an [open issue you're interested in working on](/issues)
- - Get your local environment running with [the developer documentation](/documentation)
+ - Find an [open issue you're interested in working on](https://concepttoclinic.drivendata.org/issues)
+ - Get your local environment running with [the developer documentation](https://concept-to-clinic.readthedocs.io/en/latest/developing-locally-docker.html)
  - Submit your pull request to the [GitHub repo](https://github.com/concept-to-clinic/concept-to-clinic)
 
 If you need any help, [jump into the forums](https://community.drivendata.org/c/concept-to-clinic) and ask away!
