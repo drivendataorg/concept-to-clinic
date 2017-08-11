@@ -66,6 +66,31 @@ For example, if you are actively developing the prediction app, you could run th
 
 ## Other notes
 
+### Pre-commit hooks
+Git pre-commit hooks are useful tools that run commands before you commit. To enable easier maintainance of style guide and running tests, we implement pre-commit git hook commands that will run every time before you create a commit.
+
+To set it up on your local development repository:
+
+    $ cd concept-to-clinic
+
+Copy the `.githook-pre-commit` file into the `.git/hooks/` folder as `pre-commit` with `-f` flag so that you overwrite any existing `pre-commit` file:
+
+    $ cp -f .githook-pre-commit .git/hooks/pre-commit
+
+Install `flake8` locally for the styling scripts:
+
+    $ pip install flake8 pep8
+
+You are set! The next time you want to commit, styling and testing pre-commit commands will be executed first and if they fail, your commit will not be committed.
+
+If you want to by-pass the pre-commit check, use `--no-verify` flag in your commit:
+
+    $ git commit --no-verify -m "Ignore pre-commit rules"
+
+To check if the created pre-commit hook is working without having to do a commit, you can run from the root of the project:
+
+    $ .git/hooks/pre-commit
+
 ### Detached Mode
 
 If you want to run the stack in detached mode (in the background without console output), use the `-d` argument:
