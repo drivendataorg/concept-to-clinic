@@ -1,7 +1,8 @@
+import os
+
 import dicom
 import dicom_numpy
 import numpy as np
-import os
 import pytest
 
 from ..preprocess import load_dicom as ld
@@ -43,5 +44,6 @@ def test_load_dicom(dicom_path):
     dicom_array = ld.load_dicom(dicom_path)
 
     assert isinstance(dicom_array, np.ndarray)
+
     with pytest.raises(errors.EmptyDicomSeriesException):
         ld.load_dicom('./')
