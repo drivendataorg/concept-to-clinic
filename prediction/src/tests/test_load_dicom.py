@@ -11,26 +11,28 @@ from ..preprocess import errors
 
 @pytest.fixture
 def dicom_path():
-    return '../images/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
-           '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192'
+    open('./not_a_dcm.xml', 'w+')
+    yield '../images/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
+          '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192'
+    os.remove('./not_a_dcm.xml')
 
 
 def test_read_files(dicom_path):
-    files = ld._read_files(os.path.join(dicom_path, '*.dcm'))
+    files = ld.read_dicom_files(os.path.join(dicom_path, '*.dcm'))
 
     assert isinstance(files, list)
     assert len(files) > 0
     assert isinstance(files[0], dicom.dataset.Dataset)
 
     with pytest.raises(dicom.errors.InvalidDicomError):
-        ld._read_files(os.path.join(dicom_path, '*.xml'))
+        ld.read_dicom_files('./not_a_dcm.xml')
 
     with pytest.raises(errors.EmptyDicomSeriesException):
-        ld._read_files(os.path.join('./', '*.dcm'))
+        ld.read_dicom_files(os.path.join('./', '*.dcm'))
 
 
 def test_extract_voxel_data(dicom_path):
-    files = ld._read_files(os.path.join(dicom_path, '*.dcm'))
+    files = ld.read_dicom_files(os.path.join(dicom_path, '*.dcm'))
     dicom_array = ld._extract_voxel_data(files)
 
     assert isinstance(dicom_array, np.ndarray)

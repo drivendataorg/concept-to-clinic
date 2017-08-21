@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 
 volumes:
   postgres_data_dev: {}
@@ -27,7 +27,7 @@ services:
       - DJANGO_SETTINGS_MODULE=config.settings.local
     volumes:
       - ./interface/:/app
-      - ./tests/assets/:/images
+      - ./tests/assets/test_image_data/small:/images
     ports:
       - "8000:8000"
 
@@ -41,6 +41,6 @@ services:
       - FLASK_APP=src/factory.py
     volumes:
       - ./prediction/:/app
-      - ./tests/assets/:/images
+      - ./tests/assets/test_image_data/small:/images
     ports:
       - "8001:8001"

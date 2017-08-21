@@ -7,7 +7,7 @@ import dicom_numpy
 from .errors import EmptyDicomSeriesException
 
 
-def _read_files(file_pattern):
+def read_dicom_files(file_pattern):
     try:
         files = [dicom.read_file(fn) for fn in glob(file_pattern)]
 
@@ -44,5 +44,5 @@ def load_dicom(path):
     """
 
     file_pattern = os.path.join(path, '*.dcm')
-    files = _read_files(file_pattern)
+    files = read_dicom_files(file_pattern)
     return _extract_voxel_data(files)
