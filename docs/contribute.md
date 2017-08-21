@@ -44,6 +44,51 @@ Creating issues is encouraged! When you create a new issue, you'll see a pre-pop
 
 Upon review, project admins may tweak the issue or ask for more clarification, or may attach the `official` label to demonstrate both agreement and that supplying a PR that closes the issue will result in an award of points.
 
+
+## Cloning the repository and Git LFS
+The problem with large files in Git (such as test images for this project) is that the entire history of these files is transferred to the client. This means that every time a big file is edited, its whole history needs to be downloaded by the contributors. Git Large File Storage (LFS) circumvents that problem by creating pointer files and lazily downloading only the needed version of big files while checkout rather than downloading the whole history of it while cloning or fetching (Githubs explanation can be found [here](https://help.github.com/articles/about-git-large-file-storage/)).
+
+If you don't want to use Git LFS, you can clone the repository in a normal way and contribute to it, but you won't be able to use e.g. test images shared by other contributors tracked by Git LFS.
+
+### Installing LFS
+
+If you want to use Git LFS, please install Git LFS [from the official website](https://git-lfs.github.com/). To initialize LFS, you might need to run  
+
+    $ git lfs install
+
+
+### Cloning Using LFS
+
+Change to the project directory and run  
+
+    $ git lfs pull
+
+This should indicate that files are being downloaded.
+
+### Track files using LFS
+
+To manage files using LFS, run  
+
+    $ git lfs track myfile.psd
+
+or to manage all files of a certain type, run
+
+    $ git lfs track "*.psd"
+
+You can also adapt [.gitattributes](https://github.com/concept-to-clinic/concept-to-clinic/blob/master/.gitattributes) manually. Next, track said file  
+
+    $ git add .gitattributes
+
+Now you just have to commit and push the file(s) as you normally would  
+
+    $ git add myfile.psd
+    $ git commit -m "Add big file"
+    $ git push origin master
+
+### Removing big files from Git history
+
+If you already tracked big files using Git but moved them to LFS, you might want to remove them from the Git history. The preferred approach would be to use the [BFG Repo-Cleaner](http://rtyley.github.io/bfg-repo-cleaner/) since it is simpler and faster than Git's built-in command `filter-branch`. Please refer to [this](https://help.github.com/articles/removing-sensitive-data-from-a-repository/) great and detailed Github article about removing data from the repository history.
+
 ## Opening a Pull Request
 
 It's beyond the scope of this document to explain pull requests in detail, but Github has some great [resources](https://help.github.com/articles/creating-a-pull-request/) to help people new to git and Github.
