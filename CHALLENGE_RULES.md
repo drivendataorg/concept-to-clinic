@@ -69,7 +69,7 @@ which describes the goals of the Project, the anticipated Project
 structure, and necessary features of the Project.
 
 By submitting a Pull Request or other Contribution or executing the
-Contibutor License Agreement ("**CLA**") in this Competition, you are
+Contributor License Agreement ("**CLA**") in this Competition, you are
 agreeing to be bound by these Competition Rules which constitute a
 binding agreement between you and DrivenData and, if applicable, any
 rules and restrictions that may be imposed by the Competition Sponsor.
