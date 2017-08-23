@@ -96,7 +96,8 @@ def test_segment(client):
 
     data = get_data(r)
 
-    assert isinstance(data['prediction'], str)
+    assert isinstance(data['prediction']['binary_mask_path'], str)
+    assert isinstance(data['prediction']['volumes'], list)
 
 
 def test_error(client):

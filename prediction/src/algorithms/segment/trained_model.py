@@ -27,7 +27,32 @@ def predict(dicom_path, centroids):
              'z': int}
 
     Returns:
-        str: a path to the serialized binary mask that can be used for
-             segmentation
+        dict: Dictionary containing path to serialized binary masks and
+            volumes per centroid with form::
+            {'binary_mask_path': str,
+             'volumes': list[float]}
     """
-    return 'path/to/segmentation'
+    segment_path = 'path/to/segmentation'
+    volumes = calculate_volume(segment_path, centroids)
+    return_value = {
+        'binary_mask_path': segment_path,
+        'volumes': volumes
+    }
+    return return_value
+
+
+def calculate_volume(segment_path, centroids):
+    """ Calculates tumor volume from pixel masks
+
+    Args:
+        segment_path (str): A path to the serialized binary mask for
+            each centroid
+        centroids (list[dict]): A list of centroids of the form::
+            {'x': int,
+             'y': int,
+             'z': int}
+
+    Returns:
+        list[float]: List of volumes per centroid
+    """
+    return [0.5 for centroid in centroids]

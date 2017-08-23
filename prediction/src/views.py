@@ -81,11 +81,7 @@ def predict(algorithm):
         try:
             predict_method = PREDICTORS[algorithm]
 
-            if 'centroids' in payload:
-                prediction = predict_method(payload['dicom_path'],
-                                            payload['centroids'])
-            else:
-                prediction = predict_method(payload['dicom_path'])
+            prediction = predict_method(**payload)
 
             response.update({
                 'prediction': prediction
