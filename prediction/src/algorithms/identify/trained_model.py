@@ -7,6 +7,8 @@
     for where the centroids of nodules are in the DICOM image.
 """
 
+from src.preprocess.load_dicom import load_dicom
+
 
 def predict(dicom_path):
     """ Predicts centroids of nodules in a DICOM image.
@@ -32,6 +34,7 @@ def predict(dicom_path):
              'z': int,
              'p_nodule': float}
     """
+    load_dicom(dicom_path)
     return [{'x': 0,
              'y': 0,
              'z': 0,

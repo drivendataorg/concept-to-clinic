@@ -7,6 +7,8 @@
     for if nodules are concerning or not.
 """
 
+from src.preprocess.load_dicom import load_dicom
+
 
 def predict(dicom_path, centroids):
     """ Predicts if centroids are concerning or not.
@@ -33,6 +35,7 @@ def predict(dicom_path, centroids):
              'z': int,
              'p_concerning': float}
     """
+    load_dicom(dicom_path)
     for centroid in centroids:
         centroid['p_concerning'] = 0.5
 

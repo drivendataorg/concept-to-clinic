@@ -23,6 +23,12 @@ def get_data(response):
 
 
 @pytest.fixture
+def dicom_path():
+    return '../images/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
+           '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192'
+
+
+@pytest.fixture
 def client(request):
     app = create_app(config_mode='Test')
     client = app.test_client()
@@ -58,10 +64,9 @@ def test_endpoint_documentation(client):
         assert data['description'] == docstrings[algorithm]
 
 
-def test_identify(client):
+def test_indentify(client, dicom_path):
     url = client.url_for('predict', algorithm='identify')
-
-    test_data = dict(dicom_path='')
+    test_data = dict(dicom_path=dicom_path)
 
     r = client.post(url,
                     data=json.dumps(test_data),
@@ -73,9 +78,9 @@ def test_identify(client):
     assert data['prediction'][0]['x'] == 0
 
 
-def test_classify(client):
+def test_classify(client, dicom_path):
     url = client.url_for('predict', algorithm='classify')
-    test_data = dict(dicom_path='', centroids=[])
+    test_data = dict(dicom_path=dicom_path, centroids=[])
 
     r = client.post(url,
                     data=json.dumps(test_data),
@@ -86,9 +91,9 @@ def test_classify(client):
     assert isinstance(data['prediction'], list)
 
 
-def test_segment(client):
+def test_segment(client, dicom_path):
     url = client.url_for('predict', algorithm='segment')
-    test_data = dict(dicom_path='', centroids=[])
+    test_data = dict(dicom_path=dicom_path, centroids=[])
 
     r = client.post(url,
                     data=json.dumps(test_data),
@@ -100,14 +105,54 @@ def test_segment(client):
     assert isinstance(data['prediction']['volumes'], list)
 
 
-def test_error(client):
-    url = client.url_for('predict', algorithm='classify')
+def test_bad_algorithm(client):
+    url = client.url_for('predict', algorithm='blahblah')
+    r = client.get(url)
+    data = get_data(r)
+    assert r.status_code == 500
+    assert "'blahblah' is not a valid algorithm" in data['error']
 
-    # missing centroids
-    test_data = dict(dicom_path='')
 
+def test_wrong_parameter(client):
+    # dicom_path missing
+    url = client.url_for('predict', algorithm='identify')
+    test_data = dict()
     r = client.post(url,
                     data=json.dumps(test_data),
                     content_type='application/json')
-
+    data = get_data(r)
     assert r.status_code == 500
+    assert "'dicom_path'" in data['error']
+
+    # centroids missing
+    url = client.url_for('predict', algorithm='segment')
+    test_data = dict(dicom_path='')
+    r = client.post(url,
+                    data=json.dumps(test_data),
+                    content_type='application/json')
+    data = get_data(r)
+    assert r.status_code == 500
+    assert "'centroids'" in data['error']
+
+    # centroids unnecessary
+    url = client.url_for('predict', algorithm='identify')
+    test_data = dict(dicom_path='', centroids=[])
+    r = client.post(url,
+                    data=json.dumps(test_data),
+                    content_type='application/json')
+    data = get_data(r)
+    assert r.status_code == 500
+    assert "'centroids'" in data['error']
+
+
+# test that other errors are passed through the API
+def test_other_error(client):
+    url = client.url_for('predict', algorithm='identify')
+    # non-existent dicom path as example
+    test_data = dict(dicom_path='/')
+    r = client.post(url,
+                    data=json.dumps(test_data),
+                    content_type='application/json')
+    data = get_data(r)
+    assert r.status_code == 500
+    assert "does not contain dcm-files" in data['error']

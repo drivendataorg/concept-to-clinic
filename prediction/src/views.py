@@ -57,14 +57,15 @@ def predict(algorithm):
         algorithm (str): The prediction algorithm to use. One of 'segment',
             'classify', or 'identify'.
     """
-    # empty string to track if there was an
-    error = ''
 
     # dictionary to hold the response
     response = dict()
 
+    # string to contain error message
+    error = ""
+
     if algorithm not in PREDICTORS:
-        errormsg = 'Error! {} is not a valid algorithm. Please choose from {}.'
+        errormsg = "Error! '{}' is not a valid algorithm. Please choose from {}."
         error = errormsg.format(algorithm, set(PREDICTORS))
 
     # describe API on GET
@@ -84,17 +85,19 @@ def predict(algorithm):
             prediction = predict_method(**payload)
 
             response.update({
-                'prediction': prediction
+                'prediction': prediction,
             })
 
-        except Exception:
-            error = "There was an error with your request."
+        except Exception as e:
+            # pass errors from prediction function along with function chosen
+            error = "Error using algorithm '{}': {} ({})."
+            error = error.format(algorithm, str(e), type(e).__name__)
 
-    # set the status code and messages for the response
+    # set the status code for the response
     if error:
         response.update({
             'error': error,
-            'status': 500
+            'status': 500,
         })
     else:
         response.update({
