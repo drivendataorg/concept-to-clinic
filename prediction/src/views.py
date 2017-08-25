@@ -70,7 +70,7 @@ def predict(algorithm):
     # describe API on GET
     elif request.method == 'GET':
         response.update({
-            'description': 'API documentation goes here.',
+            'description': PREDICTORS[algorithm].__doc__,
         })
 
     # make predictions on POST
