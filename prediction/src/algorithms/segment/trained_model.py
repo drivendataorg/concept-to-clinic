@@ -7,7 +7,11 @@
     descriptive statistics.
 """
 
-from src.preprocess.load_dicom import load_dicom
+from src.preprocess.load_dicom import load_dicom, load_meta
+
+import numpy as np
+import os
+import scipy.ndimage
 
 
 def predict(dicom_path, centroids):
@@ -35,27 +39,52 @@ def predict(dicom_path, centroids):
              'volumes': list[float]}
     """
     load_dicom(dicom_path)
-    segment_path = 'path/to/segmentation'
+    segment_path = os.path.join(os.path.dirname(__file__),
+                                'assets', 'test_mask.npy')
     volumes = calculate_volume(segment_path, centroids)
     return_value = {
         'binary_mask_path': segment_path,
         'volumes': volumes
     }
+
     return return_value
 
 
-def calculate_volume(segment_path, centroids):
-    """ Calculates tumor volume from pixel masks
+def calculate_volume(segment_path, centroids, dicom_path=None):
+    """ Calculates tumor volume in cubic mm if a dicom_path has been provided.
 
+    Given the path to the serialized mask and a list of centroids
+        (1) For each centroid, calculate the volume of the tumor.
+        (2) DICOM has voxels' sizes in mm therefore the volume should be in real
+        measurements (not pixels).
     Args:
-        segment_path (str): A path to the serialized binary mask for
-            each centroid
+        segment_path (str): a path to a mask file
         centroids (list[dict]): A list of centroids of the form::
             {'x': int,
              'y': int,
              'z': int}
+        dicom_path (str): contains the path to the folder containing the dcm-files of a series.
+            If None then volume will be returned in voxels.
 
     Returns:
-        list[float]: List of volumes per centroid
+        list[float]: a list of volumes in cubic mm (if a dicom_path has been provided)
+            of a connected component for each centroid.
     """
-    return [0.5 for centroid in centroids]
+
+    mask = np.load(segment_path)
+    mask, _ = scipy.ndimage.label(mask)
+    labels = [mask[centroid['x'], centroid['y'], centroid['z']] for centroid in centroids]
+    volumes = np.bincount(mask.flatten())
+    volumes = volumes[labels].tolist()
+
+    if dicom_path:
+        dicom_files = load_meta(dicom_path)
+        slice_locations = [dcm_file.SliceLocation for dcm_file in dicom_files]
+        slice_thickness = np.diff(slice_locations).mean()
+        # Every DICOM study preserve the same PixelSpacing along its sub files
+        voxel_shape = dicom_files[0].PixelSpacing
+        # Taking into account ijk -> xyz transformation
+        voxel_shape = np.prod([voxel_shape[1], voxel_shape[0], slice_thickness])
+        volumes = [volume * voxel_shape for volume in volumes]
+
+    return volumes

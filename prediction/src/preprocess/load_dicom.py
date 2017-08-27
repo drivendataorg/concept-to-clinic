@@ -58,3 +58,17 @@ def load_dicom(path, preprocess=None):
                             'callable[list[DICOM], ndarray] -> ndarray')
 
     return voxel_data
+
+
+def load_meta(path):
+    """Function that load a DICOM series.
+
+    Args:
+        path (str): contains the path to the folder containing the dcm-files of a series.
+
+    Returns:
+        DICOM series
+    """
+
+    file_pattern = os.path.join(path, '*.dcm')
+    return read_dicom_files(file_pattern)

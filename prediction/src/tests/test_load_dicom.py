@@ -28,7 +28,7 @@ def test_read_files(dicom_path):
         ld.read_dicom_files('./not_a_dcm.xml')
 
     with pytest.raises(errors.EmptyDicomSeriesException):
-        ld.read_dicom_files(os.path.join('./', '*.dcm'))
+        ld.read_dicom_files(os.path.join('.', '*.dcm'))
 
 
 def test_extract_voxel_data(dicom_path):
@@ -48,4 +48,10 @@ def test_load_dicom(dicom_path):
     assert isinstance(dicom_array, np.ndarray)
 
     with pytest.raises(errors.EmptyDicomSeriesException):
-        ld.load_dicom('./')
+        ld.load_dicom('.')
+
+
+def test_load_meta(dicom_path):
+    dicom_series = ld.load_meta(dicom_path)
+
+    assert isinstance(dicom_series, list)
