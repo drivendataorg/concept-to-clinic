@@ -1,7 +1,5 @@
 import numpy as np
-import os
 import pytest
-import shutil
 
 from ..preprocess import load_dicom, preprocess_dicom
 
@@ -35,10 +33,9 @@ def test_preprocess_dicom_pure(dicom_path):
     params = preprocess_dicom.Params()
     preprocess = preprocess_dicom.PreprocessDicom(params)
 
-
     dicom_array = load_dicom.load_dicom(dicom_path)
     assert isinstance(dicom_array, np.ndarray)
-    
+
     dicom_array = load_dicom.load_dicom(dicom_path, preprocess)
     assert isinstance(dicom_array, np.ndarray)
 

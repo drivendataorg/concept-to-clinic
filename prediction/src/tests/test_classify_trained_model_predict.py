@@ -1,8 +1,5 @@
-import numpy as np
 import os
 import pytest
-import shutil
-from glob import glob
 import sys
 
 from ..preprocess import preprocess_dicom

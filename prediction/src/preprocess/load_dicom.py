@@ -39,7 +39,7 @@ def load_dicom(path, preprocess=None):
 
     Args:
         path (str): contains the path to the folder containing the dcm-files of a series.
-        preprocess (callable[list[DICOM], ndarray] -> ndarray): A python function or method 
+        preprocess (callable[list[DICOM], ndarray] -> ndarray): A python function or method
             aimed at preprocessing dicom.
 
     Returns:
@@ -55,6 +55,6 @@ def load_dicom(path, preprocess=None):
         print(type(voxel_data))
         if not isinstance(voxel_data, np.ndarray):
             raise TypeError('The signature of preprocess must be '
-                + 'callable[list[DICOM], ndarray] -> ndarray')
-    
+                            + 'callable[list[DICOM], ndarray] -> ndarray')
+
     return voxel_data

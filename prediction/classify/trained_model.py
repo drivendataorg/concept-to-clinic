@@ -7,18 +7,17 @@
     for if nodules are concerning or not.
 """
 
-
 import numpy as np
-import keras.models 
+import keras.models
 import sys
 import os
 
 sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir))
 
-from src.preprocess.load_dicom import load_dicom 
+from src.preprocess.load_dicom import load_dicom
 
 
-def predict(dicom_path, centroids, model_path, 
+def predict(dicom_path, centroids, model_path,
             preprocess_dicom=None, preprocess_model_input=None):
     """ Predicts if centroids are concerning or not.
 
@@ -36,7 +35,7 @@ def predict(dicom_path, centroids, model_path,
              'y': int,
              'z': int}
         model_path (str): A path to the serialized model
-        process_dicom (preprocess.preprocess_dicom.PreprocessDicom): A preprocess 
+        process_dicom (preprocess.preprocess_dicom.PreprocessDicom): A preprocess
             method which aimed at brining the input data to the desired view.
         preprocess_model_input (callable[ndarray, list[dict]]): preprocess for a model
             input.
@@ -59,7 +58,6 @@ def predict(dicom_path, centroids, model_path,
 
     predictions = model.predict(patches)
     predictions = predictions.astype(np.float)
-
 
     for i, centroid in enumerate(centroids):
         centroid['p_concerning'] = predictions[i, 0]
