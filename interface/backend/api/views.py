@@ -4,6 +4,7 @@ from backend.cases.models import (
     Candidate,
     Nodule,
 )
+from rest_framework.views import APIView 
 from backend.images.models import ImageSeries
 from django.http import JsonResponse
 from rest_framework import viewsets
@@ -27,6 +28,17 @@ class NoduleViewSet(viewsets.ModelViewSet):
 class ImageSeriesViewSet(viewsets.ModelViewSet):
     queryset = ImageSeries.objects.all()
     serializer_class = serializers.ImageSeriesSerializer
+
+
+class ImageSrcApiView(APIView): 
+    """ 
+    View list of images from dataset directory 
+    """ 
+    def get(self, request): 
+        """ 
+        Return a list of files and folders in dataset
+        """ 
+        pass
 
 
 def candidate_mark(request, candidate_id):
