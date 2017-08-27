@@ -35,6 +35,7 @@ htmlcov/
 
 # workspace files are user-specific
 *.sublime-workspace
+.vscode
 
 # npm
 node_modules/
@@ -62,4 +63,7 @@ prediction/data/*
 
 # ignore data
 data/
-.vscode
+
+
+# ignore Sphinx apidoc
+_apidoc_*
