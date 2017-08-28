@@ -124,3 +124,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny'
     ]
 }
+
+try:
+    with open('/HEAD') as f:
+        APP_VERSION_NUMBER = f.readlines()[-1].split(' ')[1][:7]
+except:
+    APP_VERSION_NUMBER = '(unknown)'

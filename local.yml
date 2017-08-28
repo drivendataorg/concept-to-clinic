@@ -28,6 +28,7 @@ services:
     volumes:
       - ./interface/:/app
       - ./tests/assets/test_image_data/small:/images
+      - ./.git/logs/HEAD:/HEAD
     ports:
       - "8000:8000"
 
