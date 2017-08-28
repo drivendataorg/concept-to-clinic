@@ -7,8 +7,8 @@ SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = ConcepttoClinic
 SOURCEDIR     = .
 BUILDDIR      = _build
-APIDOCDIR_INTERFACE    = _apidoc_interface
-APIDOCDIR_PREDICTION   = _apidoc_prediction
+APIDOCDIR_INTERFACE    = apidoc_interface
+APIDOCDIR_PREDICTION   = apidoc_prediction
 SPHINXAPIDOC  = sphinx-apidoc
 PROJDIR       = ../
 

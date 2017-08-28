@@ -33,8 +33,8 @@ Welcome to Concept to Clinic's documentation!
    :maxdepth: 2
    :caption: Code Documentation
 
-   _apidoc_interface/modules
-   _apidoc_prediction/modules
+   apidoc_interface/modules
+   apidoc_prediction/modules
 
 
 

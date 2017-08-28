@@ -62,6 +62,3 @@ prediction/data/*
 
 # ignore data
 data/
-
-# ignore Sphinx apidoc
-_apidoc_*
