@@ -7,3 +7,6 @@ psycopg2==2.7.1
 # Config
 django-dotenv==1.4.1
 django-environ==0.4.3
+
+# Images
+pydicom==0.9.9
