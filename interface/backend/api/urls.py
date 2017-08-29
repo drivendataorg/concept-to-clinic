@@ -3,7 +3,7 @@ from backend.api.views import (
     CandidateViewSet,
     NoduleViewSet,
     ImageSeriesViewSet,
-    ImageSrcApiView 
+    ImageSrcApiView,
     candidate_mark,
     candidate_dismiss,
 )
