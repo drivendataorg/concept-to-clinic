@@ -36,6 +36,11 @@ Welcome to Concept to Clinic's documentation!
    apidoc_interface/modules
    apidoc_prediction/modules
 
+.. toctree::
+  :maxdepth: 2
+  :caption: Documentation
+
+  how-to-edit-this-docs
 
 
 Indices and tables

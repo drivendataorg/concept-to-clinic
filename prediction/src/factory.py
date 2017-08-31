@@ -24,8 +24,8 @@ def create_app(config_mode='Production', config_file=None):
         (obj): A Flask app
 
     Examples:
-        >>> create_app('Test')
-        >>> create_app('/path/to/config.py')
+        >>> from src.factory import create_app
+        >>> app = create_app(config_mode='Test')
     """
     app = Flask('prediction')
 

@@ -1,5 +1,5 @@
-backend\.api package
-====================
+backend.api package
+===================
 
 Subpackages
 -----------
@@ -11,40 +11,40 @@ Subpackages
 Submodules
 ----------
 
-backend\.api\.apps module
--------------------------
+backend.api.apps module
+-----------------------
 
 .. automodule:: backend.api.apps
     :members:
     :undoc-members:
     :show-inheritance:
 
-backend\.api\.serializers module
---------------------------------
+backend.api.serializers module
+------------------------------
 
 .. automodule:: backend.api.serializers
     :members:
     :undoc-members:
     :show-inheritance:
 
-backend\.api\.tests module
---------------------------
+backend.api.tests module
+------------------------
 
 .. automodule:: backend.api.tests
     :members:
     :undoc-members:
     :show-inheritance:
 
-backend\.api\.urls module
--------------------------
+backend.api.urls module
+-----------------------
 
 .. automodule:: backend.api.urls
     :members:
     :undoc-members:
     :show-inheritance:
 
-backend\.api\.views module
---------------------------
+backend.api.views module
+------------------------
 
 .. automodule:: backend.api.views
     :members:

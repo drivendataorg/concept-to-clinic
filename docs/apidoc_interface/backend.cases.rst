@@ -1,5 +1,5 @@
-backend\.cases package
-======================
+backend.cases package
+=====================
 
 Subpackages
 -----------
@@ -11,32 +11,32 @@ Subpackages
 Submodules
 ----------
 
-backend\.cases\.apps module
----------------------------
+backend.cases.apps module
+-------------------------
 
 .. automodule:: backend.cases.apps
     :members:
     :undoc-members:
     :show-inheritance:
 
-backend\.cases\.factories module
---------------------------------
+backend.cases.factories module
+------------------------------
 
 .. automodule:: backend.cases.factories
     :members:
     :undoc-members:
     :show-inheritance:
 
-backend\.cases\.models module
------------------------------
+backend.cases.models module
+---------------------------
 
 .. automodule:: backend.cases.models
     :members:
     :undoc-members:
     :show-inheritance:
 
-backend\.cases\.tests module
-----------------------------
+backend.cases.tests module
+--------------------------
 
 .. automodule:: backend.cases.tests
     :members:

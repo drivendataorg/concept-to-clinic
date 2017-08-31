@@ -1,19 +1,19 @@
-backend\.images\.migrations package
-===================================
+backend.images.migrations package
+=================================
 
 Submodules
 ----------
 
-backend\.images\.migrations\.0001\_initial module
--------------------------------------------------
+backend.images.migrations.0001_initial module
+---------------------------------------------
 
 .. automodule:: backend.images.migrations.0001_initial
     :members:
     :undoc-members:
     :show-inheritance:
 
-backend\.images\.migrations\.0002\_imageseries\_patient\_id module
-------------------------------------------------------------------
+backend.images.migrations.0002_imageseries_patient_id module
+------------------------------------------------------------
 
 .. automodule:: backend.images.migrations.0002_imageseries_patient_id
     :members:

@@ -45,3 +45,26 @@ services:
       - ./tests/assets/test_image_data/small:/images
     ports:
       - "8001:8001"
+
+  compile_docs:
+      restart: always
+      build:
+        context: .
+        dockerfile: ./compose/prediction/Dockerfile-dev
+      volumes:
+        - ./:/app
+      command: make -C /app/docs html
+
+  documentation:
+    build:
+      context: .
+      dockerfile: ./compose/prediction/Dockerfile-dev
+    depends_on:
+      - compile_docs
+    working_dir: /app/docs/_build/html
+    volumes:
+      - ./docs/_build/html:/app/docs/_build/html
+      - ./:/app
+    command: python -m http.server
+    ports:
+      - "8002:8000"

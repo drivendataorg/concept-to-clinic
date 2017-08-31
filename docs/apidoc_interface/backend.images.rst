@@ -1,5 +1,5 @@
-backend\.images package
-=======================
+backend.images package
+======================
 
 Subpackages
 -----------
@@ -11,32 +11,32 @@ Subpackages
 Submodules
 ----------
 
-backend\.images\.apps module
-----------------------------
+backend.images.apps module
+--------------------------
 
 .. automodule:: backend.images.apps
     :members:
     :undoc-members:
     :show-inheritance:
 
-backend\.images\.factories module
----------------------------------
+backend.images.factories module
+-------------------------------
 
 .. automodule:: backend.images.factories
     :members:
     :undoc-members:
     :show-inheritance:
 
-backend\.images\.models module
-------------------------------
+backend.images.models module
+----------------------------
 
 .. automodule:: backend.images.models
     :members:
     :undoc-members:
     :show-inheritance:
 
-backend\.images\.tests module
------------------------------
+backend.images.tests module
+---------------------------
 
 .. automodule:: backend.images.tests
     :members:

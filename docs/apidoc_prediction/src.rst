@@ -13,16 +13,16 @@ Subpackages
 Submodules
 ----------
 
-src\.factory module
--------------------
+src.factory module
+------------------
 
 .. automodule:: src.factory
     :members:
     :undoc-members:
     :show-inheritance:
 
-src\.views module
------------------
+src.views module
+----------------
 
 .. automodule:: src.views
     :members:

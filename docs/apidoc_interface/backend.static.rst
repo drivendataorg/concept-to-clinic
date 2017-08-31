@@ -1,29 +1,37 @@
-backend\.static package
-=======================
+backend.static package
+======================
 
 Submodules
 ----------
 
-backend\.static\.apps module
-----------------------------
+backend.static.apps module
+--------------------------
 
 .. automodule:: backend.static.apps
     :members:
     :undoc-members:
     :show-inheritance:
 
-backend\.static\.tests module
------------------------------
+backend.static.tests module
+---------------------------
 
 .. automodule:: backend.static.tests
     :members:
     :undoc-members:
     :show-inheritance:
 
-backend\.static\.urls module
-----------------------------
+backend.static.urls module
+--------------------------
 
 .. automodule:: backend.static.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+backend.static.views module
+---------------------------
+
+.. automodule:: backend.static.views
     :members:
     :undoc-members:
     :show-inheritance:

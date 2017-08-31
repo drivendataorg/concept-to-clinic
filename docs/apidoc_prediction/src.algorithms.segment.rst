@@ -1,11 +1,11 @@
-src\.algorithms\.segment package
-================================
+src.algorithms.segment package
+==============================
 
 Submodules
 ----------
 
-src\.algorithms\.segment\.trained\_model module
------------------------------------------------
+src.algorithms.segment.trained_model module
+-------------------------------------------
 
 .. automodule:: src.algorithms.segment.trained_model
     :members:

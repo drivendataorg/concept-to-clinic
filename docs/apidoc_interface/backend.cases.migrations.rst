@@ -1,11 +1,11 @@
-backend\.cases\.migrations package
-==================================
+backend.cases.migrations package
+================================
 
 Submodules
 ----------
 
-backend\.cases\.migrations\.0001\_initial module
-------------------------------------------------
+backend.cases.migrations.0001_initial module
+--------------------------------------------
 
 .. automodule:: backend.cases.migrations.0001_initial
     :members:

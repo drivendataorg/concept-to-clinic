@@ -11,6 +11,7 @@ APIDOCDIR_INTERFACE    = apidoc_interface
 APIDOCDIR_PREDICTION   = apidoc_prediction
 SPHINXAPIDOC  = sphinx-apidoc
 PROJDIR       = ../
+ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
 # Put it first so that "make" without argument is like "make help".
 help:
@@ -31,3 +32,13 @@ html:
 	@echo "apidoc build finished. The api source files are in $(APIDOCDIR)/"
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	@echo "Sphinx build finished. The build files are in $(BUILDDIR)/"
+
+.PHONY: doctest
+doctest:
+	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
+	@echo "Testing of doctests in the sources finished, look at the " \
+	      "results in $(BUILDDIR)/doctest/output.txt."
+
+.PHONY: clean
+clean:
+	rm -rf $(BUILDDIR)/*

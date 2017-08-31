@@ -11,16 +11,16 @@ Subpackages
 Submodules
 ----------
 
-config\.urls module
--------------------
+config.urls module
+------------------
 
 .. automodule:: config.urls
     :members:
     :undoc-members:
     :show-inheritance:
 
-config\.wsgi module
--------------------
+config.wsgi module
+------------------
 
 .. automodule:: config.wsgi
     :members:

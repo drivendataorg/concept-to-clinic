@@ -1,11 +1,11 @@
-src\.algorithms\.identify package
-=================================
+src.algorithms.identify package
+===============================
 
 Submodules
 ----------
 
-src\.algorithms\.identify\.trained\_model module
-------------------------------------------------
+src.algorithms.identify.trained_model module
+--------------------------------------------
 
 .. automodule:: src.algorithms.identify.trained_model
     :members:
