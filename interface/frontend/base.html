@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Concept to Clinic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/project.css' %}" rel="stylesheet">
+  {% block head %}
+  {% endblock %}
+</head>
+
+<body>
+
+  <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
+    <img src="{% static 'images/c-logo-light.svg' %}" />
+    <a class="navbar-brand" href="#">Concept To Clinic</a>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="navbar-nav justify-content-center">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Open image</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Detect and Select</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Annotate and Segment</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Report and Export</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav mx-auto justify-content-end">
+        <li class="nav-item">
+          <a class="nav-link">Version: {{ short_hash }}</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    {% block content %}
+    {% endblock %}
+  </div>
+  <!-- /.container -->
+
+  <!-- Bootstrap core JavaScript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="{% static 'js/jquery-3.1.1.slim.min.js' %}"></script>
+  <script src="{% static 'js/tether.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+</body>
+
+</html>
