@@ -128,5 +128,5 @@ REST_FRAMEWORK = {
 try:
     with open('/HEAD') as f:
         APP_VERSION_NUMBER = f.readlines()[-1].split(' ')[1][:7]
-except:
+except (IOError, IndexError):
     APP_VERSION_NUMBER = '(unknown)'
