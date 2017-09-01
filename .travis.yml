@@ -26,12 +26,14 @@ before_install:
 - docker-compose -v
 - docker -v
 install:
-- pip install flake8
+- pip install flake8 pycodestyle
 before_script:
 - docker-compose -f local.yml build
 script:
 - flake8 interface
+- pycodestyle interface
 - flake8 prediction
+- pycodestyle prediction
 - sh tests/test_docker.sh
 notifications:
   webhooks: https://app.fossa.io/hooks/travisci
