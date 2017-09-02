@@ -54,7 +54,7 @@ def load_dicom(path, preprocess=None):
         voxel_data = preprocess(files, voxel_data)
         print(type(voxel_data))
         if not isinstance(voxel_data, np.ndarray):
-            raise TypeError('The signature of preprocess must be '
-                            + 'callable[list[DICOM], ndarray] -> ndarray')
+            raise TypeError('The signature of preprocess must be ' +
+                            'callable[list[DICOM], ndarray] -> ndarray')
 
     return voxel_data

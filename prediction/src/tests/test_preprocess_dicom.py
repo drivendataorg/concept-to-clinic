@@ -15,7 +15,7 @@ def test_create_params():
     params = preprocess_dicom.Params(voxel_shape=1., ndim=3)
     assert len(params.voxel_shape) == 3
     voxel_shape = [shape == 1. for shape in params.voxel_shape]
-    assert all(params.voxel_shape)
+    assert all(voxel_shape)
 
     with pytest.raises(ValueError):
         preprocess_dicom.Params(clip_lower='one', clip_upper=0)
