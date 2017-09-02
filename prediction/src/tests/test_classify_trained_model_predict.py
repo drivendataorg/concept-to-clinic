@@ -1,11 +1,6 @@
-import os
 import pytest
-import sys
 
 from ..preprocess import preprocess_dicom
-
-sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))
-
 from classify import trained_model
 from classify.src.preprocess_patch import preprocess_LR3DCNN
 
@@ -22,24 +17,24 @@ def model_path():
 
 
 def test_classify_predict_model_load(dicom_path, model_path):
-    predicted = trained_model.predict(dicom_path, 
-                                      [], 
-                                      model_path, 
-                                      preprocess_dicom=None, 
+    predicted = trained_model.predict(dicom_path,
+                                      [],
+                                      model_path,
+                                      preprocess_dicom=None,
                                       preprocess_model_input=preprocess_LR3DCNN)
 
     assert len(predicted) == 0
 
 
 def test_classify_predict_inference(dicom_path, model_path):
-    params = preprocess_dicom.Params(clip_lower=-1000, 
-                                     clip_upper=400, 
+    params = preprocess_dicom.Params(clip_lower=-1000,
+                                     clip_upper=400,
                                      voxel_shape=(.6, .6, .3))
     preprocess = preprocess_dicom.PreprocessDicom(params)
-    predicted = trained_model.predict(dicom_path, 
-                                      [{'x': 50, 'y': 50, 'z': 22}], 
-                                      model_path, 
-                                      preprocess_dicom=preprocess, 
+    predicted = trained_model.predict(dicom_path,
+                                      [{'x': 50, 'y': 50, 'z': 22}],
+                                      model_path,
+                                      preprocess_dicom=preprocess,
                                       preprocess_model_input=preprocess_LR3DCNN)
 
     assert len(predicted) == 1

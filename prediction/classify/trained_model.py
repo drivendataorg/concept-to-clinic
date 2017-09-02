@@ -9,12 +9,7 @@
 
 import numpy as np
 import keras.models
-import sys
-import os
-
-sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir))
-
-from src.preprocess.load_dicom import load_dicom
+from src.preprocess import load_dicom
 
 
 def predict(dicom_path, centroids, model_path,
@@ -53,7 +48,7 @@ def predict(dicom_path, centroids, model_path,
 
     model = keras.models.load_model(model_path)
 
-    dicom_array = load_dicom(dicom_path, preprocess_dicom)
+    dicom_array = load_dicom.load_dicom(dicom_path, preprocess_dicom)
     patches = preprocess_model_input(dicom_array, centroids)
 
     predictions = model.predict(patches)
