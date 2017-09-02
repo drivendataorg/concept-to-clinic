@@ -17,32 +17,9 @@
 </head>
 
 <body>
+  {% block tabs %}
+  {% endblock %}
 
-  <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
-    <img src="{% static 'images/c-logo-light.svg' %}" />
-    <a class="navbar-brand" href="#">Concept To Clinic</a>
-    <div class="navbar-collapse collapse" id="navbar">
-      <ul class="navbar-nav justify-content-center">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Open image</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Detect and Select</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Annotate and Segment</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Report and Export</a>
-        </li>
-      </ul>
-      <ul class="nav navbar-nav mx-auto justify-content-end">
-        <li class="nav-item">
-          <a class="nav-link">Version: {{ short_hash }}</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
   <div class="container">
     {% block content %}
     {% endblock %}
