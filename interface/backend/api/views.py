@@ -5,6 +5,7 @@ from backend.cases.models import (
     Nodule,
 )
 from rest_framework.views import APIView
+from rest_framework.response import Response
 from backend.images.models import ImageSeries
 from django.http import JsonResponse
 from rest_framework import viewsets
@@ -37,8 +38,9 @@ class ImageAvailableApiView(APIView):
     def get(self, request):
         """
         Return a list of files and folders in dataset
+        TODO implement directory retrieval method
         """
-        pass
+        return Response([])
 
 
 def candidate_mark(request, candidate_id):
