@@ -16,7 +16,7 @@ The steps below will get you up and running with a local development environment
 You'll need a recent version of Docker. If you don't already have it installed, follow the instructions for your OS:
 
 - On Mac OS X, you'll need [`Docker for Mac`](https://docs.docker.com/engine/installation/mac/)
-- On Windows, you'll need [`Docker for Windows`](https://docs.docker.com/engine/installation/windows/)
+- On Windows, you'll need [`Docker for Windows`](https://docs.docker.com/engine/installation/windows/)  for 64bit Windows 10 Pro, Enterprise and Education or [`Docker Toolbox`](https://docs.docker.com/toolbox/overview/) for other versions
 - On Linux, you'll need [`docker-engine`](https://docs.docker.com/engine/installation/)
 
 Docker for Mac and Windows include Docker Compose, so most Mac and Windows users do not need to install it separately. For Linux users, follow the instructions for Linux installation in the [Docker documentation](https://docs.docker.com/compose/install/)
