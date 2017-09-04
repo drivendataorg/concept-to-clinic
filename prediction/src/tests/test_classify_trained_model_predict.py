@@ -1,8 +1,8 @@
 import pytest
 
 from ..preprocess import preprocess_dicom
-from classify import trained_model
-from classify.src.preprocess_patch import preprocess_LR3DCNN
+from ..algorithms.classify import trained_model
+from ..algorithms.classify.src.preprocess_patch import preprocess_LR3DCNN
 
 
 @pytest.fixture
