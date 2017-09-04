@@ -6,5 +6,4 @@ urlpatterns = (
     url(r'^detect$', views.detect_and_select, name='detect_and_select'),
     url(r'^annotate$', views.annotate_and_segment, name='annotate_and_segment'),
     url(r'^report$', views.report_and_export, name='report_and_export'),
-
 )
