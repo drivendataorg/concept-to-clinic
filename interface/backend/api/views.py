@@ -1,5 +1,3 @@
-from rest_framework import viewsets
-
 from backend.api import serializers
 from backend.cases.models import (
     Case,
@@ -7,6 +5,7 @@ from backend.cases.models import (
     Nodule,
 )
 from backend.images.models import ImageSeries
+from rest_framework import viewsets
 
 
 class CaseViewSet(viewsets.ModelViewSet):

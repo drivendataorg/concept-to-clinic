@@ -9,17 +9,17 @@
       <a class="navbar-brand" href="#">Concept To Clinic</a>
       <div class="navbar-collapse collapse" id="navbar">
         <ul class="navbar-nav justify-content-center">
-          <li class="nav-item {% if active_tab == 'open_image' %}active{% endif %}">
-            <a class="nav-link" href="{% url 'static:open_image' %}">Open image</a>
+          <li class="nav-item {% if active_tab == 'open-image' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'static:open-image' %}">Open image</a>
           </li>
-          <li class="nav-item {% if active_tab == 'detect_and_select' %}active{% endif %}">
-            <a class="nav-link" href="{% url 'static:detect_and_select' %}">Detect and Select</a>
+          <li class="nav-item {% if active_tab == 'detect-and-select' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'static:detect-and-select' %}">Detect and Select</a>
           </li>
-          <li class="nav-item {% if active_tab == 'annotate_and_segment' %}active{% endif %}">
-            <a class="nav-link" href="{% url 'static:annotate_and_segment' %}">Annotate and Segment</a>
+          <li class="nav-item {% if active_tab == 'annotate-and-segment' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'static:annotate-and-segment' %}">Annotate and Segment</a>
           </li>
-          <li class="nav-item {% if active_tab == 'report_and_export' %}active{% endif %}">
-            <a class="nav-link" href="{% url 'static:report_and_export' %}">Report and Export</a>
+          <li class="nav-item {% if active_tab == 'report-and-export' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'static:report-and-export' %}">Report and Export</a>
           </li>
         </ul>
         <ul class="nav navbar-nav mx-auto justify-content-end">

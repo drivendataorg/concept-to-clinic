@@ -4,7 +4,7 @@ from django.urls import reverse
 
 class SmokeTest(TestCase):
     def test_landing(self):
-        url = reverse('static:open_image')
+        url = reverse('static:open-image')
         resp = self.client.get(url)
         self.assertContains(resp, 'Concept to Clinic')
         self.assertEqual(resp.status_code, 200)

@@ -12,6 +12,14 @@ backend.static.apps module
     :undoc-members:
     :show-inheritance:
 
+backend.static.context_processors module
+----------------------------------------
+
+.. automodule:: backend.static.context_processors
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 backend.static.tests module
 ---------------------------
 

@@ -3,3 +3,7 @@
   padding: 2px;
   width: auto;
 }
+
+.top-buffer {
+  margin-top:20px;
+}
