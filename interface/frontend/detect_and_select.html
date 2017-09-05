@@ -66,8 +66,14 @@
                   </tr>
                 </tbody>
               </table>
-              <button type="button" class="btn btn-sm btn-secondary">Dismiss</button>
-              <button type="button" class="btn btn-sm btn-danger">Mark concerning</button>
+              {% verbatim %}
+              <a href="#" @click="dismiss(candidate)">
+                <button type="button" class="btn btn-sm btn-secondary">Dismiss</button>
+              </a>
+              <a href="#" @click="mark(candidate)">
+                <button type="button" class="btn btn-sm btn-danger">Mark concerning</button>
+              </a>
+              {% endverbatim %}
             </div>
           </div>
         </div>
@@ -105,6 +111,24 @@
         this.$http.get("{% url 'candidate-list' %}").then(
           function(response) {
             this.candidates = response.body;
+          },
+          function() {
+            // error callback
+          });
+      },
+      mark: function(candidate) {
+        this.$http.get(candidate.url + "mark").then(
+          function(response) {
+          console.log(response);
+          },
+          function() {
+            // error callback
+          });
+      },
+      dismiss: function(candidate) {
+        this.$http.get(candidate.url + "dismiss").then(
+          function(response) {
+          console.log(response);
           },
           function() {
             // error callback

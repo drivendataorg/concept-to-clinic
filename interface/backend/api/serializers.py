@@ -1,5 +1,3 @@
-from rest_framework import serializers
-
 from backend.cases.models import (
     Case,
     Candidate,
@@ -9,6 +7,7 @@ from backend.images.models import (
     ImageSeries,
     ImageLocation
 )
+from rest_framework import serializers
 
 
 class ImageSeriesSerializer(serializers.HyperlinkedModelSerializer):
@@ -39,6 +38,13 @@ class CandidateSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ('created',)
 
     centroid = ImageLocationSerializer()
+
+    def create(self, validated_data):
+        case_data = validated_data.pop('case')
+        centroid_data = validated_data.pop('centroid')
+        image_location = ImageLocation.objects.create(**centroid_data)
+        candidate = Candidate.objects.create(case=case_data, centroid=image_location, **validated_data)
+        return candidate
 
 
 class NoduleSerializer(serializers.HyperlinkedModelSerializer):
