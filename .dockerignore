@@ -1,3 +1,5 @@
 .*
 !.env
 !setup.cfg
+node_modules
+npm-debug.log

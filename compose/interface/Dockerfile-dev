@@ -1,5 +1,14 @@
-FROM python:3.6
+FROM ubuntu:16.04
 ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    python-pip
+
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash
+RUN apt-get install -y nodejs
+
+RUN pip install -U pip
 
 # Requirements have to be pulled and installed here, otherwise caching won't work
 COPY ./interface/requirements /requirements
@@ -12,6 +21,9 @@ RUN chmod +x /entrypoint.sh
 COPY ./compose/interface/start-dev.sh /start-dev.sh
 RUN sed -i 's/\r//' /start-dev.sh
 RUN chmod +x /start-dev.sh
+
+ADD ./interface/frontend/package.json /tmp/package.json
+RUN cd /tmp && npm install
 
 WORKDIR /app
 

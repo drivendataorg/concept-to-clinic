@@ -64,7 +64,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            str(BASE_DIR.path('frontend')),
+            str(BASE_DIR.path('frontend/templates')),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -110,7 +110,7 @@ STATIC_ROOT = str(BASE_DIR('staticfiles'))
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = (
-    str(BASE_DIR.path('assets')),
+    str(BASE_DIR.path('frontend/static')),
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders

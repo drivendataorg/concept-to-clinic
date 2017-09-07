@@ -39,9 +39,11 @@ htmlcov/
 
 # npm
 node_modules/
-dist/
+static/
+templates/
 npm-debug.log
 selenium-debug.log
+package-lock.json
 
 # Docker
 .cache/

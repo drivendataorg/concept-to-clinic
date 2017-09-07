@@ -1,0 +1,7 @@
+div#version {
+  position: absolute;
+  color: white;
+  top: .5rem;
+  right: 1rem;
+  z-index: 10000;
+}
