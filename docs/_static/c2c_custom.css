@@ -25,3 +25,11 @@ h6,
 nav {
    font-family: "Roboto Mono", monospace;
 }
+
+tr.structure-tr:nth-child(odd) {
+    background-color: #f6f6f6;
+}
+table#structure-table {
+   border-collapse: separate;
+    border-spacing: 0 5px;
+}

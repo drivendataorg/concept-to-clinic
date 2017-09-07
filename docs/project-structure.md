@@ -4,449 +4,440 @@ Project Structure
 
 Here is an annotated version of the project structure.
 
-<style>
-tr:nth-child(odd) {
-    background-color: #f6f6f6;
-}
-table#structure-table {
-   border-collapse: separate;
-    border-spacing: 0 5px;
-}
-</style>
 <table id="structure-table">
 <thead>
- <tr><th style='white-space:nowrap; text-align: left'><code>concept-to-clinic</code></th><th></th></tr>
+ <tr class="structure-tr"><th style='white-space:nowrap; text-align: left'><code>concept-to-clinic</code></th><th></th></tr>
 </thead>
 <tbody>
- <tr>
+ <tr class="structure-tr">
   <td nowrap><code>├── compose</code></td>
-  <td>The compose folder contains all of the configuration for Docker, including development and production. It defines docker containers for two separate applications (interface and prediction) that are both run by `docker-compose up`.</td>
+  <td>The <a href="https://docs.docker.com/compose/">compose</a> folder contains all of the configuration for <a href="https://docs.docker.com/">Docker</a>, including development and production. It defines docker containers for two separate applications (interface and prediction) that are both run by `docker-compose up`.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   ├── interface</code></td>
-  <td>Docker configuration for the interface application.</td>
+  <td><a href="https://docs.docker.com/">Docker</a> configuration for the interface application.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── Dockerfile</code></td>
-  <td>Production Docker configuration for the interface application.</td>
+  <td>Production <a href="https://docs.docker.com/glossary/?term=Dockerfile">Docker configuration</a> for the interface application.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── Dockerfile-dev</code></td>
-  <td>Development Docker configuration for the interface application.</td>
+  <td>Development <a href="https://docs.docker.com/glossary/?term=Dockerfile">Docker configuration</a> for the interface application.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── entrypoint.sh</code></td>
-  <td>The script that is called when the docker container is finished setting up.</td>
+  <td>The script that is called when the <a href="https://docs.docker.com/glossary/?term=container">docker container</a> is finished setting up.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── gunicorn.sh</code></td>
-  <td>Called by the Dockerfile to run the application in production.</td>
+  <td>Called by the <a href="https://docs.docker.com/glossary/?term=Dockerfile">Dockerfile</a> to run the application in production.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   └── start-dev.sh</code></td>
-  <td>Called by the Dockerfile to run the application in development mode.</td>
+  <td>Called by the <a href="https://docs.docker.com/glossary/?term=Dockerfile">Dockerfile</a> to run the application in development mode.</td>
 </tr>
-<tr>
-  <td nowrap><code>│   └── prediction</code></td>
-  <td>Docker configuration for the prediction application</td>
+<tr class="structure-tr">
+  <td nowrap><code>│   |── prediction</code></td>
+  <td><a href="https://docs.docker.com/">Docker</a> configuration for the prediction application</td>
 </tr>
-<tr>
-  <td nowrap><code>│       ├── Dockerfile</code></td>
-  <td>Production Docker configuration for the prediction application.</td>
+<tr class="structure-tr">
+  <td nowrap><code>│   │   ├── Dockerfile</code></td>
+  <td>Production <a href="https://docs.docker.com/glossary/?term=Dockerfile">Docker configuration</a> for the interface application.</td>
 </tr>
-<tr>
-  <td nowrap><code>│       ├── Dockerfile-dev</code></td>
-  <td>Development Docker configuration for the prediction application.</td>
+<tr class="structure-tr">
+  <td nowrap><code>│   │   ├── Dockerfile-dev</code></td>
+  <td>Development <a href="https://docs.docker.com/glossary/?term=Dockerfile">Docker configuration</a> for the interface application.</td>
 </tr>
-<tr>
-  <td nowrap><code>│       └── gunicorn.sh</code></td>
-  <td>Called by the Dockerfile to uns the application in production.</td>
+<tr class="structure-tr">
+  <td nowrap><code>│   │   ├── gunicorn.sh</code></td>
+  <td>Called by the <a href="https://docs.docker.com/glossary/?term=Dockerfile">Dockerfile</a> to run the application in production.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>├── docs</code></td>
-  <td>A sphinx project with all of the documentation for the application (Contents collapsed for this view).</td>
+  <td>A <a href="http://www.sphinx-doc.org/en/stable/index.html">Sphinx</a> project with all of the documentation for the application (Contents collapsed for this view).</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>├── interface</code></td>
-  <td>The frontend and backend that a clinician will interact with. Contains a Django project using the Django Rest Framework for the backend, and a Vue.js frontend project.</td>
+  <td>The frontend and backend that a clinician will interact with. Contains a <a href="https://docs.djangoproject.com/en/1.11/">Django</a> project using the <a href="http://www.django-rest-framework.org/">Django Rest Framework</a> for the backend, and a <a href="https://vuejs.org/v2/guide/">Vue.js</a> frontend project.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   ├── assets</code></td>
   <td>Static assets that are served, such as javascript, css, and images.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── css</code></td>
   <td>Project-specific stylesheets.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   └── project.css</code></td>
   <td>The project stylesheet</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── images</code></td>
   <td>A folder for any static images that need to be displayed in the interface.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   └── js</code></td>
   <td>A folder for project-specific javascript.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   ├── backend</code></td>
   <td>All of the backend code that controls the application.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── api</code></td>
   <td>Provides the REST api for the application. The frontend communicates with the views in this applicaiton.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── migrations</code></td>
-  <td>When the database schema changes (because a model changed) we need to create migrations, which are auto-generated code snippets to update the database to the new schema. These are generated by `manage.py makemigrations` and applied with `manage.py migrate`. These should never be edited by hand. (Folder collapsed).</td>
+  <td>When the database schema changes (because a model changed) we need to create <a href="https://docs.djangoproject.com/en/1.11/topics/migrations/">migrations</a>, which are auto-generated code snippets to update the database to the new schema. These are generated by `manage.py makemigrations` and applied with `manage.py migrate`. These should never be edited by hand. (Folder collapsed).</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── __init__.py</code></td>
   <td>`__init__.py` tells Python this directory is importable. No code lives in this file.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── apps.py</code></td>
   <td>Configures the API application.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── serializers.py</code></td>
-  <td>Describes how the django rest framework should turn models (objects) into JSON.</td>
+  <td>Describes how the django rest framework should turn models (objects) into <a href="http://www.json.org/">JSON</a>.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── tests.py</code></td>
   <td>Keep testing, my friends.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── urls.py</code></td>
   <td>Describes the API endpoint URLs.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   └── views.py</code></td>
   <td>API endpoints that accept requests from the frontend and handle them.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── cases</code></td>
   <td>This component is an abstraction for a single patient (i.e., a "case"). It also has models for the candidates (potential nodules) and nodules (confirmed nodules).</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── migrations</code></td>
-  <td>When the database schema changes (because a model changed) we need to create migrations, which are auto-generated code snippets to update the database to the new schema. These are generated by `manage.py makemigrations` and applied with `manage.py migrate`. These should never be edited by hand. (Folder collapsed.)</td>
+  <td>When the database schema changes (because a model changed) we need to create <a href="https://docs.djangoproject.com/en/1.11/topics/migrations/">migrations</a>, which are auto-generated code snippets to update the database to the new schema. These are generated by `manage.py makemigrations` and applied with `manage.py migrate`. These should never be edited by hand. (Folder collapsed.)</td>
 </tr>
 
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── __init__.py</code></td>
   <td>`__init__.py` tells Python this directory is importable. No code lives in this file.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── apps.py</code></td>
   <td>Configuration for this component.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── factories.py</code></td>
   <td>Code to generate example instances of the models. This will be used by the tests.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── models.py</code></td>
   <td>The models that describe how Python objects map to what is stored in the database.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   └── tests.py</code></td>
   <td>Test, test, test, test!</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── images</code></td>
-  <td>This component contains abstractions for a DICOM image, including both the image series and </td>
+  <td>This component contains abstractions for a <a href="https://en.wikipedia.org/wiki/DICOM">DICOM</a> image, including both the image series and </td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── migrations</code></td>
-  <td>When the database schema changes (because a model changed) we need to create migrations, which are auto-generated code snippets to update the database to the new schema. These are generated by `manage.py makemigrations` and applied with `manage.py migrate`. These should never be edited by hand. (Folder collapsed).</td>
+  <td>When the database schema changes (because a model changed) we need to create <a href="https://docs.djangoproject.com/en/1.11/topics/migrations/">migrations</a>, which are auto-generated code snippets to update the database to the new schema. These are generated by `manage.py makemigrations` and applied with `manage.py migrate`. These should never be edited by hand. (Folder collapsed).</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── __init__.py</code></td>
   <td>`__init__.py` tells Python this directory is importable. No code lives in this file.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── apps.py</code></td>
   <td>Configuration for the images component.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── factories.py</code></td>
   <td>Code to generate example instances of the models. This will be used by the tests.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── models.py</code></td>
   <td>The models that describe how Python objects map to what is stored in the database.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   └── tests.py</code></td>
   <td>Get the test on.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── static</code></td>
   <td>Application to serve static content pages.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── __init__.py</code></td>
   <td>`__init__.py` tells Python this directory is importable. No code lives in this file.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── apps.py</code></td>
   <td>Configuration for static content pages.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── tests.py</code></td>
   <td>Tests are good.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   └── urls.py</code></td>
   <td>URLs for the static content pages.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   └── __init__.py</code></td>
   <td>`__init__.py` tells Python this directory is importable. No code lives in this file.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   ├── config</code></td>
   <td>Configuration for the interface Django application.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── settings</code></td>
-  <td>The settings for the Django application.</td>
+  <td>The <a href="https://docs.djangoproject.com/en/1.11/topics/settings/">settings</a> for the Django application.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── __init__.py</code></td>
   <td>`__init__.py` tells Python this directory is importable. No code lives in this file.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── base.py</code></td>
   <td>These settings are shared across all configs (though can be overridden).</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── local.py</code></td>
   <td>Settings for local development.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── production.py</code></td>
   <td>Settings for production environment.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   └── test.py</code></td>
   <td>Don't stop testing.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── __init__.py</code></td>
   <td>`__init__.py` tells Python this directory is importable. No code lives in this file.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── urls.py</code></td>
   <td>Overall URLs for the project. Includes the URLs from the individual components. </td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   └── wsgi.py</code></td>
   <td>The WSGI configuration.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   ├── frontend</code></td>
   <td>Code for the frontend of the user interface.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   └── index.html</code></td>
-  <td>Initial index page with simple Vue.js application.</td>
+  <td>Initial index page with simple <a href="https://vuejs.org/v2/guide/">Vue.js</a> application.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   ├── requirements</code></td>
-  <td>Configuration specific requirements (Python packages) for the interface application.</td>
+  <td>Configuration specific <a href="http://pip-python3.readthedocs.io/en/latest/user_guide.html#requirements-files">requirements</a> (Python packages) for the interface application.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── base.txt</code></td>
   <td>The shared packages for both local and production. Most dependencies will live here.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── local.txt</code></td>
   <td>The packages that are only used in development. (E.g., debugging tools)</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   └── production.txt</code></td>
   <td>The packages that are only used in production.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   ├── manage.py</code></td>
-  <td>The manage.py file provides commands for interacting with the Django application.</td>
+  <td>The <a href="https://docs.djangoproject.com/en/1.11/ref/django-admin/">manage.py</a> file provides commands for interacting with the Django application.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   └── requirements.txt</code></td>
-  <td>The main requirements file (which by convention is in the top level folder). This simply points to the production requirements.</td>
+  <td>The main <a href="http://pip-python3.readthedocs.io/en/latest/user_guide.html#requirements-files">requirements</a> file (which by convention is in the top level folder). This simply points to the production requirements.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>├── prediction</code></td>
-  <td>The prediction application. This is a microservice that returns predictions for various ML tasks for a given DICOM image. This separates the machine learning models from the interface application code.</td>
+  <td>The prediction application. This is a microservice that returns predictions for various ML tasks for a given <a href="https://en.wikipedia.org/wiki/DICOM">DICOM</a> image. This separates the machine learning models from the interface application code.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   ├── data</code></td>
-  <td>Use this folder to store DICOM images for use in testing and training models. This folder is ignored by git, so the contents won't be synced to the repository.</td>
+  <td>Use this folder to store <a href="https://en.wikipedia.org/wiki/DICOM">DICOM</a> images for use in testing and training models. This folder is ignored by <a href="https://git-scm.com/docs">git</a>, so the contents won't be synced to the repository.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   └── test</code></td>
   <td>Tests for the data.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   ├── requirements</code></td>
-  <td>Requirements (Python packages) for the prediction application.</td>
+  <td><a href="http://pip-python3.readthedocs.io/en/latest/user_guide.html#requirements-files">Requirements</a> (Python packages) for the prediction application.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── base.txt</code></td>
   <td>Common packages that will be used for both local and production.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── local.txt</code></td>
   <td>Packages that are exclusively used in local development.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   └── production.txt</code></td>
   <td>Packages that are exclusively used in production.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   ├── src</code></td>
-  <td>The source code for the prediction application. This application is a Flask application (as opposed to the Django application for the interface). This lightweight framework is good for serving simple endpoints and letting us focus on the algorithms.</td>
+  <td>The source code for the prediction application. This application is a <a href="http://flask.pocoo.org/docs/0.12/">Flask</a> application (as opposed to the Django application for the interface). This lightweight framework is good for serving simple endpoints and letting us focus on the algorithms.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── algorithms</code></td>
-  <td>Code for the three machine learning tasks: identification, classificaiton, and segmentation.</td>
+  <td>Code for the three machine learning tasks: identification, classification, and segmentation.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── classify</code></td>
   <td>The classification model. For a centroid of a given nodule, determine the probability that it is concerning.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   │   ├── assets</code></td>
-  <td>The assets folder should contain the fully trained model stored in a serialized state. These can be quite large, so this is managed by git-lfs.</td>
+  <td>The assets folder should contain the fully trained model stored in a serialized state. These can be quite large, so this is managed by <a href="https://git-lfs.github.com/">git-lfs</a>.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   │   ├── src</code></td>
   <td>The src folder contains the code necessary to train the model from scratch. It won't be executed by the endpoint, but it is required to keep track of the details of the model that solves this task.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   │   └── trained_model.py</code></td>
   <td>The trained_model.py file provides a simple, one method API to make predictions. It loads the serialized model from assets and then makes the necessary predictions.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   ├── identify</code></td>
-  <td>The identification model. For a given DICOM image, return potential nodules.</td>
+  <td>The identification model. For a given <a href="https://en.wikipedia.org/wiki/DICOM">DICOM</a> image, return potential nodules.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   │   ├── assets</code></td>
-  <td>The assets folder should contain the fully trained model stored in a serialized state. These can be quite large, so this is managed by git-lfs.</td>
+  <td>The assets folder should contain the fully trained model stored in a serialized state. These can be quite large, so this is managed by <a href="https://git-lfs.github.com/">git-lfs</a>.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   │   ├── src</code></td>
   <td>The src folder contains the code necessary to train the model from scratch. It won't be executed by the endpoint, but it is required to keep track of the details of the model that solves this task.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   │   └── trained_model.py</code></td>
   <td>The trained_model.py file provides a simple, one method API to make predictions. It loads the serialized model from assets and then makes the necessary predictions.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   └── segment</code></td>
-  <td>The segmentation model. For a given DICOM image and set of centroids, predict per-pixel values for the image representing if it is cancerous.</td>
+  <td>The segmentation model. For a given <a href="https://en.wikipedia.org/wiki/DICOM">DICOM</a> image and set of centroids, predict per-pixel values for the image representing if it is cancerous.</td>
 </tr>
-<tr>
-  <td nowrap><code>│   │   │       ├── assets</code></td>
-  <td>The assets folder should contain the fully trained model stored in a serialized state. These can be quite large, so this is managed by git-lfs.</td>
+<tr class="structure-tr">
+  <td nowrap><code>│   │   │   │   ├── assets</code></td>
+  <td>The assets folder should contain the fully trained model stored in a serialized state. These can be quite large, so this is managed by <a href="https://git-lfs.github.com/">git-lfs</a>.</td>
 </tr>
-<tr>
-  <td nowrap><code>│   │   │       ├── src</code></td>
+<tr class="structure-tr">
+  <td nowrap><code>│   │   │   │   ├── src</code></td>
   <td>The src folder contains the code necessary to train the model from scratch. It won't be executed by the endpoint, but it is required to keep track of the details of the model that solves this task.</td>
 </tr>
-<tr>
-  <td nowrap><code>│   │   │       └── trained_model.py</code></td>
+<tr class="structure-tr">
+  <td nowrap><code>│   │   │   │   └── trained_model.py</code></td>
   <td>The trained_model.py file provides a simple, one method API to make predictions. It loads the serialized model from assets and then makes the necessary predictions.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── preprocess</code></td>
   <td>Any shared preprocessing code that more than one model will use for prediction can be refactored into this folder.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── tests</code></td>
   <td>Tests for the model prediction endpoints.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   │   └── test_endpoints.py</code></td>
   <td>Tests the endpoints.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── __init__.py</code></td>
   <td>`__init__.py` tells Python this directory is importable. No code lives in this file.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── factory.py</code></td>
-  <td>Creates and configures the Flask application.</td>
+  <td>Creates and configures the <a href="http://flask.pocoo.org/docs/0.12/patterns/appfactories/">Flask</a> application.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   ├── utils.py</code></td>
   <td>Helpful utilities for the views.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   │   └── views.py</code></td>
   <td>Describes the API endpoints and routes requests to the appropriate ML model.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   ├── config.py</code></td>
-  <td>Configuration for the Flask application.</td>
+  <td>Configuration for the <a href="http://flask.pocoo.org/docs/0.12/config/">Flask</a> application.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   └── requirements.txt</code></td>
-  <td>Root folder requirements.txt points to production by convention.</td>
+  <td>Root folder <a href="http://pip-python3.readthedocs.io/en/latest/user_guide.html#requirements-files">requirements.txt</a> points to production by convention.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>├── tests</code></td>
   <td>Tests that exercise the entire architecture (i.e., both applications in tandem.)</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   ├── assets</code></td>
   <td>Any large files that are required by the tests for execution.</td>
 </tr>
 
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>│   └── test_docker.sh</code></td>
   <td>Simple shell script to test that the Docker configuration is working for developers.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>├── CHALLENGE_RULES.md</code></td>
   <td>The rules for the Concept to Clinic challenge.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>├── CODE_OF_CONDUCT.md</code></td>
   <td>The code of conduct for the Concept to Clinic challenge.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>├── CONTRIBUTOR_LICENSE_AGREEMENT.md</code></td>
   <td>The contributor license agreement for the project.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>├── LICENSE</code></td>
   <td>The license for the project.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>├── README.md</code></td>
   <td>The top-level README for the project.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>├── local.yml</code></td>
-  <td>Docker configuration for the local development environment.</td>
+  <td><a href="https://docs.docker.com/compose/compose-file/#service-configuration-reference">Docker configuration</a> for the local development environment.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>├── production.yml</code></td>
-  <td>Docker configuration for the production environment.</td>
+  <td><a href="https://docs.docker.com/compose/compose-file/#service-configuration-reference">Docker configuration</a> for the production environment.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>├── requirements.txt</code></td>
-  <td>All of the requirements for the project, including docs. Points to the requirements for both of the projects.</td>
+  <td>All of the <a href="http://pip-python3.readthedocs.io/en/latest/user_guide.html#requirements-files">requirements.txt</a> for the project, including docs. Points to the <a href="http://pip-python3.readthedocs.io/en/latest/user_guide.html#requirements-files">requirements.txt</a> for both of the projects.</td>
 </tr>
-<tr>
+<tr class="structure-tr">
   <td nowrap><code>└── setup.cfg</code></td>
-  <td>Configuration for the project for packages that accept configs. Currently configures style guides for flake8.</td>
+  <td>Configuration for the project for packages that accept configs. Currently configures style guides for <a href="http://flake8.pycqa.org/en/latest/">flake8</a>.</td>
 </tr>
 
 </tbody>
