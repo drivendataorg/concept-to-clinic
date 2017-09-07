@@ -83,12 +83,17 @@
         <p class="card-text">No candidates available.</p>
       </template>
     </div>
-    <div class="col-md-8"></div>
+    <div class="col-md-8">
+      {% verbatim %}
+      <div class="float-right">{{candidates.length}} {{candidates.length | pluralize('candidate')}} found</div>
+      {% endverbatim %}
+    </div>
   </div>
 </div>
 
 <script src="{% static 'js/vue.js' %}"></script>
 <script src="{% static 'js/vue-resource.js' %}"></script>
+<script src="{% static 'js/vue2-filters.min.js' %}"></script>
 <script src="{% static 'js/tether.min.js' %}"></script>
 <script>
   Vue.use(VueResource);
