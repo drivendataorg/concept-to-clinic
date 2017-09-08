@@ -28,6 +28,14 @@ src.preprocess.load_dicom module
     :undoc-members:
     :show-inheritance:
 
+src.preprocess.preprocess_dicom module
+--------------------------------------
+
+.. automodule:: src.preprocess.preprocess_dicom
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
