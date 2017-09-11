@@ -1,6 +1,6 @@
 <template>
 <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
-  <img src="../assets/c-logo-light.svg"/>
+  <img src="../assets/images/c-logo-light.svg"/>
   <a class="navbar-brand" href="#">Concept To Clinic</a>
   <div class="navbar-collapse collapse" id="navbar">
     <ul class="navbar-nav justify-content-center">
