@@ -23,6 +23,10 @@ COPY ./compose/interface/start-dev.sh /start-dev.sh
 RUN sed -i 's/\r//' /start-dev.sh
 RUN chmod +x /start-dev.sh
 
+COPY ./compose/interface/test.sh /test.sh
+RUN sed -i 's/\r//' /test.sh
+RUN chmod +x /test.sh
+
 WORKDIR /app
 
 ENTRYPOINT ["/entrypoint.sh"]

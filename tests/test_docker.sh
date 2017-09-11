@@ -10,7 +10,7 @@ set -ex
 docker-compose -f local.yml run prediction pytest
 
 # run the project's tests
-docker-compose -f local.yml run interface python manage.py test
+docker-compose -f local.yml run interface /test.sh
 
 # run the documentation's tests
 # docker-compose -f local.yml run documentation make -C /app/docs doctest
