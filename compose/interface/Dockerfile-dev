@@ -1,19 +1,20 @@
-FROM ubuntu:16.04
+FROM python:3.6-jessie
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update && apt-get install -y \
-    curl \
-    python-pip
-
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash
-RUN apt-get install -y nodejs
-
-RUN pip install -U pip
+# Install Node
+RUN curl --silent --location https://deb.nodesource.com/setup_8.x | bash - && \
+    apt-get install --yes nodejs
 
 # Requirements have to be pulled and installed here, otherwise caching won't work
 COPY ./interface/requirements /requirements
-RUN pip install -r /requirements/local.txt
+RUN pip install -U pip && \
+    pip install -r /requirements/local.txt
 
+# Install Node dependencies
+ADD ./interface/frontend/package.json /tmp/package.json
+RUN cd /tmp && npm install
+
+# Copy the scripts into the container
 COPY ./compose/interface/entrypoint.sh /entrypoint.sh
 RUN sed -i 's/\r//' /entrypoint.sh
 RUN chmod +x /entrypoint.sh
@@ -22,9 +23,10 @@ COPY ./compose/interface/start-dev.sh /start-dev.sh
 RUN sed -i 's/\r//' /start-dev.sh
 RUN chmod +x /start-dev.sh
 
-ADD ./interface/frontend/package.json /tmp/package.json
-RUN cd /tmp && npm install
-
 WORKDIR /app
+
+# Build the pages
+RUN cd /app/frontend && \
+    npm run build
 
 ENTRYPOINT ["/entrypoint.sh"]
