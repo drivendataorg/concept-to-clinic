@@ -10,7 +10,7 @@ Contribute now by [grabbing an issue](https://concepttoclinic.drivendata.org/iss
 
 ### [Read more on the project homepage](https://concepttoclinic.drivendata.org/)!
 
-[![Build Status](https://travis-ci.com/concept-to-clinic/point-platform.svg?token=jQqJJf53PSKkiRHAUzFE&branch=master)](https://travis-ci.com/concept-to-clinic/point-platform)
+[![Build Status](https://travis-ci.org/concept-to-clinic/concept-to-clinic.svg?branch=master)](https://travis-ci.org/concept-to-clinic/concept-to-clinic)
 [![Documentation Status](https://readthedocs.org/projects/concept-to-clinic/badge/?version=latest)](http://concept-to-clinic.readthedocs.io/en/latest/?badge=latest)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fconcept-to-clinic%2Fconcept-to-clinic.svg?type=shield)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fconcept-to-clinic%2Fconcept-to-clinic?ref=badge_shield)
 
