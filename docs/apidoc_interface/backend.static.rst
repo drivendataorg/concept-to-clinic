@@ -36,14 +36,6 @@ backend.static.urls module
     :undoc-members:
     :show-inheritance:
 
-backend.static.views module
----------------------------
-
-.. automodule:: backend.static.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------
