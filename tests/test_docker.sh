@@ -9,8 +9,11 @@ set -ex
 # run the model service's tests
 docker-compose -f local.yml run prediction pytest
 
-# run the project's tests
-docker-compose -f local.yml run interface /test.sh
+# run the backend API tests
+docker-compose -f local.yml run interface python manage.py test
+
+# run the frontend tests
+# docker-compose -f local.yml run vue npm run e2e
 
 # run the documentation's tests
 # docker-compose -f local.yml run documentation make -C /app/docs doctest

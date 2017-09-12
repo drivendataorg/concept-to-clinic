@@ -18,8 +18,21 @@
       </li>
     </ul>
   </div>
+  <span class="navbar-text">
+    {{ appVersion }}
+  </span>
 </nav>
 </template>
+
+<script>
+export default {
+  data () {
+    return {
+      appVersion: 'a0b1c2d'
+    }
+  }
+}
+</script>
 
 <style>
 .navbar > img {

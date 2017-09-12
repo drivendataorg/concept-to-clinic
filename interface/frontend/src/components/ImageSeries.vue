@@ -12,7 +12,7 @@
                 <span v-if="series == selected">&larr;</span>
               </li>
             </ul>
-          </div>
+          </template>
         </div>
       </div><!-- left side -->
       <div class="col-md-8">

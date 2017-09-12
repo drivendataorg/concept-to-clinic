@@ -49,7 +49,11 @@ And then run:
 
     $ docker-compose up
 
-You should now be able to open a browser and view the interface at http://localhost:8000 and the prediction API at http://localhost:8001.
+You should now be able to open a browser and interact with the services:
+ 
+- `interface` frontend at http://localhost:8080
+- `interface` API at http://localhost:8000/api/
+- `prediction` service at http://localhost:8001
 
 
 ## Code changes
@@ -97,6 +101,3 @@ If you want to run the stack in detached mode (in the background without console
 
     $ docker-compose -f local.yml up -d
 
-### Production Mode
-
-In general, this is not relevant for project contributors and only exists for hosting demo instances of the software. Nonetheless, instead of using `local.yml`, you would use `production.yml`.

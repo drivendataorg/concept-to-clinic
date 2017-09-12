@@ -18,10 +18,6 @@ Here is an annotated version of the project structure.
   <td><a href="https://docs.docker.com/">Docker</a> configuration for the interface application.</td>
 </tr>
 <tr class="structure-tr">
-  <td nowrap><code>│   │   ├── Dockerfile</code></td>
-  <td>Production <a href="https://docs.docker.com/glossary/?term=Dockerfile">Docker configuration</a> for the interface application.</td>
-</tr>
-<tr class="structure-tr">
   <td nowrap><code>│   │   ├── Dockerfile-dev</code></td>
   <td>Development <a href="https://docs.docker.com/glossary/?term=Dockerfile">Docker configuration</a> for the interface application.</td>
 </tr>
@@ -40,10 +36,6 @@ Here is an annotated version of the project structure.
 <tr class="structure-tr">
   <td nowrap><code>│   |── prediction</code></td>
   <td><a href="https://docs.docker.com/">Docker</a> configuration for the prediction application</td>
-</tr>
-<tr class="structure-tr">
-  <td nowrap><code>│   │   ├── Dockerfile</code></td>
-  <td>Production <a href="https://docs.docker.com/glossary/?term=Dockerfile">Docker configuration</a> for the interface application.</td>
 </tr>
 <tr class="structure-tr">
   <td nowrap><code>│   │   ├── Dockerfile-dev</code></td>
