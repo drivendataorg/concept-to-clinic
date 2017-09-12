@@ -1,3 +1,3 @@
 #!/bin/sh
-cd frontend && npm run build && cd ..
+cd /app/frontend && npm install && npm run build && cd /app
 python manage.py test
