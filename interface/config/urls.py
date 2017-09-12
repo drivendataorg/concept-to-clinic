@@ -6,8 +6,7 @@ from django.conf.urls import (
 from django.views.static import serve
 
 urlpatterns = (
-    url(r'', include('backend.static.urls', namespace='static')),
-    url(r'^api/', include('backend.api.urls', namespace=''))
+    url(r'^api/', include('backend.api.urls', namespace='')),
 )
 
 if settings.DEBUG:
