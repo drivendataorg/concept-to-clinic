@@ -1,13 +1,17 @@
+import os
+from django.conf import settings
 from backend.api import serializers
 from backend.cases.models import (
     Case,
     Candidate,
     Nodule,
 )
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from backend.images.models import ImageSeries
 from django.http import JsonResponse
 from rest_framework import viewsets
-from rest_framework.views import APIView
+from django.core.files.storage import FileSystemStorage
 
 
 class CaseViewSet(viewsets.ModelViewSet):
@@ -35,18 +39,48 @@ class ImageAvailableApiView(APIView):
     View list of images from dataset directory
     """
 
+    def __init__(self, *args, **kwargs):
+        super(ImageAvailableApiView, self).__init__(**kwargs)
+        self.fss = FileSystemStorage(settings.DATASOURCE_DIR)
+
+    def walk(self, location, dir_name='root'):
+        """
+        Recursively walkthrough directories and files
+        """
+        list_dirs = self.fss.listdir(location)
+        tree = {
+            'name': dir_name,
+            'children': [],
+        }
+        tree['children'] = sorted(list_dirs[1])
+        for dirname in sorted(list_dirs[0]):
+            tree['children'].append(self.walk(os.path.join(location, dirname), dirname))
+        return tree
+
     def get(self, request):
         """
-        Return a list of files and folders in dataset in the form
+        Return a sorted(by name) list of files and folders
+        in dataset in the form
         {'directories': [
             {
                 'name': directory_name1,
-                'children': [ file_name1, file_name2, ... ]
+                'children': [
+                    file_name1,
+                    file_name2,
+                    {
+                        'name': 'nested_dir_1',
+                        'children': [
+                            'file_name_1',
+                            'file_name_2',
+                            ....
+                        ]
+                    }
+                    ... ]
             }, ... ]
         }
-
         """
-        return JsonResponse({'directories': []})
+        tree = self.walk(settings.DATASOURCE_DIR)
+        return JsonResponse({'directories': tree})
 
 
 def candidate_mark(request, candidate_id):

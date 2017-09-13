@@ -3,6 +3,8 @@ from django.test import (
     TestCase
 )
 from django.urls import reverse
+from rest_framework.test import APIRequestFactory
+from rest_framework import status
 
 from backend.api.serializers import NoduleSerializer
 from backend.cases.factories import (
@@ -14,6 +16,7 @@ from backend.cases.factories import (
 class ViewTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
+        self.rest_factory = APIRequestFactory()
 
     def test_nodule_list_viewset(self):
         # first try an endpoint without a nodule
@@ -33,3 +36,8 @@ class ViewTest(TestCase):
         response = self.client.get(url)
         payload = response.json()
         self.assertListEqual(payload, expected)
+
+    def test_images_available_view(self):
+        url = reverse('images-available')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
