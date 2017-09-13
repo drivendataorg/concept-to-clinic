@@ -41,7 +41,12 @@ services:
     depends_on:
       - interface
     volumes:
-      - ./interface/:/app
+      - ./interface/frontend/src:/app/src
+      - ./interface/frontend/build:/app/build
+      - ./interface/frontend/config:/app/config
+      - ./interface/frontend/dist:/app/dist
+      - ./interface/frontend/static:/app/static
+      - ./interface/frontend/test:/app/test
       - ./.git/logs/HEAD:/HEAD
     links:
       - interface

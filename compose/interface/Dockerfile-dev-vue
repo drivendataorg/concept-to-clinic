@@ -5,11 +5,11 @@ RUN apt-get update && \
     apt-get install -y bzip2
 
 # Install Node dependencies
-COPY ./interface/frontend/package.json /tmp/package.json
-RUN cd /tmp && npm install --global
+COPY ./interface/frontend /app
+RUN cd /app && npm install
 
 EXPOSE 8080
 
-WORKDIR /app/frontend
+WORKDIR /app
 
-CMD ["npm", "run" "dev"]
+CMD [ "npm", "run" "dev" ]
