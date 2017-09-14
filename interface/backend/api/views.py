@@ -1,17 +1,18 @@
 import os
-from django.conf import settings
+
 from backend.api import serializers
 from backend.cases.models import (
     Case,
     Candidate,
     Nodule,
 )
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from backend.images.models import ImageSeries
-from django.http import JsonResponse
-from rest_framework import viewsets
+from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from rest_framework import viewsets
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
 class CaseViewSet(viewsets.ModelViewSet):
@@ -80,12 +81,14 @@ class ImageAvailableApiView(APIView):
         }
         """
         tree = self.walk(settings.DATASOURCE_DIR)
-        return JsonResponse({'directories': tree})
+        return Response({'directories': tree})
 
 
+@api_view(['GET'])
 def candidate_mark(request, candidate_id):
-    return JsonResponse({'response': "Candidate {} was marked".format(candidate_id)})
+    return Response({'response': "Candidate {} was marked".format(candidate_id)})
 
 
+@api_view(['GET'])
 def candidate_dismiss(request, candidate_id):
-    return JsonResponse({'response': "Candidate {} was dismissed".format(candidate_id)})
+    return Response({'response': "Candidate {} was dismissed".format(candidate_id)})

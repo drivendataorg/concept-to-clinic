@@ -1,16 +1,16 @@
+from backend.api.serializers import NoduleSerializer
+from backend.cases.factories import (
+    CaseFactory,
+    CandidateFactory,
+    NoduleFactory
+)
 from django.test import (
     RequestFactory,
     TestCase
 )
 from django.urls import reverse
-from rest_framework.test import APIRequestFactory
 from rest_framework import status
-
-from backend.api.serializers import NoduleSerializer
-from backend.cases.factories import (
-    CaseFactory,
-    NoduleFactory
-)
+from rest_framework.test import APIRequestFactory
 
 
 class ViewTest(TestCase):
@@ -40,4 +40,20 @@ class ViewTest(TestCase):
     def test_images_available_view(self):
         url = reverse('images-available')
         response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_candidates_mark(self):
+        candidate = CandidateFactory()
+        url = reverse('candidate-mark', kwargs={'candidate_id': candidate.id})
+        response = self.client.get(url)
+        response_dict = response.json()
+        self.assertEqual(response_dict["response"], "Candidate {} was marked".format(candidate.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_candidates_dismiss(self):
+        candidate = CandidateFactory()
+        url = reverse('candidate-dismiss', kwargs={'candidate_id': candidate.id})
+        response = self.client.get(url)
+        response_dict = response.json()
+        self.assertEqual(response_dict["response"], "Candidate {} was dismissed".format(candidate.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)

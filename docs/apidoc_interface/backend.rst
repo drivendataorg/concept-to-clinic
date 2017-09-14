@@ -9,7 +9,6 @@ Subpackages
     backend.api
     backend.cases
     backend.images
-    backend.static
 
 Module contents
 ---------------
