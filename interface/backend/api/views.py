@@ -1,3 +1,4 @@
+import json
 import os
 
 from backend.api import serializers
@@ -5,12 +6,18 @@ from backend.cases.models import (
     Case,
     Candidate,
     Nodule,
+    CaseSerializer
 )
 from backend.images.models import ImageSeries
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from django.core.serializers.json import DjangoJSONEncoder
+from django.shortcuts import get_object_or_404
+from rest_framework import renderers
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
+from rest_framework.decorators import renderer_classes
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -92,3 +99,20 @@ def candidate_mark(request, candidate_id):
 @api_view(['GET'])
 def candidate_dismiss(request, candidate_id):
     return Response({'response': "Candidate {} was dismissed".format(candidate_id)})
+
+
+class JsonHtmlRenderer(renderers.BaseRenderer):
+    media_type = 'text/html'
+    format = 'html'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return "<pre>{}</pre>".format(json.dumps(data, indent=4, sort_keys=True, cls=DjangoJSONEncoder))
+
+
+@api_view(['GET'])
+# Render .json and .html requests
+@renderer_classes((JSONRenderer, JsonHtmlRenderer))
+def case_report(request, case_id, format=None):
+    case = get_object_or_404(Case, pk=case_id)
+
+    return Response(CaseSerializer(case).data)

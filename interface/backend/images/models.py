@@ -1,7 +1,9 @@
+import glob
+
+import dicom
 from django.db import models
 from django.utils._os import safe_join
-import dicom
-import glob
+from rest_framework import serializers
 
 
 class ImageSeries(models.Model):
@@ -36,6 +38,12 @@ class ImageSeries(models.Model):
             uri=uri)
 
 
+class ImageSeriesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImageSeries
+        fields = ('id', 'patient_id', 'series_instance_uid', 'uri')
+
+
 class ImageLocation(models.Model):
     """
     Model representing a certain voxel location on certain image
@@ -47,3 +55,11 @@ class ImageLocation(models.Model):
     y = models.PositiveSmallIntegerField(help_text='Voxel index for Y axis, zero-index, from top left')
 
     z = models.PositiveSmallIntegerField(help_text='Slice index for Z axis, zero-index')
+
+
+class ImageLocationSerializer(serializers.ModelSerializer):
+    series = ImageSeriesSerializer()
+
+    class Meta:
+        model = ImageLocation
+        fields = ('id', 'series', 'x', 'y', 'z')
