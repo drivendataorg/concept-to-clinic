@@ -10,3 +10,6 @@ django-environ==0.4.3
 
 # Images
 pydicom==0.9.9
+
+# Data
+numpy==1.13.1
