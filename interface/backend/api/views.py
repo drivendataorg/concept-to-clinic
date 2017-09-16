@@ -92,7 +92,7 @@ class ImageMetadataApiView(APIView):
         ---
         parameters:
             - name: dicom_location
-            description: quoted full location of the image
+            description: 'QUOTED' full location of the image
             required: true
             type: string
         '''

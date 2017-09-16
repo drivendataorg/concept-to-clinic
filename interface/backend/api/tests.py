@@ -41,6 +41,15 @@ class ViewTest(TestCase):
         url = reverse('images-available')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+    def test_images_metadata_view(self):
+        url = reverse('images-metadata')
+        response = self.client.get(url, {
+            'dicom_location': '"/images/LIDC-IDRI-0002/' \
+            '1.3.6.1.4.1.14519.5.2.1.6279.6001.490157381160200744295382098329/' \
+            '1.3.6.1.4.1.14519.5.2.1.6279.6001.619372068417051974713149104919/-80.750000.dcm"'
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_candidates_mark(self):
         candidate = CandidateFactory()
