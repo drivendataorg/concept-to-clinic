@@ -3,6 +3,8 @@ import mimetypes
 import os
 import dicom
 import base64
+from PIL import Image
+from io import BytesIO
 from backend.api import serializers
 from backend.cases.models import (
     Case,
@@ -69,13 +71,13 @@ class ImageMetadataApiView(APIView):
             cv = repr(v)
         return cv
 
-    def dicom_dataset_to_dict(self, dicom_header):
+    def dicom_dataset_to_dict(self, ds):
         '''
         Put dicom metadata into a separate dictionary
         '''
         dicom_dict = {}
-        repr(dicom_header)
-        for dicom_value in dicom_header.values():
+        repr(ds)
+        for dicom_value in ds.values():
             if dicom_value.tag == (0x7fe0, 0x0010):
                 # discard pixel data
                 continue
@@ -84,6 +86,16 @@ class ImageMetadataApiView(APIView):
             else:
                 dicom_dict[dicom_value.name] = self._convert_value(dicom_value.value)
         return dicom_dict
+    
+    def dicom_to_base64(self, ds):
+        '''
+        Returning base64 encoded string for a dicom image
+        '''
+        buff_output = BytesIO()
+        img = Image.fromarray((ds.pixel_array)).convert('RGB')
+        img.save(buff_output, format='jpeg')
+        return 'data:image/jpg;base64,' + \
+                base64.b64encode(buff_output.getvalue()).decode()
 
     def get(self, request):
         '''
@@ -103,7 +115,7 @@ class ImageMetadataApiView(APIView):
         ds = dicom.read_file(path, force=True)
         return Response({
             'metadata': self.dicom_dataset_to_dict(ds),
-            'image': base64.b64encode((ds.pixel_array.tostring()))
+            'image': self.dicom_to_base64(ds),
         })
 
 
