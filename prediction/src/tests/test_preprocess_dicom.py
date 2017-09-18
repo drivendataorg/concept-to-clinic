@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from ..preprocess import load_ct, preprocess_ct
+from src.preprocess import load_ct, preprocess_ct
 
 
 @pytest.fixture

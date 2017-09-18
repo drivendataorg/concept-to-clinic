@@ -82,7 +82,8 @@ class PreprocessCT:
 
     def __call__(self, voxel_data, meta):
         if not isinstance(meta, load_ct.MetaData):
-            raise ValueError('The meta should be an instance of %s.' % str(load_ct.MetaData))
+            meta = load_ct.MetaData(meta)
+
         if self.params is None:
             return voxel_data
 
@@ -106,5 +107,6 @@ class PreprocessCT:
         if self.params.spacing is not None:
             zoom_fctr = meta.spacing / np.asarray(self.params.spacing)
             voxel_data = scipy.ndimage.interpolation.zoom(voxel_data, zoom_fctr)
+            meta.spacing = [axis for axis in self.params.spacing]
 
         return voxel_data

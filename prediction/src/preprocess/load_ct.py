@@ -4,7 +4,6 @@ from glob import glob
 import SimpleITK
 import dicom
 import dicom_numpy
-import numpy as np
 
 from .errors import EmptyDicomSeriesException
 
@@ -127,14 +126,23 @@ class MetaData:
         # Every DICOM file have the same PixelSpacing
         spacing = self.meta[0].PixelSpacing
         # Taking into account ijk -> xyz transformation
-        return np.asarray([spacing[1], spacing[0], slice_thickness])
+        if self.xyz_order:
+            return [spacing[1], spacing[0], slice_thickness]
+        return [slice_thickness, spacing[0], spacing[1]]
 
     def extract_spacing_mhd(self):
-        # Again, taking into account ijk -> xyz transformation
-        return list(reversed(self.meta.GetSpacing()))
+        if self.xyz_order:
+            return list(reversed(self.meta.GetSpacing()))
+        return self.meta.GetSpacing()
 
-    def __init__(self, meta):
+    def extract_origin_mhd(self):
+        if self.xyz_order:
+            return list(reversed(self.meta.GetOrigin()))
+        return self.meta.GetSpacing()
+
+    def __init__(self, meta, xyz_order=True):
         self.meta = meta
+        self.xyz_order = xyz_order
 
         dicom_meta = False
         if isinstance(self.meta, list) and self.meta:
@@ -146,5 +154,6 @@ class MetaData:
         elif mhd_meta:
             # list of methods for MetaImage meta
             self.spacing = self.extract_spacing_mhd()
+            self.origin = self.extract_origin_mhd()
         else:
             raise ValueError('The meta should be either list[dicom.dataset.FileDataset] or SimpleITK.SimpleITK.Image')

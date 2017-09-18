@@ -6,7 +6,7 @@ import dicom
 import numpy as np
 import pytest
 
-from ..preprocess import load_ct
+from src.preprocess import load_ct
 
 
 @pytest.fixture
