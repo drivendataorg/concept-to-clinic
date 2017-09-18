@@ -12,6 +12,14 @@ backend.cases.migrations.0001_initial module
     :undoc-members:
     :show-inheritance:
 
+backend.cases.migrations.0002_nodule_lung_orientation module
+------------------------------------------------------------
+
+.. automodule:: backend.cases.migrations.0002_nodule_lung_orientation
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

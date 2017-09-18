@@ -119,3 +119,23 @@ def case_report(request, case_id, format=None):
     case = get_object_or_404(Case, pk=case_id)
 
     return Response(CaseSerializer(case).data)
+
+
+@api_view(['POST'])
+def nodule_update(request, nodule_id):
+    try:
+        lung_orientation = json.loads(request.body)['lung_orientation']
+    except Exception as e:
+        return Response({'response': "An error occurred: {}".format(e)}, 500)
+
+    if lung_orientation is None:
+        lung_orientation = 'NONE'
+
+    orientation_choices = [orientation.name for orientation in Nodule.LungOrientation]
+
+    if lung_orientation not in orientation_choices:
+        return Response({'response': "ValueError: lung_orientation must be one of {}".format(orientation_choices)}, 500)
+
+    Nodule.objects.filter(pk=nodule_id).update(lung_orientation=Nodule.LungOrientation[lung_orientation].value)
+    return Response(
+        {'response': "Lung orientation of nodule {} has been changed to '{}'".format(nodule_id, lung_orientation)})

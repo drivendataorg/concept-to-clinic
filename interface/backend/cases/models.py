@@ -1,3 +1,5 @@
+from enum import IntEnum, unique
+
 from backend.images.models import ImageSeriesSerializer, ImageLocationSerializer
 from django.core.validators import (
     MaxValueValidator,
@@ -30,10 +32,24 @@ class Candidate(models.Model):
     probability_concerning = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
 
 
+def django_enum(cls):
+    # decorator needed to enable enums in django templates
+    cls.do_not_call_in_templates = True
+    return cls
+
+
 class Nodule(models.Model):
     """
-    Actual nodule, either confirmed as concerning from prediciton or manually added.
+    Actual nodule, either confirmed as concerning from prediction or manually added.
     """
+
+    @unique  # ensures all variables are unique
+    @django_enum
+    class LungOrientation(IntEnum):
+        NONE = 0
+        LEFT = 1
+        RIGHT = 2
+
     created = models.DateTimeField(default=timezone.now)
 
     case = models.ForeignKey(Case, on_delete=models.CASCADE, related_name='nodules')
@@ -41,6 +57,10 @@ class Nodule(models.Model):
     candidate = models.OneToOneField(Candidate, on_delete=models.CASCADE, null=True)
 
     centroid = models.OneToOneField('images.ImageLocation', on_delete=models.CASCADE)
+
+    lung_orientation = models.IntegerField(
+        choices=[(choice.value, choice.name.replace("_", " ")) for choice in LungOrientation],
+        default=LungOrientation.NONE.value)
 
 
 class CandidateSerializer(serializers.ModelSerializer):

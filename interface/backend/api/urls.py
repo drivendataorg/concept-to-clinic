@@ -7,6 +7,7 @@ from backend.api.views import (
     candidate_mark,
     candidate_dismiss,
     case_report,
+    nodule_update
 )
 from django.conf.urls import (
     include,
@@ -27,6 +28,7 @@ urlpatterns = [
     url(r'^images/available$', ImageAvailableApiView.as_view(), name='images-available'),
     url(r'^candidates/(?P<candidate_id>\d+)/dismiss$', candidate_dismiss, name='candidate-dismiss'),
     url(r'^candidates/(?P<candidate_id>\d+)/mark$', candidate_mark, name='candidate-mark'),
+    url(r'^nodules/(?P<nodule_id>\d+)/update$', nodule_update, name='nodule-update'),
 ]
 
 # Support different suffixes

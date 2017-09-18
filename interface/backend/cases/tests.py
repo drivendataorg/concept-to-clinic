@@ -98,3 +98,21 @@ class SmokeTest(TestCase):
         self.assertEqual(nodule2_dict['centroid']['x'], 10)
         self.assertEqual(nodule2_dict['centroid']['y'], 20)
         self.assertEqual(nodule2_dict['centroid']['z'], 30)
+
+    def test_update_nodule_lung_orientation(self):
+        nodule = NoduleFactory()
+        url = reverse('nodule-update', kwargs={'nodule_id': nodule.id})
+
+        self.assertEquals(nodule.lung_orientation, Nodule.LungOrientation.NONE.value)
+
+        self.client.post(url, json.dumps({'lung_orientation': 'LEFT'}), 'application/json')
+        nodule.refresh_from_db()
+        self.assertEquals(nodule.lung_orientation, Nodule.LungOrientation.LEFT.value)
+
+        self.client.post(url, json.dumps({'lung_orientation': 'RIGHT'}), 'application/json')
+        nodule.refresh_from_db()
+        self.assertEquals(nodule.lung_orientation, Nodule.LungOrientation.RIGHT.value)
+
+        self.client.post(url, json.dumps({'lung_orientation': 'NONE'}), 'application/json')
+        nodule.refresh_from_db()
+        self.assertEquals(nodule.lung_orientation, Nodule.LungOrientation.NONE.value)
