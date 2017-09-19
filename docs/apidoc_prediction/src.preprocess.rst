@@ -20,6 +20,14 @@ src.preprocess.errors module
     :undoc-members:
     :show-inheritance:
 
+src.preprocess.load_ct module
+-----------------------------
+
+.. automodule:: src.preprocess.load_ct
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 src.preprocess.load_dicom module
 --------------------------------
 
@@ -28,10 +36,10 @@ src.preprocess.load_dicom module
     :undoc-members:
     :show-inheritance:
 
-src.preprocess.preprocess_dicom module
---------------------------------------
+src.preprocess.preprocess_ct module
+-----------------------------------
 
-.. automodule:: src.preprocess.preprocess_dicom
+.. automodule:: src.preprocess.preprocess_ct
     :members:
     :undoc-members:
     :show-inheritance:

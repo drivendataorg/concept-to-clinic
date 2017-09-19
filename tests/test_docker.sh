@@ -7,7 +7,7 @@
 set -ex
 
 # run the model service's tests
-docker-compose -f local.yml run prediction pytest
+docker-compose -f local.yml run prediction pytest -rs
 
 # run the backend API tests
 docker-compose -f local.yml run interface python manage.py test

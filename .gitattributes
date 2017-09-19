@@ -6,5 +6,6 @@ test/assets/* filter=lfs diff=lfs merge=lfs -text
 *.dcm filter=lfs diff=lfs merge=lfs -text
 *.h5 filter=lfs diff=lfs merge=lfs -text
 *.npy filter=lfs diff=lfs merge=lfs -text
+*.hd5 filter=lfs diff=lfs merge=lfs -text
 *.mhd filter=lfs diff=lfs merge=lfs -text
 *.raw filter=lfs diff=lfs merge=lfs -text

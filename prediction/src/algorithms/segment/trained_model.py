@@ -51,7 +51,7 @@ def predict(dicom_path, centroids):
 
 
 def calculate_volume(segment_path, centroids, ct_path=None):
-    """ Calculates tumor volume in cubic mm if a dicom_path has been provided.
+    """ Calculates tumor volume in cubic mm if a ct_path has been provided.
 
     Given the path to the serialized mask and a list of centroids
         (1) For each centroid, calculate the volume of the tumor.
@@ -63,11 +63,11 @@ def calculate_volume(segment_path, centroids, ct_path=None):
             {'x': int,
              'y': int,
              'z': int}
-        dicom_path (str): contains the path to the folder containing the dcm-files of a series.
+        ct_path (str): contains the path to the folder containing the dcm-files of a series.
             If None then volume will be returned in voxels.
 
     Returns:
-        list[float]: a list of volumes in cubic mm (if a dicom_path has been provided)
+        list[float]: a list of volumes in cubic mm (if a ct_path has been provided)
             of a connected component for each centroid.
     """
 

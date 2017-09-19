@@ -4,14 +4,22 @@
 
     Provides unit tests for the API endpoints.
 """
-from functools import partial
 import json
+import os
+from functools import partial
 
 import pytest
-
 from flask import url_for
-from src.factory import create_app
 from src.algorithms import classify, identify, segment
+from src.factory import create_app
+
+
+def skip_slow_test():
+    """
+    Skip the wrapped test function unless the environment variable RUN_SLOW_TESTS is set.
+    """
+    value = os.environ.get('RUN_SLOW_TESTS')
+    return value.lower() not in {'1', 'true'}
 
 
 def get_data(response):
@@ -64,7 +72,8 @@ def test_endpoint_documentation(client):
         assert data['description'] == docstrings[algorithm]
 
 
-def test_indentify(client, dicom_path):
+@pytest.mark.skipif(skip_slow_test, reason='Takes very long')
+def test_identify(client, dicom_path):
     url = client.url_for('predict', algorithm='identify')
     test_data = dict(dicom_path=dicom_path)
 
@@ -75,7 +84,12 @@ def test_indentify(client, dicom_path):
     data = get_data(r)
 
     assert isinstance(data['prediction'], list)
-    assert data['prediction'][0]['x'] == 0
+    assert len(data['prediction']) > 0
+    for prediction in data['prediction']:
+        assert (0.5 <= prediction['p_nodule'] < 1.0)
+        assert prediction['x'] > 0
+        assert prediction['y'] > 0
+        assert prediction['z'] > 0
 
 
 def test_classify(client, dicom_path):
@@ -155,4 +169,4 @@ def test_other_error(client):
                     content_type='application/json')
     data = get_data(r)
     assert r.status_code == 500
-    assert "The path doesn't contain neither .mhd nor .dcm files" in data['error']
+    assert "The specified path does not contain dcm-files." in data['error']

@@ -64,7 +64,10 @@ services:
     volumes:
       - ./prediction/:/app
       - ./tests/assets/test_image_data/small:/images
+      - ./tests/assets/test_image_data/full:/images_full
       - ./prediction/src/algorithms/classify/assets/:/classify_models
+      - ./prediction/src/algorithms/identify/assets/:/identify_models
+      - ./data/:/app/data
     ports:
       - "8001:8001"
 

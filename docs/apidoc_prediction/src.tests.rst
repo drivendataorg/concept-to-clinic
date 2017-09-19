@@ -36,6 +36,14 @@ src.tests.test_endpoints module
     :undoc-members:
     :show-inheritance:
 
+src.tests.test_load_ct module
+-----------------------------
+
+.. automodule:: src.tests.test_load_ct
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 src.tests.test_load_dicom module
 --------------------------------
 
