@@ -28,7 +28,7 @@
 <!--- Not obligatory, but suggest an idea for implementing addition or change -->
 
 ## Checklist before submitting
-- [ ] I have confirmed this using the officially supported Docker Compose setup using the `local.py` configuration and ensured that I built the containers again and they reflect the most recent version of the project at the `HEAD` commit on the `master` branch 
+- [ ] I have confirmed this using the officially supported Docker Compose setup using the `local.yml` configuration and ensured that I built the containers again and they reflect the most recent version of the project at the `HEAD` commit on the `master` branch 
 - [ ] I have searched through the other currently open issues and am confident this is not a duplicate of an existing bug
 - [ ] I provided a **minimal code snippet** or list of steps that reproduces the bug.
 - [ ] I provided **screenshots** where appropriate
