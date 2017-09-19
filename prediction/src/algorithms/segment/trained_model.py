@@ -7,7 +7,7 @@
     descriptive statistics.
 """
 
-from src.preprocess.load_dicom import load_dicom, load_meta
+from src.preprocess.load_ct import load_ct, MetaData
 
 import numpy as np
 import os
@@ -38,7 +38,7 @@ def predict(dicom_path, centroids):
             {'binary_mask_path': str,
              'volumes': list[float]}
     """
-    load_dicom(dicom_path)
+    load_ct(dicom_path)
     segment_path = os.path.join(os.path.dirname(__file__),
                                 'assets', 'test_mask.npy')
     volumes = calculate_volume(segment_path, centroids)
@@ -50,7 +50,7 @@ def predict(dicom_path, centroids):
     return return_value
 
 
-def calculate_volume(segment_path, centroids, dicom_path=None):
+def calculate_volume(segment_path, centroids, ct_path=None):
     """ Calculates tumor volume in cubic mm if a dicom_path has been provided.
 
     Given the path to the serialized mask and a list of centroids
@@ -77,14 +77,10 @@ def calculate_volume(segment_path, centroids, dicom_path=None):
     volumes = np.bincount(mask.flatten())
     volumes = volumes[labels].tolist()
 
-    if dicom_path:
-        dicom_files = load_meta(dicom_path)
-        slice_locations = [dcm_file.SliceLocation for dcm_file in dicom_files]
-        slice_thickness = np.diff(slice_locations).mean()
-        # Every DICOM study preserve the same PixelSpacing along its sub files
-        voxel_shape = dicom_files[0].PixelSpacing
-        # Taking into account ijk -> xyz transformation
-        voxel_shape = np.prod([voxel_shape[1], voxel_shape[0], slice_thickness])
-        volumes = [volume * voxel_shape for volume in volumes]
+    if ct_path:
+        meta = load_ct(ct_path, voxel=False)
+        meta = MetaData(meta)
+        spacing = np.prod(meta.spacing)
+        volumes = [volume * spacing for volume in volumes]
 
     return volumes

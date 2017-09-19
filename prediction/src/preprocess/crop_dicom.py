@@ -1,6 +1,6 @@
 import os
 
-from .load_dicom import read_dicom_files
+from .load_ct import read_dicom_files
 
 
 def crop_dicom(path_to_dicom, begin, end, output=None):

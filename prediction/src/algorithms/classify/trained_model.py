@@ -9,11 +9,11 @@
 
 import numpy as np
 import keras.models
-from src.preprocess import load_dicom
+from src.preprocess.load_ct import load_ct, MetaData
 
 
 def predict(dicom_path, centroids, model_path=None,
-            preprocess_dicom=None, preprocess_model_input=None):
+            preprocess_ct=None, preprocess_model_input=None):
     """ Predicts if centroids are concerning or not.
 
     Given path to a DICOM image and an iterator of centroids:
@@ -30,7 +30,7 @@ def predict(dicom_path, centroids, model_path=None,
              'y': int,
              'z': int}
         model_path (str): A path to the serialized model
-        process_dicom (preprocess.preprocess_dicom.PreprocessDicom): A preprocess
+        preprocess_ct (preprocess.preprocess_dicom.PreprocessDicom): A preprocess
             method which aimed at brining the input data to the desired view.
         preprocess_model_input (callable[ndarray, list[dict]]): preprocess for a model
             input.
@@ -47,10 +47,15 @@ def predict(dicom_path, centroids, model_path=None,
         return []
 
     model = keras.models.load_model(model_path)
+    ct_array, meta = load_ct(dicom_path)
+    if preprocess_ct is not None:
+        meta = MetaData(meta)
+        ct_array = preprocess_ct(ct_array, meta)
+        if not isinstance(ct_array, np.ndarray):
+            raise TypeError('The signature of preprocess_ct must be ' +
+                            'callable[list[DICOM], ndarray] -> ndarray')
 
-    dicom_array = load_dicom.load_dicom(dicom_path, preprocess_dicom)
-    patches = preprocess_model_input(dicom_array, centroids)
-
+    patches = preprocess_model_input(ct_array, centroids)
     predictions = model.predict(patches)
     predictions = predictions.astype(np.float)
 

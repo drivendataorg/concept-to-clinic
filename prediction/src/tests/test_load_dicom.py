@@ -5,8 +5,8 @@ import dicom_numpy
 import numpy as np
 import pytest
 
-from ..preprocess import load_dicom as ld
 from ..preprocess import errors
+from ..preprocess import load_ct as ld
 
 
 @pytest.fixture
@@ -43,7 +43,7 @@ def test_extract_voxel_data(dicom_path):
 
 
 def test_load_dicom(dicom_path):
-    dicom_array = ld.load_dicom(dicom_path)
+    dicom_array, meta = ld.load_dicom(dicom_path)
 
     assert isinstance(dicom_array, np.ndarray)
 
@@ -52,6 +52,6 @@ def test_load_dicom(dicom_path):
 
 
 def test_load_meta(dicom_path):
-    dicom_series = ld.load_meta(dicom_path)
+    dicom_series = ld.load_ct(dicom_path, voxel=False)
 
     assert isinstance(dicom_series, list)

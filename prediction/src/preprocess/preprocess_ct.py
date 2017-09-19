@@ -1,9 +1,10 @@
 import numpy as np
 import scipy.ndimage
+from src.preprocess import load_ct
 
 
 class Params:
-    """Params for DICOM data preprocessing.
+    """Params for CT data preprocessing.
 
     To enshure parametrs integrity for a preprocessing class.
 
@@ -22,8 +23,11 @@ class Params:
         preprocess.preprocess_dicom.Params
     """
 
-    def __init__(self, clip_lower=None, clip_upper=None,
-                 voxel_shape=None, ndim=3, min_max_normalize=False):
+    def __init__(self, hu_transform=False, clip_lower=None, clip_upper=None,
+                 spacing=None, ndim=3, min_max_normalize=False):
+        if not isinstance(hu_transform, bool):
+            raise ValueError('The hu_transform should be bool')
+        self.hu_transform = hu_transform
         if not isinstance(clip_lower, (int, float)) and (clip_lower is not None):
             raise ValueError('The clip_lower should be int or float')
         if not isinstance(clip_upper, (int, float)) and (clip_upper is not None):
@@ -40,18 +44,17 @@ class Params:
             raise ValueError('The ndim should be greater than 0')
         self.ndim = ndim
 
-        self.voxel_shape = None
-        if voxel_shape is not None:
-            self.voxel_shape = scipy.ndimage._ni_support._normalize_sequence(voxel_shape,
-                                                                             self.ndim)
+        self.spacing = None
+        if spacing is not None:
+            self.spacing = scipy.ndimage._ni_support._normalize_sequence(spacing, self.ndim)
 
         if not isinstance(min_max_normalize, (bool, int)) and (min_max_normalize is not None):
             raise ValueError('The min_max_normalize should be bool or int')
         self.min_max_normalize = min_max_normalize
 
 
-class PreprocessDicom:
-    """Preprocess the DICOM data.
+class PreprocessCT:
+    """Preprocess the CT data.
 
     To enshure parametrs integrity for a preprocessing function.
 
@@ -67,7 +70,7 @@ class PreprocessDicom:
             So that the voxels' values will lie inside [0, 1].
 
     Returns:
-        preprocess.preprocess_dicom.Params
+        preprocess.preprocess_dicom.PreprocessCT
     """
 
     def __init__(self, params=None):
@@ -77,8 +80,10 @@ class PreprocessDicom:
                 raise ValueError('The params should be an instance of %s.' % str(Params))
         self.params = params
 
-    def __call__(self, dicom_files, voxel_data):
-        if (self.params is None) or not len(dicom_files):
+    def __call__(self, voxel_data, meta):
+        if not isinstance(meta, load_ct.MetaData):
+            raise ValueError('The meta should be an instance of %s.' % str(load_ct.MetaData))
+        if self.params is None:
             return voxel_data
 
         # Instead of np.clip usage in order to avoid np.max | np.min calculation in case of None
@@ -98,14 +103,8 @@ class PreprocessDicom:
 
             voxel_data = (voxel_data - data_min) / float(data_max - data_min)
 
-        if self.params.voxel_shape is not None:
-            slice_locations = [dcm_file.SliceLocation for dcm_file in dicom_files]
-            slice_thikness = np.diff(slice_locations).mean()
-            # Every DICOM file have the same PixelSpacing
-            current_shape = dicom_files[0].PixelSpacing
-            # Taking into account ijk -> xyz transformation
-            current_shape = np.asarray([current_shape[1], current_shape[0], slice_thikness])
-            zoom_fctr = current_shape / np.asarray(self.params.voxel_shape)
+        if self.params.spacing is not None:
+            zoom_fctr = meta.spacing / np.asarray(self.params.spacing)
             voxel_data = scipy.ndimage.interpolation.zoom(voxel_data, zoom_fctr)
 
         return voxel_data
