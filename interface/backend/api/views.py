@@ -68,24 +68,27 @@ class ImageAvailableApiView(APIView):
     def get(self, request):
         """
         Return a sorted(by name) list of files and folders
-        in dataset in the form
-        {'directories': [
-            {
-                'name': directory_name1,
-                'children': [
-                    file_name1,
-                    file_name2,
-                    {
-                        'name': 'nested_dir_1',
-                        'children': [
-                            'file_name_1',
-                            'file_name_2',
-                            ....
-                        ]
-                    }
-                    ... ]
-            }, ... ]
-        }
+        in dataset
+
+        Format::
+        
+            {'directories': [
+                {
+                    'name': directory_name1,
+                    'children': [
+                        file_name1,
+                        file_name2,
+                        {
+                            'name': 'nested_dir_1',
+                            'children': [
+                                'file_name_1',
+                                'file_name_2',
+                                ....
+                            ]
+                        }
+                        ... ]
+                }, ... ]
+            }
         """
         tree = self.walk(settings.DATASOURCE_DIR)
         return Response({'directories': tree})

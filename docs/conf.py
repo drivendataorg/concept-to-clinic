@@ -19,12 +19,15 @@
 #
 import os
 import sys
+import django
 
 DOCS_DIR = os.getcwd()
 PROJECT_DIR = os.path.abspath(os.path.join(DOCS_DIR, os.pardir))
 
 INTERFACE_DIR = os.path.join(PROJECT_DIR, 'interface')
 sys.path.insert(0, INTERFACE_DIR)
+
+django.setup()  # Needed to document interface app with sphinx
 
 PREDICTION_DIR = os.path.join(PROJECT_DIR, 'prediction')
 sys.path.insert(0, PREDICTION_DIR)
