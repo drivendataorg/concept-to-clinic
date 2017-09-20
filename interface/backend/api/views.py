@@ -71,7 +71,7 @@ class ImageAvailableApiView(APIView):
         in dataset
 
         Format::
-        
+
             {'directories': [
                 {
                     'name': directory_name1,
