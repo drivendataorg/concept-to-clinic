@@ -1,3 +1,7 @@
+import dicom
+import base64
+from PIL import Image
+from io import BytesIO
 from backend.cases.models import (
     Case,
     Candidate,
@@ -66,3 +70,71 @@ class NoduleSerializer(serializers.HyperlinkedModelSerializer):
             candidate=validated_data['candidate'],
             centroid=ImageLocation.objects.create(**validated_data['centroid']),
         )
+
+class DicomMetadataSerializer(serializers.BaseSerializer):
+    '''
+    Serialize a Dicom image metadata including a base64 version of the
+    image in following format:
+    {
+        metadata: {
+            "Specific Character Set": "ISO_IR 100",
+            "Image Type": [
+                "ORIGINAL",
+                "SECONDARY",
+                "AXIAL"
+            ],
+            "SOP Class UID": "1.2.840.10008.5.1.4.1.1.2",
+            ......
+        },
+        image: "data:image/jpg;base64,/9j/4AAQSkZJRgABAQ.....fnkw3n"
+    }
+    '''
+
+    def to_representation(self, obj):
+        '''
+        Put dicom metadata into a separate dictionary
+        '''
+        dicom_dict = {}
+        repr(obj)   # Bit hacky! But does the work to populate the elements
+        for dicom_value in obj.values():
+            if dicom_value.tag == (0x7fe0, 0x0010):
+                # discard pixel data
+                continue
+            if isinstance(dicom_value.value, dicom.dataset.Dataset):
+                dicom_dict[dicom_value.name] = self.dicom_dataset_to_dict(dicom_value.value)
+            else:
+                dicom_dict[dicom_value.name] = self._convert_value(dicom_value.value)
+        return {
+            'metadata': dicom_dict,
+            'image': self.dicom_to_base64(obj),
+        }
+
+    def dicom_to_base64(self, ds):
+        '''
+        Returning base64 encoded string for a dicom image
+        '''
+        buff_output = BytesIO()
+        img = Image.fromarray((ds.pixel_array)).convert('RGB')
+        img.save(buff_output, format='jpeg')
+        return 'data:image/jpg;base64,' + \
+                base64.b64encode(buff_output.getvalue()).decode()
+
+    def _sanitise_unicode(self, s):
+        return s.replace(u"\u0000", "").strip()
+
+    def _convert_value(self, v):
+        if isinstance(v, (list, int, float)):
+            converted_val = v
+        elif isinstance(v, str):
+            converted_val = self._sanitise_unicode(v)
+        elif isinstance(v, bytes):
+            converted_val = self._sanitise_unicode(v.decode('ascii', 'replace'))
+        elif isinstance(v, dicom.valuerep.DSfloat):
+            converted_val = float(v)
+        elif isinstance(v, dicom.valuerep.IS):
+            converted_val = int(v)
+        elif isinstance(v, dicom.valuerep.PersonName3):
+            converted_val = str(v)
+        else:
+            converted_val = repr(v)
+        return converted_val

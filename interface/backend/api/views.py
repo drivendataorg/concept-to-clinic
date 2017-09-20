@@ -2,9 +2,6 @@ import json
 import mimetypes
 import os
 import dicom
-import base64
-from PIL import Image
-from io import BytesIO
 from backend.api import serializers
 from backend.cases.models import (
     Case,
@@ -49,54 +46,6 @@ class ImageSeriesViewSet(viewsets.ModelViewSet):
 
 class ImageMetadataApiView(APIView):   
 
-    def _sanitise_unicode(self, s):
-        return s.replace(u"\u0000", "").strip()
-
-    def _convert_value(self, v):
-        t = type(v)
-        if t in (list, int, float):
-            cv = v
-        elif t == str:
-            cv = self._sanitise_unicode(v)
-        elif t == bytes:
-            s = v.decode('ascii', 'replace')
-            cv = self._sanitise_unicode(s)
-        elif t == dicom.valuerep.DSfloat:
-            cv = float(v)
-        elif t == dicom.valuerep.IS:
-            cv = int(v)
-        elif t == dicom.valuerep.PersonName3:
-            cv = str(v)
-        else:
-            cv = repr(v)
-        return cv
-
-    def dicom_dataset_to_dict(self, ds):
-        '''
-        Put dicom metadata into a separate dictionary
-        '''
-        dicom_dict = {}
-        repr(ds)
-        for dicom_value in ds.values():
-            if dicom_value.tag == (0x7fe0, 0x0010):
-                # discard pixel data
-                continue
-            if type(dicom_value.value) == dicom.dataset.Dataset:
-                dicom_dict[dicom_value.name] = self.dicom_dataset_to_dict(dicom_value.value)
-            else:
-                dicom_dict[dicom_value.name] = self._convert_value(dicom_value.value)
-        return dicom_dict
-    
-    def dicom_to_base64(self, ds):
-        '''
-        Returning base64 encoded string for a dicom image
-        '''
-        buff_output = BytesIO()
-        img = Image.fromarray((ds.pixel_array)).convert('RGB')
-        img.save(buff_output, format='jpeg')
-        return 'data:image/jpg;base64,' + \
-                base64.b64encode(buff_output.getvalue()).decode()
-
     def get(self, request):
         '''
         Get metadata of a DICOM image including the image in base64 format.
@@ -113,10 +62,7 @@ class ImageMetadataApiView(APIView):
             raise Exception('dicom_location not provided')
         path = path[1:-1]   # un-quoting the string
         ds = dicom.read_file(path, force=True)
-        return Response({
-            'metadata': self.dicom_dataset_to_dict(ds),
-            'image': self.dicom_to_base64(ds),
-        })
+        return Response(serializers.DicomMetadataSerializer(ds).data)
 
 
 class ImageAvailableApiView(APIView):
