@@ -1,17 +1,16 @@
 <template>
 <div id="app">
   <app-nav></app-nav>
-  <image-series></image-series>
+  <router-view></router-view>
 </div>
 </template>
 
 <script>
 import AppNav from './components/AppNav'
-import ImageSeries from './components/ImageSeries'
 
 export default {
   components: {
-    AppNav, ImageSeries
+    AppNav
   }
 }
 </script>

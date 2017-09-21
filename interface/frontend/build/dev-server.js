@@ -9,7 +9,7 @@ var opn = require('opn')
 var path = require('path')
 var express = require('express')
 var webpack = require('webpack')
-var proxy = require('http-proxy-middleware');
+var proxy = require('http-proxy-middleware')
 var webpackConfig = (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV === 'production')
   ? require('./webpack.prod.conf')
   : require('./webpack.dev.conf')
@@ -40,7 +40,7 @@ compiler.plugin('compilation', function (compilation) {
   })
 })
 
-app.use('/api', proxy({target:'http://interface:8000', changeOrigin:true}));
+app.use('/api', proxy({target: 'http://interface:8000', changeOrigin: true}))
 
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())
@@ -73,7 +73,7 @@ devMiddleware.waitUntilValid(() => {
   _resolve()
 })
 
-var server = app.listen(port, host);
+var server = app.listen(port, host)
 
 module.exports = {
   ready: readyPromise,

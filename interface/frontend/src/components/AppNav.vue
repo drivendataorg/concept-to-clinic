@@ -4,18 +4,18 @@
   <a class="navbar-brand" href="#">Concept To Clinic</a>
   <div class="navbar-collapse collapse" id="navbar">
     <ul class="navbar-nav justify-content-center">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Open image</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Detect and Select</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Annotate and Segment</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Report and Export</a>
-      </li>
+      <router-link to="/" tag="li" class="nav-item" exact>
+        <a class="nav-link">Open Image</a>
+      </router-link>
+      <router-link to="/detect-and-select" tag="li" class="nav-item">
+        <a class="nav-link">Detect and Select</a>
+      </router-link>
+      <router-link to="/annotate-and-segment" tag="li" class="nav-item">
+        <a class="nav-link">Annotate and Segment</a>
+      </router-link>
+      <router-link to="/report-and-export" tag="li" class="nav-item">
+        <a class="nav-link">Report and Export</a>
+      </router-link>
     </ul>
   </div>
   <span class="navbar-text">

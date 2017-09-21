@@ -30,6 +30,11 @@ class CaseSerializer(serializers.HyperlinkedModelSerializer):
 
     series = ImageSeriesSerializer()
 
+    def create(self, validated_data):
+        return Case.objects.create(
+            series=ImageSeries.objects.create(**validated_data['series']), **validated_data
+        )
+
 
 class CandidateSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
