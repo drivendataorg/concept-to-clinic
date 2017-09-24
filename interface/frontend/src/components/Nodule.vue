@@ -1,10 +1,8 @@
 <template>
 <div class="card">
-  <div class="card-header">
+  <div class="card-header" @click="toggleShow(nodule)">
     <p class="mb-0">
-      <a @click="toggleShow(nodule)">
-        <b>Nodule {{ index + 1 }}</b>
-      </a>
+      <b>Nodule {{ index + 1 }}</b>
     </p>
   </div>
 

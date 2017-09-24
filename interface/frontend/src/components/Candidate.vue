@@ -1,10 +1,8 @@
 <template>
 <div class="card">
-  <div class="card-header">
+  <div class="card-header" @click="toggleShow(candidate)">
     <p class="mb-0">
-      <a @click="toggleShow(candidate)">
-        <b>Candidate {{ index + 1 }}</b> (p={{ candidate.probability_concerning }})
-      </a>
+      <b>Candidate {{ index + 1 }}</b> (p={{ candidate.probability_concerning }})
     </p>
   </div>
 
