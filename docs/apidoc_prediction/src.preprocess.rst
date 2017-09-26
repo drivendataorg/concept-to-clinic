@@ -36,6 +36,14 @@ src.preprocess.load_dicom module
     :undoc-members:
     :show-inheritance:
 
+src.preprocess.lung_segmentation module
+---------------------------------------
+
+.. automodule:: src.preprocess.lung_segmentation
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 src.preprocess.preprocess_ct module
 -----------------------------------
 

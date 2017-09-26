@@ -1,7 +1,9 @@
 # limit memory usage..
+import glob
 import logging
 import os
 
+import cv2
 import numpy
 import pandas
 # limit memory usage..
@@ -25,6 +27,20 @@ LEARN_RATE = 0.001
 PREDICT_STEP = 12
 
 
+def load_patient_images(patient_id, base_dir=EXTRACTED_IMAGE_DIR, wildcard="*.*", exclude_wildcards=None):
+    exclude_wildcards = exclude_wildcards or []
+    src_dir = os.path.join(os.getcwd(), base_dir, patient_id)
+    src_img_paths = glob.glob(src_dir + wildcard)
+    for exclude_wildcard in exclude_wildcards:
+        exclude_img_paths = glob.glob(src_dir + exclude_wildcard)
+        src_img_paths = [im for im in src_img_paths if im not in exclude_img_paths]
+    src_img_paths.sort()
+    images = [cv2.imread(img_path, cv2.IMREAD_GRAYSCALE) for img_path in src_img_paths]
+    images = [im.reshape((1,) + im.shape) for im in images]
+    res = numpy.vstack(images)
+    return res
+
+
 def prepare_image_for_net3D(img):
     img = img.astype(numpy.float32)
     img -= MEAN_PIXEL_VALUE
@@ -34,8 +50,7 @@ def prepare_image_for_net3D(img):
 
 
 def filter_patient_nodules_predictions(df_nodule_predictions: pandas.DataFrame, patient_id, view_size):
-    src_dir = EXTRACTED_IMAGE_DIR
-    patient_mask = helpers.load_patient_images(patient_id, src_dir, "*_m.png")
+    patient_mask = load_patient_images(patient_id, wildcard="*_m.png")
     delete_indices = []
     for index, row in df_nodule_predictions.iterrows():
         z_perc = row["coord_z"]
@@ -163,11 +178,11 @@ def predict_cubes(model_path, patient_id, magnification=1, ext_name=""):  # noqa
     for patient_index, patient_id in enumerate(reversed(patient_ids)):
         logging.info(patient_index, ": ", patient_id)
 
-        patient_img = helpers.load_patient_images(patient_id, EXTRACTED_IMAGE_DIR, "*_i.png", [])
+        patient_img = load_patient_images(patient_id, wildcard="*_i.png", exclude_wildcards=[])
         if magnification != 1:
             patient_img = helpers.rescale_patient_images(patient_img, (1, 1, 1), magnification)
 
-        patient_mask = helpers.load_patient_images(patient_id, EXTRACTED_IMAGE_DIR, "*_m.png", [])
+        patient_mask = load_patient_images(patient_id, wildcard="*_m.png", exclude_wildcards=[])
         if magnification != 1:
             patient_mask = helpers.rescale_patient_images(patient_mask, (1, 1, 1), magnification, is_mask_image=True)
 

@@ -52,6 +52,14 @@ src.tests.test_load_dicom module
     :undoc-members:
     :show-inheritance:
 
+src.tests.test_lung_segmentation module
+---------------------------------------
+
+.. automodule:: src.tests.test_lung_segmentation
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 src.tests.test_preprocess_dicom module
 --------------------------------------
 
