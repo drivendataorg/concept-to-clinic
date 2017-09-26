@@ -54,8 +54,12 @@ class ImageAvailableApiView(APIView):
 
     @staticmethod
     def filename_to_dict(name, location):
-        d = {'type': 'file', 'mime_guess': mimetypes.guess_type(name)[0], 'name': name}
-        d['path'] = os.path.join(location, name)
+        d = {
+            'type': 'file',
+            'mime_guess': mimetypes.guess_type(name)[0],
+            'name': name,
+            'path': os.path.join(location, name)
+        }
         return d
 
     def walk(self, location, dir_name='/'):
@@ -71,28 +75,54 @@ class ImageAvailableApiView(APIView):
 
     def get(self, request):
         """
-        Return a sorted(by name) list of files and folders
-        in dataset
+        Return a sorted (by name) list of files and folders in dataset
 
         Format::
 
-            {'directories': [
+          {
+            "directories": {
+              "name": "/",
+              "children": [
                 {
-                    'name': directory_name1,
-                    'children': [
-                        file_name1,
-                        file_name2,
+                  "name": "LIDC-IDRI-0002",
+                  "children": [
+                    {
+                      "name": "1.3.6.1.4.1.14519.5.2.1.6279.6001.490157381160200744295382098329",
+                      "children": [
                         {
-                            'name': 'nested_dir_1',
-                            'children': [
-                                'file_name_1',
-                                'file_name_2',
-                                ....
-                            ]
+                          "name": "1.3.6.1.4.1.14519.5.2.1.6279.6001.619372068417051974713149104919",
+                          "children": [],
+                          "files": [
+                            {
+                              "type": "file",
+                              "mime_guess": "application/dicom",
+                              "name": "-80.750000.dcm",
+                              "path": "/images/LIDC-IDRI-0002/1.3.[...snip...]3149104919/-80.750000.dcm"
+                            },
+                            {
+                              "type": "file",
+                              "mime_guess": "application/dicom",
+                              "name": "-82.000000.dcm",
+                              "path": "/images/LIDC-IDRI-0002/1.3.[...snip...]3149104919/-82.000000.dcm"
+                            },
+                            ...
+                          ],
+                          "type": "folder"
                         }
-                        ... ]
-                }, ... ]
+                      ],
+                      "files": [],
+                      "type": "folder"
+                    }
+                  ],
+                  "files": [],
+                  "type": "folder"
+                }
+              ],
+              "files": [],
+              "type": "folder"
             }
+          }
+
         """
         tree = self.walk(settings.DATASOURCE_DIR)
         return Response({'directories': tree})
