@@ -1,4 +1,5 @@
 import json
+import mimetypes
 import os
 
 from backend.api import serializers
@@ -51,18 +52,21 @@ class ImageAvailableApiView(APIView):
         super(ImageAvailableApiView, self).__init__(**kwargs)
         self.fss = FileSystemStorage(settings.DATASOURCE_DIR)
 
-    def walk(self, location, dir_name='root'):
+    @staticmethod
+    def filename_to_dict(name, location):
+        d = {'type': 'file', 'mime_guess': mimetypes.guess_type(name)[0], 'name': name}
+        d['path'] = os.path.join(location, name)
+        return d
+
+    def walk(self, location, dir_name='/'):
         """
         Recursively walkthrough directories and files
         """
-        list_dirs = self.fss.listdir(location)
-        tree = {
-            'name': dir_name,
-            'children': [],
-        }
-        tree['children'] = sorted(list_dirs[1])
-        for dirname in sorted(list_dirs[0]):
-            tree['children'].append(self.walk(os.path.join(location, dirname), dirname))
+        folders, files = self.fss.listdir(location)
+        tree = {'name': dir_name, 'children': []}
+        tree['files'] = [self.filename_to_dict(filename, location) for filename in sorted(files)]
+        tree['type'] = 'folder'
+        tree['children'] = [self.walk(os.path.join(location, dir), dir) for dir in folders]
         return tree
 
     def get(self, request):
