@@ -49,18 +49,15 @@ class ImageMetadataApiView(APIView):
     def get(self, request):
         '''
         Get metadata of a DICOM image including the image in base64 format.
-        Example: .../api/images/metadata?dicom_location='FULL_PATH_TO_IMAGE'
+        Example: .../api/images/metadata?dicom_location=FULL_PATH_TO_IMAGE
         ---
         parameters:
             - name: dicom_location
-            description: 'QUOTED' full location of the image
+            description: full location of the image
             required: true
             type: string
         '''
-        path = request.GET.get('dicom_location')
-        if path is None:
-            raise Exception('dicom_location not provided')
-        path = path[1:-1]   # un-quoting the string
+        path = request.GET['dicom_location']
         ds = dicom.read_file(path, force=True)
         return Response(serializers.DicomMetadataSerializer(ds).data)
 
