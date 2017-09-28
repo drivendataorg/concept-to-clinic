@@ -71,6 +71,7 @@ class NoduleSerializer(serializers.HyperlinkedModelSerializer):
             centroid=ImageLocation.objects.create(**validated_data['centroid']),
         )
 
+
 class DicomMetadataSerializer(serializers.BaseSerializer):
     '''
     Serialize a Dicom image metadata including a base64 version of the
@@ -116,8 +117,9 @@ class DicomMetadataSerializer(serializers.BaseSerializer):
         buff_output = BytesIO()
         img = Image.fromarray((ds.pixel_array)).convert('RGB')
         img.save(buff_output, format='jpeg')
-        return 'data:image/jpg;base64,' + \
-                base64.b64encode(buff_output.getvalue()).decode()
+        preamble = 'data:image/jpg;base64,'
+        base64_encoded = base64.b64encode(buff_output.getvalue()).decode()
+        return preamble + base64_encoded
 
     def _sanitise_unicode(self, s):
         return s.replace(u"\u0000", "").strip()
