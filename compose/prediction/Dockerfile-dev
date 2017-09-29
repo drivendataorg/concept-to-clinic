@@ -1,6 +1,9 @@
-FROM python:3.6
+FROM ubuntu:rolling
 ENV PYTHONUNBUFFERED 1
-
+RUN apt-get update && apt-get install -y tcl tk python3.6 python3.6-tk wget python-opencv
+RUN wget https://bootstrap.pypa.io/get-pip.py
+RUN python3.6 get-pip.py
+RUN ln -s /usr/bin/python3.6 /usr/local/bin/python
 # Requirements have to be pulled and installed here, otherwise caching won't work
 COPY ./prediction/requirements /requirements
 RUN pip install -r /requirements/local.txt

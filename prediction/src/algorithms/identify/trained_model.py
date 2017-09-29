@@ -7,11 +7,9 @@
     for where the centroids of nodules are in the DICOM image.
 """
 
-import glob
+import SimpleITK as sitk
 
-import dicom
-from src.preprocess.errors import EmptyDicomSeriesException
-from src.preprocess.lung_segmentation import save_lung_segments
+from src.algorithms.identify.src import gtr123_model
 
 from . import prediction
 
@@ -40,22 +38,32 @@ def predict(dicom_path):
              'z': int,
              'p_nodule': float}
     """
-    if dicom_path[-1] != '/':
-        dicom_path += '/'
-    dicom_files = glob.glob(dicom_path + "*.dcm")
-    if not dicom_files:
-        raise EmptyDicomSeriesException
-    patient_id = dicom.read_file(dicom_files[0]).SeriesInstanceUID
-    z, x, y = save_lung_segments(dicom_path, patient_id)
-    results_df = run_prediction(patient_id)
-    results_df['coord_x'] *= x
-    results_df['coord_y'] *= y
-    results_df['coord_z'] *= z
-    rescaled_results_df = results_df[['coord_x', 'coord_y', 'coord_z', 'nodule_chance']].copy()
-    rescaled_results_df.columns = ['x', 'y', 'z', 'p_nodule']
-    rescaled_results_df[['x', 'y', 'z']] = rescaled_results_df[['x', 'y', 'z']].astype(int)
-    rescaled_dict = rescaled_results_df.to_dict(orient='record')
-    return rescaled_dict
+
+    reader = sitk.ImageSeriesReader()
+    filenames = reader.GetGDCMSeriesFileNames(dicom_path)
+    if not filenames:
+        raise ValueError("The path doesn't contain neither .mhd nor .dcm files")
+
+    reader.SetFileNames(reader.GetGDCMSeriesFileNames(dicom_path))
+    image = reader.Execute()
+    result = gtr123_model.predict(image)
+    return result
+    # if dicom_path[-1] != '/':
+    #     dicom_path += '/'
+    # dicom_files = glob.glob(dicom_path + "*.dcm")
+    # if not dicom_files:
+    #     raise EmptyDicomSeriesException
+    # patient_id = dicom.read_file(dicom_files[0]).SeriesInstanceUID
+    # z, x, y = save_lung_segments(dicom_path, patient_id)
+    # results_df = run_prediction(patient_id)
+    # results_df['coord_x'] *= x
+    # results_df['coord_y'] *= y
+    # results_df['coord_z'] *= z
+    # rescaled_results_df = results_df[['coord_x', 'coord_y', 'coord_z', 'nodule_chance']].copy()
+    # rescaled_results_df.columns = ['x', 'y', 'z', 'p_nodule']
+    # rescaled_results_df[['x', 'y', 'z']] = rescaled_results_df[['x', 'y', 'z']].astype(int)
+    # rescaled_dict = rescaled_results_df.to_dict(orient='record')
+    # return rescaled_dict
 
 
 def run_prediction(patient_id, magnification=1, ext_name="luna_posnegndsb_v", version=1, holdout=1):

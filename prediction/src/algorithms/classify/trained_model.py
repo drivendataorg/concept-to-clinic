@@ -7,9 +7,10 @@
     for if nodules are concerning or not.
 """
 
-import numpy as np
-import keras.models
+from src.algorithms.classify.src import gtr123_model
 from src.preprocess.load_ct import load_ct, MetaData
+
+import SimpleITK as sitk
 
 
 def predict(dicom_path, centroids, model_path=None,
@@ -43,23 +44,26 @@ def predict(dicom_path, centroids, model_path=None,
              'z': int,
              'p_concerning': float}
     """
-    if not len(centroids) or model_path is None:
-        return []
+    reader = sitk.ImageSeriesReader()
+    filenames = reader.GetGDCMSeriesFileNames(dicom_path)
 
-    model = keras.models.load_model(model_path)
-    ct_array, meta = load_ct(dicom_path)
-    if preprocess_ct is not None:
-        meta = MetaData(meta)
-        ct_array = preprocess_ct(ct_array, meta)
-        if not isinstance(ct_array, np.ndarray):
-            raise TypeError('The signature of preprocess_ct must be ' +
-                            'callable[list[DICOM], ndarray] -> ndarray')
+    if not filenames:
+        raise ValueError("The path doesn't contain neither .mhd nor .dcm files")
 
-    patches = preprocess_model_input(ct_array, centroids)
-    predictions = model.predict(patches)
-    predictions = predictions.astype(np.float)
+    reader.SetFileNames(filenames)
+    image = reader.Execute()
 
-    for i, centroid in enumerate(centroids):
-        centroid['p_concerning'] = predictions[i, 0]
+    if preprocess_ct:
+        meta = load_ct(dicom_path)[1]
+        voxel_data = preprocess_ct(image, MetaData(meta))
+    else:
+        voxel_data = image
 
-    return centroids
+    if preprocess_model_input:
+        preprocessed = preprocess_model_input(voxel_data, centroids)
+    else:
+        preprocessed = voxel_data
+
+    model_path = model_path or "src/algorithms/classify/assets/gtr123_model.ckpt"
+
+    return gtr123_model.predict(preprocessed, centroids, model_path)

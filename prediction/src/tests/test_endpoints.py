@@ -4,11 +4,12 @@
 
     Provides unit tests for the API endpoints.
 """
-import json
 import os
 from functools import partial
+import json
 
 import pytest
+
 from flask import url_for
 from src.algorithms import classify, identify, segment
 from src.factory import create_app
@@ -169,4 +170,4 @@ def test_other_error(client):
                     content_type='application/json')
     data = get_data(r)
     assert r.status_code == 500
-    assert "The specified path does not contain dcm-files." in data['error']
+    assert "The path doesn't contain neither .mhd nor .dcm files" in data['error']

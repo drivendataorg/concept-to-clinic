@@ -1,3 +1,4 @@
+import torch  # noqa # pylint: disable=unused-import
 import sys
 import os
 
