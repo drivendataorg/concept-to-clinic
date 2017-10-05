@@ -35,7 +35,9 @@ script:
 - pycodestyle prediction
 - sh tests/test_docker.sh
 notifications:
-  webhooks: https://app.fossa.io/hooks/travisci
+  webhooks:
+  - https://app.fossa.io/hooks/travisci
+  - https://webhooks.gitter.im/e/90ccb5b48655747c3e9d
   email: false
   slack:
     rooms:
