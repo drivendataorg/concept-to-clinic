@@ -1,5 +1,7 @@
-<template id="">
-
+<template id="annotate">
+  <div class="container">
+    This is the Annotate component
+  </div>
 </template>
 
 <script>
