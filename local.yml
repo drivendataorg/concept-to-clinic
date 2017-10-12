@@ -61,6 +61,8 @@ services:
     environment:
       - FLASK_DEBUG=1
       - FLASK_APP=src/factory.py
+      - LC_ALL=C.UTF-8
+      - LANG=C.UTF-8
     volumes:
       - ./prediction/:/app
       - ./tests/assets/test_image_data/small:/images
