@@ -1,3 +1,4 @@
 -r interface/requirements/local.txt
+-r prediction/requirements/base.txt
 -r prediction/requirements/local.txt
 -r docs/requirements.txt

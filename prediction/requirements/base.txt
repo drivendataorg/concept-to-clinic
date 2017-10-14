@@ -10,4 +10,3 @@ opencv-python==3.3.0.10
 pandas==0.20.3
 scikit-image==0.13.0
 SimpleITK==1.0.1
-http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp36-cp36m-manylinux1_x86_64.whl
