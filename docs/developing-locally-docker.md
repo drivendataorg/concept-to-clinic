@@ -50,7 +50,7 @@ And then run:
     $ docker-compose up
 
 You should now be able to open a browser and interact with the services:
- 
+
 - `interface` frontend at http://localhost:8080
 - `interface` API at http://localhost:8000/api/
 - `prediction` service at http://localhost:8001
@@ -59,6 +59,80 @@ You should now be able to open a browser and interact with the services:
 ## Code changes
 
 Because `local.yml` has the volume mappings `./interface/:/app` and `./prediction/:/app` (the project dirs containing all of the code into the container's source code directory), changes made to files during development should be reflected in the running `interface` or `prediction` container as soon as the dev server process restarts.
+
+## Create JSON data
+
+First use the testing fixture factories to create some data in your local database:
+
+```bash
+docker-compose -f local.yml run interface python manage.py shell_plus
+
+Python 3.6.2 (default, Sep  8 2017, 06:15:13)
+[GCC 4.9.2] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from backend.cases.factories import *
+>>> case = CaseFactory()
+>>> candidates = CandidateFactory.create_batch(5, case=case)
+>>> nodule0 = NoduleFactory(candidate=candidates[0])
+>>> nodule1 = NoduleFactory(candidate=candidates[1])
+>>> nodule4 = NoduleFactory(candidate=candidates[4])
+[exit]
+```
+
+Then run the API: `docker-compose -f local.yml up interface`
+
+And if you go to `http://[IP of your docker, could be localhost]:8000/api/` you can play with the data you just created:
+![](https://user-images.githubusercontent.com/1284973/31413578-f65dfb36-ade7-11e7-9775-cea3dff4501e.png)
+
+For instance, here's the list of nodules we just created:  
+
+```JSON
+[
+    {
+        "url": "http://localhost:8000/api/nodules/1/",
+        "centroid": {
+            "id": 6,
+            "x": 324,
+            "y": 285,
+            "z": 59,
+            "series": 6
+        },
+        "created": "2017-10-10T22:16:35.620318Z",
+        "lung_orientation": 0,
+        "case": "http://localhost:8000/api/cases/2/",
+        "candidate": "http://localhost:8000/api/candidates/1/"
+    },
+    {
+        "url": "http://localhost:8000/api/nodules/2/",
+        "centroid": {
+            "id": 7,
+            "x": 49,
+            "y": 227,
+            "z": 31,
+            "series": 7
+        },
+        "created": "2017-10-10T22:16:44.436150Z",
+        "lung_orientation": 0,
+        "case": "http://localhost:8000/api/cases/3/",
+        "candidate": "http://localhost:8000/api/candidates/2/"
+    },
+    {
+        "url": "http://localhost:8000/api/nodules/3/",
+        "centroid": {
+            "id": 8,
+            "x": 242,
+            "y": 339,
+            "z": 22,
+            "series": 8
+        },
+        "created": "2017-10-10T22:16:50.403528Z",
+        "lung_orientation": 0,
+        "case": "http://localhost:8000/api/cases/4/",
+        "candidate": "http://localhost:8000/api/candidates/5/"
+    }
+]
+```
 
 ## Running the tests
 
@@ -100,4 +174,3 @@ To check if the created pre-commit hook is working without having to do a commit
 If you want to run the stack in detached mode (in the background without console output), use the `-d` argument:
 
     $ docker-compose -f local.yml up -d
-
