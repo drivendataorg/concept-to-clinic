@@ -9,9 +9,8 @@
 
 import SimpleITK as sitk
 
-from src.algorithms.identify.src import gtr123_model
-
 from . import prediction
+from .src import gtr123_model
 
 
 def predict(dicom_path):

@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.ndimage
-from src.preprocess import load_ct
+
+from . import load_ct
 
 
 class Params:

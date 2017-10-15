@@ -1,10 +1,11 @@
 import torch
 import numpy as np
-from torch.autograd import Variable
-from torch import nn
 import SimpleITK as sitk
 
-from src.preprocess.gtr123_preprocess import lum_trans, resample
+from torch import nn
+from torch.autograd import Variable
+
+from ....preprocess.gtr123_preprocess import lum_trans, resample
 
 """"
 Classification model from team gtr123

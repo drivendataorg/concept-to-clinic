@@ -1,12 +1,13 @@
 import torch
 from torch import nn
 from torch.autograd import Variable
-from src.preprocess.extract_lungs import extract_lungs
-from src.preprocess.gtr123_preprocess import lum_trans, resample
 from scipy.special import expit
 
 import SimpleITK as sitk
 import numpy as np
+
+from ....preprocess.extract_lungs import extract_lungs
+from ....preprocess.gtr123_preprocess import lum_trans, resample
 
 """"
 Detector model from team gtr123

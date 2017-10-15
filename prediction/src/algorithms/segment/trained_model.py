@@ -7,11 +7,11 @@
     descriptive statistics.
 """
 
-from src.preprocess.load_ct import load_ct, MetaData
-
 import numpy as np
 import os
 import scipy.ndimage
+
+from ...preprocess.load_ct import load_ct, MetaData
 
 
 def predict(dicom_path, centroids):

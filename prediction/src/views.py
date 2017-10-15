@@ -6,9 +6,9 @@
 """
 from flask import Blueprint, jsonify, request
 
-from .algorithms import classify
-from .algorithms import identify
-from .algorithms import segment
+from .algorithms.classify import trained_model as classify_trained_model
+from .algorithms.identify import trained_model as identify_trained_model
+from .algorithms.segment import trained_model as segment_trained_model
 
 
 blueprint = Blueprint('blueprint', __name__)
@@ -16,9 +16,9 @@ blueprint = Blueprint('blueprint', __name__)
 
 # The predict methods for each of the possible ML algorithms
 PREDICTORS = {
-    'classify': classify.trained_model.predict,
-    'identify': identify.trained_model.predict,
-    'segment': segment.trained_model.predict
+    'classify': classify_trained_model.predict,
+    'identify': identify_trained_model.predict,
+    'segment': segment_trained_model.predict
 }
 
 
