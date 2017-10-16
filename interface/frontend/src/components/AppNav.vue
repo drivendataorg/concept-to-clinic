@@ -34,7 +34,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .navbar > img {
   height: 20px;
   padding: 2px;

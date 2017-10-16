@@ -15,8 +15,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .container {
   margin-top: 72px;
+  a {
+    color: red;
+  }
 }
 </style>

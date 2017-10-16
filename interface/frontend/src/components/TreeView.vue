@@ -75,7 +75,7 @@
   }
 </script>
 
-<style>
+<style lang="scss" scoped>
   .item {
     cursor: pointer;
   }
