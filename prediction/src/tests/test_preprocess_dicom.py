@@ -30,37 +30,26 @@ def test_create_params():
 
 
 def test_preprocess_dicom_pure(dicom_path):
-    params = preprocess_ct.Params()
-    preprocess = preprocess_ct.PreprocessCT(params)
+    preprocess = preprocess_ct.PreprocessCT()
 
     dicom_array, meta = load_ct.load_dicom(dicom_path)
     assert isinstance(dicom_array, np.ndarray)
 
-    dicom_array, meta = load_ct.load_dicom(dicom_path)
-    meta = load_ct.MetaData(meta)
-    dicom_array = preprocess(dicom_array, meta)
+    dicom_array = preprocess(*load_ct.load_dicom(dicom_path))
     assert isinstance(dicom_array, np.ndarray)
 
 
 def test_preprocess_dicom_clips(dicom_path):
-    params = preprocess_ct.Params(clip_lower=-1, clip_upper=40)
-    preprocess = preprocess_ct.PreprocessCT(params)
-
-    dicom_array, meta = load_ct.load_ct(dicom_path)
-    meta = load_ct.MetaData(meta)
-    dicom_array = preprocess(dicom_array, meta)
+    preprocess = preprocess_ct.PreprocessCT(clip_lower=-1, clip_upper=40)
+    dicom_array = preprocess(*load_ct.load_ct(dicom_path))
     assert isinstance(dicom_array, np.ndarray)
     assert dicom_array.max() <= 40
     assert dicom_array.min() >= -1
 
 
 def test_preprocess_dicom_min_max_scale(dicom_path):
-    params = preprocess_ct.Params(clip_lower=-1000, clip_upper=400, min_max_normalize=True)
-    preprocess = preprocess_ct.PreprocessCT(params)
-
-    dicom_array, meta = load_ct.load_ct(dicom_path)
-    meta = load_ct.MetaData(meta)
-    dicom_array = preprocess(dicom_array, meta)
+    preprocess = preprocess_ct.PreprocessCT(clip_lower=-1000, clip_upper=400, min_max_normalize=True)
+    dicom_array = preprocess(*load_ct.load_ct(dicom_path))
     assert isinstance(dicom_array, np.ndarray)
     assert dicom_array.max() <= 1
     assert dicom_array.min() >= 0

@@ -42,7 +42,7 @@ def test_load_metaimage(metaimage_path, dicom_path):
 def test_load_ct(metaimage_path, dicom_path):
     ct_array, meta = load_ct.load_ct(dicom_path)
     assert isinstance(ct_array, np.ndarray)
-    assert ct_array.shape[2] == len(meta)
+    assert ct_array.shape[0] == len(meta)
 
     ct_array, meta = load_ct.load_ct(metaimage_path)
     assert isinstance(ct_array, np.ndarray)
@@ -68,11 +68,11 @@ def test_load_meta(metaimage_path, dicom_path):
 def test_metadata(metaimage_path, dicom_path):
     meta = load_ct.load_ct(dicom_path, voxel=False)
     meta = load_ct.MetaData(meta)
-    zipped = zip(meta.spacing, (0.703125, 0.703125, 2.5))
+    zipped = zip(meta.spacing, (2.5, 0.703125, 0.703125))
     assert all([m_axis == o_axis for m_axis, o_axis in zipped])
 
     meta = load_ct.load_ct(metaimage_path, voxel=False)
-    spacing = list(reversed(meta.GetSpacing()))
+    spacing = meta.GetSpacing()[::-1]
     meta = load_ct.MetaData(meta)
     assert meta.spacing == spacing
 

@@ -12,7 +12,7 @@ def ct_path():
 def test_patches_from_ct(ct_path):
     ct_array, meta = load_ct.load_ct(ct_path)
     meta = load_ct.MetaData(meta)
-    centroids = [[507, -21, -177], [547, -121, -220], [530, -221, -277]]
+    centroids = [[-177, -21, 507], [-220, -121, 547], [-277, -221, 530]]
     centroids = [{'x': centroid[0], 'y': centroid[1], 'z': centroid[2]} for centroid in centroids]
     patches = crop_patches.patches_from_ct(ct_array, patch_shape=12, centroids=centroids, meta=meta)
     assert isinstance(patches, list)

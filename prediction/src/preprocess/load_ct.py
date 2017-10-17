@@ -31,7 +31,7 @@ def _extract_voxel_data(datasets):
         print('Exception extracting voxel data: ', e)
         raise dicom_numpy.DicomImportException('Invalid dicom.dataset.Dataset among datasets! ', e)
 
-    return voxel_ndarray
+    return voxel_ndarray.T
 
 
 def load_dicom(path, voxel=True):
@@ -117,6 +117,13 @@ class MetaData:
         meta (list[dicom.dataset.FileDataset] | SimpleITK.SimpleITK.Image): CT's meta information
             from one of the primary formats.
 
+    Attributes:
+        meta (list[dicom.dataset.FileDataset] | SimpleITK.SimpleITK.Image): preserved CT's meta information
+            in original format.
+        origin (list[float]): the origin of the CT scan in mm.
+        spacing (list[float]): voxel size along the axes in mm,
+            might be changed by some spatial deformation such as re-sampling.
+
     Returns:
         preprocess.load_dicom.MetaData
     """
@@ -125,24 +132,24 @@ class MetaData:
         slice_thickness = float(self.meta[0].SliceThickness)
         # Every DICOM file have the same PixelSpacing
         spacing = self.meta[0].PixelSpacing
-        # Taking into account ijk -> xyz transformation
-        if self.xyz_order:
-            return [spacing[1], spacing[0], slice_thickness]
+        # Taking into account zyx order
         return [slice_thickness, spacing[0], spacing[1]]
 
     def extract_spacing_mhd(self):
-        if self.xyz_order:
-            return list(reversed(self.meta.GetSpacing()))
-        return self.meta.GetSpacing()
+        return self.meta.GetSpacing()[::-1]
 
     def extract_origin_mhd(self):
-        if self.xyz_order:
-            return list(reversed(self.meta.GetOrigin()))
-        return self.meta.GetSpacing()
+        return self.meta.GetOrigin()[::-1]
 
-    def __init__(self, meta, xyz_order=True):
+    def non_copy_constructor(self, meta_instance):
+        self.meta = meta_instance.meta
+        self.spacing = meta_instance.spacing
+        self.origin = meta_instance.origin
+
+    def __init__(self, meta):
         self.meta = meta
-        self.xyz_order = xyz_order
+        self.spacing = None
+        self.origin = None
 
         dicom_meta = False
         if isinstance(self.meta, list) and self.meta:
@@ -155,5 +162,7 @@ class MetaData:
             # list of methods for MetaImage meta
             self.spacing = self.extract_spacing_mhd()
             self.origin = self.extract_origin_mhd()
+        elif isinstance(self.meta, MetaData):
+            self.non_copy_constructor(meta)
         else:
             raise ValueError('The meta should be either list[dicom.dataset.FileDataset] or SimpleITK.SimpleITK.Image')

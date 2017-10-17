@@ -36,7 +36,7 @@ def test_extract_voxel_data(dicom_path):
     dicom_array = ld._extract_voxel_data(files)
 
     assert isinstance(dicom_array, np.ndarray)
-    assert dicom_array.shape[2] == len(files)
+    assert dicom_array.shape[0] == len(files)
 
     with pytest.raises(dicom_numpy.DicomImportException):
         ld._extract_voxel_data([dicom.dataset.Dataset()])

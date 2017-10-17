@@ -7,10 +7,10 @@
     for if nodules are concerning or not.
 """
 
-from .src import gtr123_model
-from ...preprocess.load_ct import load_ct, MetaData
 
 import SimpleITK as sitk
+from src.algorithms.classify.src import gtr123_model
+from src.preprocess.load_ct import load_ct
 
 
 def predict(dicom_path, centroids, model_path=None,
@@ -54,8 +54,7 @@ def predict(dicom_path, centroids, model_path=None,
     image = reader.Execute()
 
     if preprocess_ct:
-        meta = load_ct(dicom_path)[1]
-        voxel_data = preprocess_ct(image, MetaData(meta))
+        voxel_data = preprocess_ct(load_ct(dicom_path))
     else:
         voxel_data = image
 
