@@ -5,7 +5,11 @@ RUN wget https://bootstrap.pypa.io/get-pip.py
 RUN python3.6 get-pip.py
 RUN ln -s /usr/bin/python3.6 /usr/local/bin/python
 # Requirements have to be pulled and installed here, otherwise caching won't work
-COPY ./prediction/requirements /requirements
-RUN pip install -r /requirements/local.txt
+COPY ./prediction/requirements/local.txt /requirements/prediction/local.txt
+RUN pip install -r /requirements/prediction/local.txt
+COPY ./prediction/requirements/torch.txt /requirements/prediction/torch.txt
+RUN pip install -r /requirements/prediction/torch.txt
+COPY ./prediction/requirements/base.txt /requirements/prediction/base.txt
+RUN pip install -r /requirements/prediction/base.txt
 
 WORKDIR /app

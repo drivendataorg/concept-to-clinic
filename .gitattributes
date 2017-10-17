@@ -1,8 +1,5 @@
-prediction/src/algorithms/identify/assets/ filter=lfs diff=lfs merge=lfs -text
-prediction/src/algorithms/classify/assets/ filter=lfs diff=lfs merge=lfs -text
-prediction/src/algorithms/segment/assets/ filter=lfs diff=lfs merge=lfs -text
-tests/assets/test_image_data/small/**/*.dcm -filter=lfs -diff=lfs -merge=lfs -text
-test/assets/* filter=lfs diff=lfs merge=lfs -text
+prediction/src/algorithms/**/assets/* filter=lfs diff=lfs merge=lfs -text
+test/assets/test_image_data/full/**/* filter=lfs diff=lfs merge=lfs -text
 *.dcm filter=lfs diff=lfs merge=lfs -text
 *.h5 filter=lfs diff=lfs merge=lfs -text
 *.npy filter=lfs diff=lfs merge=lfs -text
@@ -10,3 +7,4 @@ test/assets/* filter=lfs diff=lfs merge=lfs -text
 *.mhd filter=lfs diff=lfs merge=lfs -text
 *.raw filter=lfs diff=lfs merge=lfs -text
 *.ckpt filter=lfs diff=lfs merge=lfs -text
+tests/assets/test_image_data/small/**/* -filter=lfs -diff=lfs -merge=lfs -text

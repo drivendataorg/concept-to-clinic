@@ -7,12 +7,14 @@ import cv2
 import dicom
 import numpy
 import scipy
+
 from dicom.errors import InvalidDicomError
 from skimage.filters import roberts
 from skimage.measure import label, regionprops
 from skimage.morphology import disk, binary_erosion, binary_closing
 from skimage.segmentation import clear_border
-from src.algorithms.identify.helpers import rescale_patient_images
+
+from ..algorithms.identify.helpers import rescale_patient_images
 
 
 def get_z_range(dicom_path):

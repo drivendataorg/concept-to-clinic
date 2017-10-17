@@ -7,8 +7,8 @@
     for if nodules are concerning or not.
 """
 
-from src.algorithms.classify.src import gtr123_model
-from src.preprocess.load_ct import load_ct, MetaData
+from .src import gtr123_model
+from ...preprocess.load_ct import load_ct, MetaData
 
 import SimpleITK as sitk
 

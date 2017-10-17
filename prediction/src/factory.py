@@ -4,9 +4,13 @@
 
     Provides the flask application
 """
-import config
 
 from flask import Flask
+
+try:
+    from .. import config
+except ValueError:
+    import config
 
 
 def create_app(config_mode='Production', config_file=None):
@@ -36,7 +40,10 @@ def create_app(config_mode='Production', config_file=None):
     if config_file:
         app.config.from_pyfile(config_file)
     elif config_mode:
-        app.config.from_object(getattr(config, config_mode))
+        try:
+            app.config.from_object(getattr(config, config_mode))
+        except AttributeError:
+            pass
     else:
         app.config.from_envvar('APP_SETTINGS', silent=True)
 
