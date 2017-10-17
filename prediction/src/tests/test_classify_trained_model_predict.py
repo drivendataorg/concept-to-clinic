@@ -4,9 +4,9 @@ from ..algorithms.classify import trained_model
 
 
 @pytest.fixture
-def dicom_path():
-    yield '../images/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
-          '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192'
+def metaimage_path():
+    yield '../images/LUNA-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.102133688497886810253331438797/' \
+          '1.3.6.1.4.1.14519.5.2.1.6279.6001.102133688497886810253331438797.mhd'
 
 
 @pytest.fixture
@@ -14,19 +14,17 @@ def model_path():
     yield 'src/algorithms/classify/assets/gtr123_model.ckpt'
 
 
-def test_classify_predict_model_load(dicom_path, model_path):
-    predicted = trained_model.predict(dicom_path,
+def test_classify_predict_model_load(metaimage_path, model_path):
+    predicted = trained_model.predict(metaimage_path,
                                       [],
-                                      model_path,
-                                      preprocess_ct=None,
-                                      preprocess_model_input=None)
+                                      model_path)
 
     assert len(predicted) == 0
 
 
-def test_classify_predict_inference(dicom_path, model_path):
-    predicted = trained_model.predict(dicom_path,
-                                      [{'x': 50, 'y': 50, 'z': 21}],
+def test_classify_predict_inference(metaimage_path, model_path):
+    predicted = trained_model.predict(metaimage_path,
+                                      [{"z": 556, "y": 100, "x": 0}],
                                       model_path)
 
     assert len(predicted) == 1

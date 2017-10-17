@@ -136,9 +136,11 @@ class MetaData:
         return [slice_thickness, spacing[0], spacing[1]]
 
     def extract_spacing_mhd(self):
+        # the default axes order which is used is: (z, y, x)
         return self.meta.GetSpacing()[::-1]
 
     def extract_origin_mhd(self):
+        # the default axes order which is used is: (z, y, x)
         return self.meta.GetOrigin()[::-1]
 
     def non_copy_constructor(self, meta_instance):

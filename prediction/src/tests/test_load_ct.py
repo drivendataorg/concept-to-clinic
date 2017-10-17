@@ -5,7 +5,6 @@ import SimpleITK
 import dicom
 import numpy as np
 import pytest
-
 from src.preprocess import load_ct
 
 
@@ -72,6 +71,7 @@ def test_metadata(metaimage_path, dicom_path):
     assert all([m_axis == o_axis for m_axis, o_axis in zipped])
 
     meta = load_ct.load_ct(metaimage_path, voxel=False)
+    # the default axes order which is used is: (z, y, x)
     spacing = meta.GetSpacing()[::-1]
     meta = load_ct.MetaData(meta)
     assert meta.spacing == spacing

@@ -1,13 +1,10 @@
+import numpy as np
 import torch
+from scipy.special import expit
+from src.preprocess import preprocess_ct, load_ct
+from src.preprocess.extract_lungs import extract_lungs
 from torch import nn
 from torch.autograd import Variable
-from scipy.special import expit
-
-import SimpleITK as sitk
-import numpy as np
-
-from ....preprocess.extract_lungs import extract_lungs
-from ....preprocess.gtr123_preprocess import lum_trans, resample
 
 """"
 Detector model from team gtr123
@@ -34,11 +31,12 @@ config['aug_scale'] = True
 config['r_rand_crop'] = 0.3
 config['pad_value'] = 170
 
-__all__ = ["Net", "lum_trans", "resample", "GetPBB", "SplitComb"]
+__all__ = ["Net", "GetPBB", "SplitComb"]
 
 
 class PostRes(nn.Module):
     """ """
+
     def __init__(self, n_in, n_out, stride=1):
         super(PostRes, self).__init__()
         self.conv1 = nn.Conv3d(n_in, n_out, kernel_size=3, stride=stride, padding=1)
@@ -181,6 +179,7 @@ class Net(nn.Module):
 
 class GetPBB(object):
     """ """
+
     def __init__(self, stride=4, anchors=(10.0, 30.0, 60.)):
         self.stride = stride
         self.anchors = np.asarray(anchors)
@@ -211,6 +210,7 @@ class GetPBB(object):
 
 class SplitComb(object):
     """ """
+
     def __init__(self, side_len, max_stride, stride, margin, pad_value):
         self.side_len = side_len
         self.max_stride = max_stride
@@ -446,7 +446,7 @@ def filter_lungs(image, spacing=(1, 1, 1), fill_value=170):
     return extracted, mask
 
 
-def predict(image_itk, model_path="src/algorithms/identify/assets/dsb2017_detector.ckpt"):
+def predict(ct_path, model_path="src/algorithms/identify/assets/dsb2017_detector.ckpt"):
     """
 
     Args:
@@ -458,10 +458,10 @@ def predict(image_itk, model_path="src/algorithms/identify/assets/dsb2017_detect
       List of Nodule locations and probabilities
 
     """
-
-    spacing = np.array(image_itk.GetSpacing())[::-1]
-    image = sitk.GetArrayFromImage(image_itk)
-    masked_image, mask = filter_lungs(image)
+    ct_array, meta = load_ct.load_ct(ct_path)
+    meta = load_ct.MetaImage(meta)
+    spacing = np.array(meta.spacing)
+    masked_image, mask = filter_lungs(ct_array)
     # masked_image = image
     net = Net()
     net.load_state_dict(torch.load(model_path)["state_dict"])
@@ -473,11 +473,12 @@ def predict(image_itk, model_path="src/algorithms/identify/assets/dsb2017_detect
     # We have to use small batches until the next release of PyTorch, as bigger ones will segfault for CPU
     # split_comber = SplitComb(side_len=int(32), margin=16, max_stride=16, stride=4, pad_value=170)
     # Transform image to the 0-255 range and resample to 1x1x1mm
-    imgs = lum_trans(masked_image)
-    imgs = resample(imgs, spacing, np.array([1, 1, 1]), order=1)[0]
-    imgs = imgs[np.newaxis, ...]
+    preprocess = preprocess_ct.PreprocessCT(clip_lower=-1200., clip_upper=600., spacing=1., order=1,
+                                            min_max_normalize=True, scale=255, dtype='uint8')
+    ct_array, meta = preprocess(ct_array, meta)
+    ct_array = ct_array[np.newaxis, ...]
 
-    imgT, coords, nzhw = split_data(imgs, split_comber=split_comber)
+    imgT, coords, nzhw = split_data(ct_array, split_comber=split_comber)
     results = []
     # Loop over the image chunks
     for img, coord in zip(imgT, coords):

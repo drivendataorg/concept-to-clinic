@@ -1,11 +1,8 @@
-import torch
 import numpy as np
-import SimpleITK as sitk
-
+import torch
+from src.preprocess import load_ct, preprocess_ct, crop_patches
 from torch import nn
 from torch.autograd import Variable
-
-from ....preprocess.gtr123_preprocess import lum_trans, resample
 
 """"
 Classification model from team gtr123
@@ -224,55 +221,11 @@ class CaseNet(nn.Module):
         return nodulePred, casePred, out
 
 
-class SimpleCrop(object):
-    """ """
-
-    def __init__(self):
-        self.crop_size = config['crop_size']
-        self.scaleLim = config['scaleLim']
-        self.radiusLim = config['radiusLim']
-        self.stride = config['stride']
-        self.filling_value = config['filling_value']
-
-    def __call__(self, imgs, target):
-        crop_size = np.array(self.crop_size).astype('int')
-
-        start = (target[:3] - crop_size / 2).astype('int')
-        pad = [[0, 0]]
-
-        for i in range(3):
-            if start[i] < 0:
-                leftpad = -start[i]
-                start[i] = 0
-            else:
-                leftpad = 0
-            if start[i] + crop_size[i] > imgs.shape[i + 1]:
-                rightpad = start[i] + crop_size[i] - imgs.shape[i + 1]
-            else:
-                rightpad = 0
-
-            pad.append([leftpad, rightpad])
-
-        imgs = np.pad(imgs, pad, 'constant', constant_values=self.filling_value)
-        crop = imgs[:, start[0]:start[0] + crop_size[0], start[1]:start[1] + crop_size[1],
-                    start[2]:start[2] + crop_size[2]]
-
-        normstart = np.array(start).astype('float32') / np.array(imgs.shape[1:]) - 0.5
-        normsize = np.array(crop_size).astype('float32') / np.array(imgs.shape[1:])
-        xx, yy, zz = np.meshgrid(np.linspace(normstart[0], normstart[0] + normsize[0], self.crop_size[0] / self.stride),
-                                 np.linspace(normstart[1], normstart[1] + normsize[1], self.crop_size[1] / self.stride),
-                                 np.linspace(normstart[2], normstart[2] + normsize[2], self.crop_size[2] / self.stride),
-                                 indexing='ij')
-        coord = np.concatenate([xx[np.newaxis, ...], yy[np.newaxis, ...], zz[np.newaxis, :]], 0).astype('float32')
-
-        return crop, coord
-
-
-def predict(image_itk, nodule_list, model_path="src/algorithms/classify/assets/gtr123_model.ckpt"):
+def predict(ct_path, nodule_list, model_path="src/algorithms/classify/assets/gtr123_model.ckpt"):
     """
 
     Args:
-      image_itk: ITK dicom image
+      ct_path (str): path to a MetaImage or DICOM data.
       nodule_list: List of nodules
       model_path: Path to the torch model (Default value = "src/algorithms/classify/assets/gtr123_model.ckpt")
 
@@ -292,20 +245,14 @@ def predict(image_itk, nodule_list, model_path="src/algorithms/classify/assets/g
     # else:
         # casenet = torch.nn.parallel.DistributedDataParallel(casenet)
 
-    image = sitk.GetArrayFromImage(image_itk)
-    spacing = np.array(image_itk.GetSpacing())[::-1]
-    image = lum_trans(image)
-    image = resample(image, spacing, np.array([1, 1, 1]), order=1)[0]
-
-    crop = SimpleCrop()
-
+    preprocess = preprocess_ct.PreprocessCT(clip_lower=-1200., clip_upper=600., spacing=1., order=1,
+                                            min_max_normalize=True, scale=255, dtype='uint8')
+    ct_array, meta = preprocess(*load_ct.load_ct(ct_path))
+    patches = crop_patches.patches_from_ct(ct_array, meta, config['crop_size'], nodule_list,
+                                           stride=config['stride'], pad_value=config['filling_value'])
     results = []
-    for nodule in nodule_list:
-        print(nodule)
-        nod_location = np.array([np.float32(nodule[s]) for s in ["z", "y", "x"]])
-        nod_location *= spacing
-        cropped_image, coords = crop(image[np.newaxis], nod_location)
-        cropped_image = Variable(torch.from_numpy(cropped_image[np.newaxis]).float())
+    for nodule, (cropped_image, coords) in zip(nodule_list, patches):
+        cropped_image = Variable(torch.from_numpy(cropped_image[np.newaxis, np.newaxis]).float())
         cropped_image.volatile = True
         coords = Variable(torch.from_numpy(coords[np.newaxis]).float())
         coords.volatile = True

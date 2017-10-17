@@ -7,7 +7,7 @@ from . import load_ct
 
 
 class Params:
-    """Params for CT data pre-processing.
+    """Params for CT scan pre-processing.
 
     To ensure parameters integrity for a pre-processing class.
 
@@ -27,19 +27,19 @@ class Params:
             So that the voxels' values will lie inside [0, 1]. The default value is False.
         scale (float): the value by which will magnitude be scaled.
             If None is set (default), then no scaling will applied.
-        dtype (str): the desired data-type of a returned array. Should be from `np.typeDict.keys()`
+        dtype (str): the desired data-type of a returned array. Should be a valid key from `np.typeDict`
             If None is set (default), then no casting will applied.
 
     Returns:
         preprocess.preprocess_dicom.Params
     """
 
-    def __init__(self, clip_lower=None, clip_upper=None, spacing=None, order=0,
+    def __init__(self, clip_lower=None, clip_upper=None, spacing=None, order=0,  # noqa: C901
                  ndim=3, min_max_normalize=False, scale=None, dtype=None):
         if not isinstance(clip_lower, (int, float)) and (clip_lower is not None):
-            raise ValueError('The clip_lower should be int or float')
+            raise TypeError('The clip_lower should be int or float')
         if not isinstance(clip_upper, (int, float)) and (clip_upper is not None):
-            raise ValueError('The clip_upper should be int or float')
+            raise TypeError('The clip_upper should be int or float')
         if (clip_lower is not None) and (clip_upper is not None):
             if clip_lower > clip_upper:
                 raise ValueError('The clip_upper should be grater or equal to clip_lower')
@@ -47,7 +47,7 @@ class Params:
         self.clip_upper = clip_upper
 
         if not isinstance(ndim, int):
-            raise ValueError('The ndim should be int')
+            raise TypeError('The ndim should be int')
         if ndim <= 1:
             raise ValueError('The ndim should be greater than 0')
         self.ndim = ndim
@@ -57,11 +57,11 @@ class Params:
             self.spacing = scipy.ndimage._ni_support._normalize_sequence(spacing, self.ndim)
 
         if not isinstance(min_max_normalize, (bool, int)) and (min_max_normalize is not None):
-            raise ValueError('The min_max_normalize should be bool or int')
+            raise TypeError('The min_max_normalize should be bool or int')
         self.min_max_normalize = min_max_normalize
 
         if not isinstance(scale, (int, float)) and (scale is not None):
-            raise ValueError('The scale should be float or int')
+            raise TypeError('The scale should be float or int')
         self.scale = scale
 
         if not isinstance(order, int) or not (4 >= order >= 0):
@@ -69,12 +69,12 @@ class Params:
         self.order = order
 
         if dtype not in np.typeDict.keys() and (dtype is not None):
-            raise ValueError('The dtype should be one of appropriate np.dtype')
+            raise ValueError('The dtype should be a valid key from `np.typeDict`')
         self.dtype = dtype
 
 
 class PreprocessCT(Params):
-    """Preprocess the CT data.
+    """Pre-process the CT data.
 
     To ensure parameters integrity for a pre-processing function.
 
@@ -137,4 +137,4 @@ class PreprocessCT(Params):
         if self.dtype:
             voxel_data = voxel_data.astype(dtype=self.dtype, copy=False)
 
-        return voxel_data
+        return voxel_data, meta
