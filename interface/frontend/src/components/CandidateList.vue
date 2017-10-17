@@ -33,14 +33,13 @@ export default {
   },
   methods: {
     fetchCandidates () {
-      this.$axios.get('/api/candidates').then(
-        (response) => {
+      this.$axios.get('/api/candidates')
+        .then((response) => {
           this.candidates = response.data
-        },
-        () => {
-          // error callback
-        }
-      )
+        })
+        .catch(() => {
+          // TODO: error callback
+        })
     }
   }
 }

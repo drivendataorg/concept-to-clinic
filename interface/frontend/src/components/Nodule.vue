@@ -48,12 +48,13 @@ export default {
       this.isOpen = !this.isOpen
     },
     update (nodule) {
-      this.$axios.put(nodule.url, { lung_orientation: this.selected }).then((response) => {
-        console.log(response)
-      },
-      () => {
-        // error callback
-      })
+      this.$axios.put(nodule.url, { lung_orientation: this.selected })
+        .then((response) => {
+          console.log(response)
+        })
+        .catch(() => {
+          // TODO: error callback
+        })
     }
   }
 }

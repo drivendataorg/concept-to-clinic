@@ -68,24 +68,22 @@ export default {
       this.isOpen = !this.isOpen
     },
     mark (candidate) {
-      this.$axios.get(candidate.url + 'mark').then(
-        (response) => {
+      this.$axios.get(candidate.url + 'mark')
+        .then((response) => {
           console.log(response)
-        },
-        () => {
-          // error callback
-        }
-      )
+        })
+        .catch(() => {
+          // TODO: error callback
+        })
     },
     dismiss (candidate) {
-      this.$axios.get(candidate.url + 'dismiss').then(
-        (response) => {
+      this.$axios.get(candidate.url + 'dismiss')
+        .then((response) => {
           console.log(response)
-        },
-        () => {
-          // error callback
-        }
-      )
+        })
+        .catch(() => {
+          // TODO: error callback
+        })
     }
   }
 }

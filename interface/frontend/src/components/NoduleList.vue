@@ -33,14 +33,13 @@ export default {
   },
   methods: {
     fetchNodules () {
-      this.$axios.get('/api/nodules.json').then(
-        (response) => {
+      this.$axios.get('/api/nodules.json')
+        .then((response) => {
           this.nodules = response.data
-        },
-        () => {
-          // error callback
-        }
-      )
+        })
+        .catch(() => {
+          // TODO: error callback
+        })
     }
   }
 }

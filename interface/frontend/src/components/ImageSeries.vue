@@ -99,12 +99,12 @@
     },
     methods: {
       fetchData () {
-        this.$http.get('/api/images/').then(
-          (response) => {
+        this.$axios.get('/api/images/')
+          .then((response) => {
             this.availableSeries = response.body
-          },
-          () => {
-            // error callback
+          })
+          .catch(() => {
+            // TODO: handle error
           })
       },
       selectSeries (series) {
@@ -112,14 +112,13 @@
         this.selected = series
       },
       fetchAvailableImages () {
-        this.$http.get('/api/images/available').then(
-          (response) => {
+        this.$axios.get('/api/images/available')
+          .then((response) => {
             this.directories = response.body.directories
-          },
-          () => {
-            // error callback
-          }
-        )
+          })
+          .catch(() => {
+            // TODO: handle error
+          })
       }
     }
   }
