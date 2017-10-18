@@ -1,111 +1,71 @@
 <template>
-<div id="annotate" class="container">
-  <div class="card-header row-space-between">
-    <h1>Nodule 1 (predicted)</h1>
+  <div id="annotate">
     <a @click="update(nodule)">
-        <button type="button" class="btn btn-sm btn-success">Accept</button>
-      </a>
-  </div>
+      <button type="button" class="btn btn-block btn-success">Accept</button>
+    </a>
+    <hr/>
 
-  <div class="concern-slider-container">
-    <div class="concern-labels row-space-between">
-      <span>Not concerning</span>
-      <span>Concerning</span>
-    </div>
-    <div class="concern-slider">
-      <input id="test" type="range" />
-    </div>
-    <div class="concern-value row-space-between">
-      <span class="predicted">
-					<span class="label">Predicted</span>
-      <span class="value">98%</span>
-      </span>
-      <span class="labeled">
-					<span class="label">Labeled</span>
-      <span class="value">100%</span>
-      </span>
-    </div>
+    <concern-slider v-model="concernValue" predictedValue="98"></concern-slider>
+
+    <hr/>
 
     <div class="lung-select-container">
-      <select>
-					<option>Left lung</option>
-					<option>Right lung</option>
-				</select>
-    </div>
-
-    <div class="solidity-radio-container">
       <form>
-        <input type="radio" name="solidity" value="solid" checked> Solid
-				<br>
-        <input type="radio" name="solidity" value="semi-solid"> Semi-solid
-				<br>
-        <input type="radio" name="solidity" value="ground-glass"> Ground glass
+        <radio-input v-model="lungSide" name="lung" value="left" label="Left lung"></radio-input>
+        <radio-input v-model="lungSide" name="lung" value="right" label="Right lung"></radio-input>
       </form>
     </div>
 
-    <div class="severity-radio-container">
-			<form>
-				<input type="radio" name="severity" value="unchaged" checked> Unchanged
-				<br>
-				<input type="radio" name="severity" value="increased"> Increased
-				<br>
-				<input type="radio" name="severity" value="decreased"> Decreased
-				<br>
-				<input type="radio" name="severity" value="new"> New
-			</form>
+    <hr>
+
+    <div class="solidity-radio-container">
+      <form>
+        <radio-input v-model="solidity" name="solidity" value="solid" label="Solid"></radio-input>
+        <radio-input v-model="solidity" name="solidity" value="semi-solid" label="Semi-solid"></radio-input>
+        <radio-input v-model="solidity" name="solidity" value="ground-glass" label="Ground glass"></radio-input>
+      </form>
     </div>
 
+    <hr>
+
+    <div class="severity-radio-container">
+      <form>
+        <radio-input v-model="condition" name="condition" value="unchanged" label="Unchanged"></radio-input>
+        <radio-input v-model="condition" name="condition" value="increased" label="Increased"></radio-input>
+        <radio-input v-model="condition" name="condition" value="decreased" label="Decreased"></radio-input>
+        <radio-input v-model="condition" name="condition" value="new" label="New"></radio-input>
+      </form>
+    </div>
+
+    <hr>
+
     <div class="note-container">
-      <textarea name="name" rows="3" style="width:100%;" placeholder="Add notes">
-			</textarea>
+      <textarea class="form-control"  name="name" rows="3" style="width:100%;" placeholder="Add notes">
+      </textarea>
     </div>
 
   </div>
-</div>
 </template>
 
 <script>
+import RadioInput from './RadioInput'
+
+import ConcernSlider from './ConcernSlider'
+
 export default {
-  props: ['nodule', 'index']
+  components: { RadioInput, ConcernSlider },
+  props: ['nodule', 'index'],
+  data () {
+    return {
+      solidity: 'solid',
+      condition: 'unchanged',
+      lungSide: 'left',
+      concernValue: 50
+    }
+  }
 }
 </script>
 
 <style scoped>
-.container {
-  width: 45vw;
-  display: flex;
-  flex-direction: column;
-}
 
-.row-space-between {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.card-header {
-  align-items: center;
-  height: 90px;
-  padding: 1em;
-}
-
-.card-header h1 {
-  margin: 0;
-  font-size: 1em;
-  font-weight: bold;
-}
-
-.concern-labels {
-  margin: 1em;
-}
-
-.concern-slider {
-  display: flex;
-  justify-content: center;
-}
-
-.concern-slider input {
-  width: 100%;
-  margin: 1em;
-}
 </style>
