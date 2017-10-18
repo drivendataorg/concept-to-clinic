@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="offset-top">
     <nodule-list annotate="true"></nodule-list>
   </div>
 </template>
@@ -13,3 +13,16 @@ export default {
   }
 }
 </script>
+
+<style media="screen">
+.offset-top {
+  margin-top: 5em;
+}
+
+@media screen and (max-width: 990px) {
+  .offset-top {
+    margin-top: 10em;
+  }
+}
+
+</style>
