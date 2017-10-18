@@ -25,6 +25,11 @@
       <a @click="update(nodule)">
         <button type="button" class="btn btn-sm btn-secondary">Accept</button>
       </a>
+      <!-- L: With the add-on-editor slot, this component can be
+              extended with a variety of foreign editor.
+            Check NoduleList for example usage
+          -->
+      <slot name="add-on-editor"></slot>
     </div>
   </div>
 </div>

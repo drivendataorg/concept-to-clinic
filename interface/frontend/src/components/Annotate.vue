@@ -66,26 +66,7 @@
 
 <script>
 export default {
-  data () {
-    return {
-      isOpen: false,
-      selected: this.nodule.lung_orientation,
-      lungOrientations: this.$constants.lungOrientations
-    }
-  },
-  created () {
-    if (this.index === 0) {
-      this.isOpen = true
-    }
-  },
-  methods: {
-    toggleShow (nodule) {
-      this.isOpen = !this.isOpen
-    },
-    update (nodule) {
-
-    }
-  }
+  props: ['nodule', 'index']
 }
 </script>
 
