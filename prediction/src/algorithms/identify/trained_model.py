@@ -41,7 +41,8 @@ def predict(dicom_path):
     reader = sitk.ImageSeriesReader()
     filenames = reader.GetGDCMSeriesFileNames(dicom_path)
     if not filenames:
-        raise ValueError("The path doesn't contain neither .mhd nor .dcm files")
+        message = "The path {} doesn't contain any .mhd or .dcm files"
+        raise ValueError(message.format(dicom_path))
 
     reader.SetFileNames(reader.GetGDCMSeriesFileNames(dicom_path))
     image = reader.Execute()

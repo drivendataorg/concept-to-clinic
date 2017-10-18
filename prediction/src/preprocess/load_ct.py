@@ -101,7 +101,8 @@ def load_ct(path, voxel=True):
     elif mhd_pattern:
         meta = load_metaimage(mhd_pattern, voxel=voxel)
     else:
-        raise ValueError('The path doesn\'t contain neither .mhd nor .dcm files.')
+        message = "Neither path {} nor {} contain any .mhd or .dcm files"
+        raise ValueError(message.format(dicom_pattern, mhd_pattern))
 
     return meta
 
