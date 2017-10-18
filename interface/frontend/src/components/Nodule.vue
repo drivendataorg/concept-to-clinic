@@ -50,18 +50,18 @@ export default {
 }
 </script>
 
-<style scoped media="screen">
+<style lang="scss" scoped media="screen">
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 45px;
   padding: 1em;
-}
 
-.card-header h1 {
-  margin: 0;
-  font-size: 1em;
-  font-weight: bold;
+  h1 {
+    margin: 0;
+    font-size: 1em;
+    font-weight: bold;
+  }
 }
 </style>

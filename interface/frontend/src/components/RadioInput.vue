@@ -21,7 +21,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 /* Radio button style inspired by https://codepen.io/jchristianhall/pen/cvFrm */
 .radio {
   display: inline-block;
@@ -29,54 +29,54 @@ export default {
   line-height: 50px;
   font-size: 1em;
   cursor: pointer;
+
+  input {
+    height: 1px;
+    width: 1px;
+    opacity: 0;
+  }
+
+  input:checked + .outer .inner {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  input:checked + .outer {
+    border-color: #f08b3b;
+  }
+
+  input:focus + .outer .inner {
+    transform: scale(1);
+    opacity: 1;
+    background-color: #e67012;
+  }
+
+  .outer {
+    display: block;
+    float: left;
+    margin: 10px 9px 10px 10px;
+    border: 3px solid #0c70b4;
+    border-radius: 50%;
+    background-color: #fff;
+  }
+
+  .inner {
+    transition: all 0.25s ease-in-out;
+    height: 16px;
+    width: 16px;
+
+    transform: scale(0);
+    display: block;
+    margin: 2px;
+    border-radius: 50%;
+    background-color: #f08b3b;
+    opacity: 0;
+  }
 }
 
 .radio:hover .inner {
   transform: scale(0.5);
   opacity: .5;
-}
-
-.radio input {
-  height: 1px;
-  width: 1px;
-  opacity: 0;
-}
-
-.radio input:checked + .outer .inner {
-  transform: scale(1);
-  opacity: 1;
-}
-
-.radio input:checked + .outer {
-  border-color: #f08b3b;
-}
-
-.radio input:focus + .outer .inner {
-  transform: scale(1);
-  opacity: 1;
-  background-color: #e67012;
-}
-
-.radio .outer {
-  display: block;
-  float: left;
-  margin: 10px 9px 10px 10px;
-  border: 3px solid #0c70b4;
-  border-radius: 50%;
-  background-color: #fff;
-}
-.radio .inner {
-
-  transition: all 0.25s ease-in-out;
-  height: 16px;
-  width: 16px;
-
-  transform: scale(0);
-  display: block;
-  margin: 2px;
-  border-radius: 50%;
-  background-color: #f08b3b;
-  opacity: 0;
 }
 
 </style>

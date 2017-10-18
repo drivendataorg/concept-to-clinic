@@ -5,14 +5,14 @@
     </a>
     <hr/>
 
-    <concern-slider v-model="concernValue" predictedValue="98"></concern-slider>
+    <concern-slider v-model="concerning" :predictedValue="nodule.predicted_concerning"></concern-slider>
 
     <hr/>
 
     <div class="lung-select-container">
       <form>
-        <radio-input v-model="lungSide" name="lung" value="left" label="Left lung"></radio-input>
-        <radio-input v-model="lungSide" name="lung" value="right" label="Right lung"></radio-input>
+        <radio-input v-model="lungOrientation" name="lung" :value="lungOrientations.left" label="Left lung"></radio-input>
+        <radio-input v-model="lungOrientation" name="lung" :value="lungOrientations.right" label="Right lung"></radio-input>
       </form>
     </div>
 
@@ -40,7 +40,7 @@
     <hr>
 
     <div class="note-container">
-      <textarea class="form-control"  name="name" rows="3" style="width:100%;" placeholder="Add notes">
+      <textarea class="form-control" v-model="note" rows="3" style="width:100%;" placeholder="Add notes">
       </textarea>
     </div>
 
@@ -57,10 +57,29 @@ export default {
   props: ['nodule', 'index'],
   data () {
     return {
+      lungOrientations: this.$constants.lungOrientations,
       solidity: 'solid',
       condition: 'unchanged',
-      lungSide: 'left',
-      concernValue: 50
+      lungOrientation: this.nodule.lung_orientation,
+      concerning: 50,
+      note: ''
+    }
+  },
+  created () {
+    // console.log(this.nodule)
+  },
+  methods: {
+    update (nodule) {
+      this.$axios.put(nodule.url, {
+        solidity: this.solidity,
+        concerning: this.concerning,
+        lung_orientation: this.lungOrientation,
+        condition: this.condition,
+        note: this.note
+      })
+      .then((response) => {
+        console.log(response)
+      }, console.error)
     }
   }
 }

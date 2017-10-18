@@ -43,7 +43,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .row-space-between {
   display: flex;
   flex-direction: row;
@@ -57,13 +57,12 @@ export default {
 .concern-slider {
   display: flex;
   justify-content: center;
-}
-
-.concern-slider input[type=range] {
-  width: 100%;
-  height: 1.8em;
-  padding: 0 1em;
-  -webkit-appearance: none;
+  input[type=range] {
+    width: 100%;
+    height: 1.8em;
+    padding: 0 1em;
+    -webkit-appearance: none;
+  }
 }
 
 /*Range input inspired by https://codepen.io/egrucza/pen/LEoOQZ*/
@@ -109,5 +108,4 @@ input[type=range]:focus {
 input[type=range]::-webkit-slider-thumb:active {
   cursor: -webkit-grabbing;
 }
-
 </style>
