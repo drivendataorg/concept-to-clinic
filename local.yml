@@ -26,10 +26,10 @@ services:
       - DEBUG=True
       - DJANGO_SETTINGS_MODULE=config.settings.local
     volumes:
-      - ./interface/:/app
-      - ./tests/assets/test_image_data/small:/images
-      - ./.git/logs/HEAD:/HEAD
-      - ./prediction/src/algorithms/classify/assets/:/classify_models
+      - ./interface/:/app:cached
+      - ./tests/assets/test_image_data/small:/images:cached
+      - ./.git/logs/HEAD:/HEAD:cached
+      - ./prediction/src/algorithms/classify/assets/:/classify_models:cached
     ports:
       - "8000:8000"
 
@@ -41,13 +41,13 @@ services:
     depends_on:
       - interface
     volumes:
-      - ./interface/frontend/src:/app/src
-      - ./interface/frontend/build:/app/build
-      - ./interface/frontend/config:/app/config
-      - ./interface/frontend/dist:/app/dist
-      - ./interface/frontend/static:/app/static
-      - ./interface/frontend/test:/app/test
-      - ./.git/logs/HEAD:/HEAD
+      - ./interface/frontend/src:/app/src:cached
+      - ./interface/frontend/build:/app/build:cached
+      - ./interface/frontend/config:/app/config:cached
+      - ./interface/frontend/dist:/app/dist:cached
+      - ./interface/frontend/static:/app/static:cached
+      - ./interface/frontend/test:/app/test:cached
+      - ./.git/logs/HEAD:/HEAD:cached
     links:
       - interface
     ports:
@@ -64,31 +64,31 @@ services:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
     volumes:
-      - ./prediction/:/app
-      - ./tests/assets/test_image_data/small:/images
-      - ./tests/assets/test_image_data/full:/images_full
-      - ./prediction/src/algorithms/classify/assets/:/classify_models
-      - ./prediction/src/algorithms/identify/assets/:/identify_models
-      - ./data/:/app/data
+      - ./prediction/:/app:cached
+      - ./tests/assets/test_image_data/small:/images:cached
+      - ./tests/assets/test_image_data/full:/images_full:cached
+      - ./prediction/src/algorithms/classify/assets/:/classify_models:cached
+      - ./prediction/src/algorithms/identify/assets/:/identify_models:cached
+      - ./data/:/app/data:cached
     ports:
       - "8001:8001"
 
   compile_docs:
-      restart: always
-      depends_on:
-        - postgres
-      environment:
-        - POSTGRES_USER=concepttoclinic
-        - USE_DOCKER=yes
-        - SECRET_KEY=notverysecret
-        - DEBUG=True
-        - DJANGO_SETTINGS_MODULE=config.settings.local
-      build:
-        context: .
-        dockerfile: ./compose/documentation/Dockerfile-dev
-      volumes:
-        - ./:/app
-      command: bash -c "source compose/interface/entrypoint.sh && make -C /app/docs html"
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_USER=concepttoclinic
+      - USE_DOCKER=yes
+      - SECRET_KEY=notverysecret
+      - DEBUG=True
+      - DJANGO_SETTINGS_MODULE=config.settings.local
+    build:
+      context: .
+      dockerfile: ./compose/documentation/Dockerfile-dev
+    volumes:
+      - ./:/app:cached
+    command: bash -c "source compose/interface/entrypoint.sh && make -C /app/docs html"
 
   documentation:
     build:
@@ -98,8 +98,8 @@ services:
       - compile_docs
     working_dir: /app/docs/_build/html
     volumes:
-      - ./docs/_build/html:/app/docs/_build/html
-      - ./:/app
+      - ./docs/_build/html:/app/docs/_build/html:cached
+      - ./:/app:cached
     command: python -m http.server
     ports:
       - "8002:8000"
