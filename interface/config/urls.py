@@ -4,9 +4,11 @@ from django.conf.urls import (
     url
 )
 from django.views.static import serve
+from django.views.generic import RedirectView
 
 urlpatterns = (
     url(r'^api/', include('backend.api.urls', namespace='')),
+    url(r'^', RedirectView.as_view(url='api/'), name="available-routes"),
 )
 
 if settings.DEBUG:
