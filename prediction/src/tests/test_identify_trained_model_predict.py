@@ -27,7 +27,6 @@ def nodule_locations_003():
     yield {"x": 369, "y": 347, "z": 6}
 
 
-@pytest.mark.skipif(skip_slow_test, reason='Takes very long')
 def test_identify_nodules_001(dicom_path_001, nodule_locations_001):
     predicted = trained_model.predict(dicom_path_001)
 
