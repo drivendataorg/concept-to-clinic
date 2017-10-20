@@ -14,13 +14,7 @@ from flask import url_for
 from src.algorithms import classify, identify, segment
 from src.factory import create_app
 
-
-def skip_slow_test():
-    """
-    Skip the wrapped test function unless the environment variable RUN_SLOW_TESTS is set.
-    """
-    value = os.environ.get('RUN_SLOW_TESTS')
-    return value.lower() not in {'1', 'true'}
+from . import skip_if_slow
 
 
 def get_data(response):
@@ -73,7 +67,7 @@ def test_endpoint_documentation(client):
         assert data['description'] == docstrings[algorithm]
 
 
-@pytest.mark.skipif(skip_slow_test, reason='Takes very long')
+@skip_if_slow
 def test_identify(client, dicom_path):
     url = client.url_for('predict', algorithm='identify')
     test_data = dict(dicom_path=dicom_path)

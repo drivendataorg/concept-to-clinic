@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
+from . import skip_if_slow
 from ..algorithms.identify import trained_model
-from ..tests.test_endpoints import skip_slow_test
 
 
 @pytest.fixture
@@ -27,7 +27,7 @@ def nodule_locations_003():
     yield {"x": 369, "y": 347, "z": 6}
 
 
-@pytest.mark.skipif(skip_slow_test, reason='Takes very long')
+@skip_if_slow
 def test_identify_nodules_001(dicom_path_001, nodule_locations_001):
     predicted = trained_model.predict(dicom_path_001)
 
@@ -38,7 +38,7 @@ def test_identify_nodules_001(dicom_path_001, nodule_locations_001):
     assert (dist < 10)
 
 
-@pytest.mark.skipif(skip_slow_test, reason='Takes very long')
+@skip_if_slow
 def test_identify_nodules_003(dicom_path_003, nodule_locations_003):
     predicted = trained_model.predict(dicom_path_003)
 
