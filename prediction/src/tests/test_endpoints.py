@@ -70,7 +70,7 @@ def test_endpoint_documentation(client):
 @skip_if_slow
 def test_identify(client, dicom_path):
     url = client.url_for('predict', algorithm='identify')
-    test_data = dict(dicom_path=dicom_path)
+    test_data = {'dicom_path': dicom_path}
 
     r = client.post(url,
                     data=json.dumps(test_data),
@@ -89,7 +89,7 @@ def test_identify(client, dicom_path):
 
 def test_classify(client, dicom_path):
     url = client.url_for('predict', algorithm='classify')
-    test_data = dict(dicom_path=dicom_path, centroids=[])
+    test_data = {'dicom_path': dicom_path, 'centroids': []}
 
     r = client.post(url,
                     data=json.dumps(test_data),
@@ -101,7 +101,7 @@ def test_classify(client, dicom_path):
 
 def test_segment(client, dicom_path):
     url = client.url_for('predict', algorithm='segment')
-    test_data = dict(dicom_path=dicom_path, centroids=[])
+    test_data = {'dicom_path': dicom_path, 'centroids': []}
 
     r = client.post(url,
                     data=json.dumps(test_data),
@@ -123,7 +123,7 @@ def test_bad_algorithm(client):
 def test_wrong_parameter(client):
     # dicom_path missing
     url = client.url_for('predict', algorithm='identify')
-    test_data = dict()
+    test_data = {}
 
     r = client.post(url,
                     data=json.dumps(test_data),
@@ -135,7 +135,7 @@ def test_wrong_parameter(client):
 
     # centroids missing
     url = client.url_for('predict', algorithm='segment')
-    test_data = dict(dicom_path='')
+    test_data = {'dicom_path': ''}
 
     r = client.post(url,
                     data=json.dumps(test_data),
@@ -147,7 +147,7 @@ def test_wrong_parameter(client):
 
     # centroids unnecessary
     url = client.url_for('predict', algorithm='identify')
-    test_data = dict(dicom_path='', centroids=[])
+    test_data = {'dicom_path': '', 'centroids': []}
 
     r = client.post(url,
                     data=json.dumps(test_data),
@@ -163,7 +163,7 @@ def test_other_error(client):
     url = client.url_for('predict', algorithm='identify')
 
     # non-existent dicom path as example
-    test_data = dict(dicom_path='/')
+    test_data = {'dicom_path': '/'}
 
     r = client.post(url,
                     data=json.dumps(test_data),

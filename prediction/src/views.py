@@ -59,7 +59,7 @@ def predict(algorithm):
     """
 
     # dictionary to hold the response
-    response = dict()
+    response = {}
 
     # string to contain error message
     error = ""
