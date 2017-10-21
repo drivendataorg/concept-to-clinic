@@ -99,7 +99,7 @@
     },
     methods: {
       fetchData () {
-        this.$axios.get('/api/images/')
+        this.$http.get('/api/images/')
           .then((response) => {
             this.availableSeries = response.body
           })
@@ -112,7 +112,7 @@
         this.selected = series
       },
       fetchAvailableImages () {
-        this.$axios.get('/api/images/available')
+        this.$http.get('/api/images/available')
           .then((response) => {
             this.directories = response.body.directories
           })

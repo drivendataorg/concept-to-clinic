@@ -1,6 +1,7 @@
 import json
 import mimetypes
 import os
+
 import dicom
 from backend.api import serializers
 from backend.cases.models import (
@@ -13,8 +14,8 @@ from backend.images.models import ImageSeries
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view
 from rest_framework import viewsets
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -40,7 +41,6 @@ class ImageSeriesViewSet(viewsets.ModelViewSet):
 
 
 class ImageMetadataApiView(APIView):
-
     def get(self, request):
         '''
         Get metadata of a DICOM image including the image in base64 format.
@@ -76,15 +76,28 @@ class ImageAvailableApiView(APIView):
         }
         return d
 
+    @staticmethod
+    def is_hidden(location):
+        """
+        Check whether a file or a directory is hidden.
+        """
+        return os.path.basename(location).startswith('.')
+
     def walk(self, location, dir_name='/'):
         """
         Recursively walkthrough directories and files
         """
         folders, files = self.fss.listdir(location)
-        tree = {'name': dir_name, 'children': []}
-        tree['files'] = [self.filename_to_dict(filename, location) for filename in sorted(files)]
-        tree['type'] = 'folder'
-        tree['children'] = [self.walk(os.path.join(location, dir), dir) for dir in folders]
+        tree = {
+            'name': dir_name,
+            'type': 'folder',
+            'files': [self.filename_to_dict(filename, location)
+                      for filename in sorted(files)
+                      if not self.is_hidden(filename)],
+            'children': [self.walk(os.path.join(location, dir), dir)
+                         for dir in sorted(folders)
+                         if not self.is_hidden(dir)]
+        }
         return tree
 
     def get(self, request):
