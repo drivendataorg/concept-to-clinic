@@ -73,7 +73,7 @@ class NoduleSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class DicomMetadataSerializer(serializers.BaseSerializer):
-    '''
+    """
     Serialize a Dicom image metadata including a base64 version of the
     image in following format:
     {
@@ -89,12 +89,12 @@ class DicomMetadataSerializer(serializers.BaseSerializer):
         },
         image: "data:image/jpg;base64,/9j/4AAQSkZJRgABAQ.....fnkw3n"
     }
-    '''
+    """
 
     def to_representation(self, obj):
-        '''
+        """
         Put dicom metadata into a separate dictionary
-        '''
+        """
         dicom_dict = {}
         repr(obj)   # Bit hacky! But does the work to populate the elements
         for dicom_value in obj.values():
@@ -111,9 +111,9 @@ class DicomMetadataSerializer(serializers.BaseSerializer):
         }
 
     def dicom_to_base64(self, ds):
-        '''
+        """
         Returning base64 encoded string for a dicom image
-        '''
+        """
         buff_output = BytesIO()
         img = Image.fromarray((ds.pixel_array)).convert('RGB')
         img.save(buff_output, format='jpeg')

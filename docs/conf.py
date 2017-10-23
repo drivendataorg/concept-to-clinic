@@ -23,6 +23,7 @@ import django
 
 DOCS_DIR = os.getcwd()
 PROJECT_DIR = os.path.abspath(os.path.join(DOCS_DIR, os.pardir))
+sys.path.insert(0, PROJECT_DIR)
 
 INTERFACE_DIR = os.path.join(PROJECT_DIR, 'interface')
 sys.path.insert(0, INTERFACE_DIR)
