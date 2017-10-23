@@ -5,3 +5,7 @@ div#version {
   right: 1rem;
   z-index: 10000;
 }
+
+div.container {
+  width: 100%;
+}
