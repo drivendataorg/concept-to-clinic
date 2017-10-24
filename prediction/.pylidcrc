@@ -1,0 +1,3 @@
+[dicom]
+path = /images_full
+warn = True

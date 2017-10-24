@@ -39,7 +39,7 @@ def load_dicom(path, voxel=True):
 
     Args:
         path (str): contains the path to the folder containing the dcm-files of a series.
-        voxel (bool): whether to return or not to return  voxel data of the CT scan
+        voxel (bool): whether to return or not to return voxel data of the CT scan
 
     Returns:
         voxel_data (np.ndarray): numpy-array containing the 3D-representation of the DICOM-series.
@@ -61,7 +61,7 @@ def load_metaimage(path, voxel=True):
     Args:
         path (str): the path directly to the .mhd file itself, .raw
             file related to that .mhd should lie in the same directory.
-        voxel (bool): whether to return or not to return  voxel data of the CT scan
+        voxel (bool): whether to return or not to return voxel data of the CT scan
 
     Returns:
         voxel_data (np.ndarray): numpy-array containing the 3D-representation of a MetaImage file.

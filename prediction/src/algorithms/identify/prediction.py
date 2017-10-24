@@ -13,7 +13,7 @@ from keras.metrics import binary_accuracy, binary_crossentropy, mean_absolute_er
 from keras.models import Model
 from keras.optimizers import SGD
 
-from . import helpers
+from ...preprocess.lung_segmentation import rescale_patient_images
 
 CUBE_SIZE = 32
 CROP_SIZE = 32
@@ -160,11 +160,11 @@ def prepare_data(patient_id, magnification=1):
     """
     patient_img = load_patient_images(patient_id, wildcard="*_i.png", exclude_wildcards=[])
     if magnification != 1:
-        patient_img = helpers.rescale_patient_images(patient_img, (1, 1, 1), magnification)
+        patient_img = rescale_patient_images(patient_img, (1, 1, 1), magnification)
 
     patient_mask = load_patient_images(patient_id, wildcard="*_m.png", exclude_wildcards=[])
     if magnification != 1:
-        patient_mask = helpers.rescale_patient_images(patient_mask, (1, 1, 1), magnification, is_mask_image=True)
+        patient_mask = rescale_patient_images(patient_mask, (1, 1, 1), magnification, is_mask_image=True)
 
     predict_volume_shape_list = [0, 0, 0]
     for dim in range(3):
@@ -225,7 +225,6 @@ def predict_cubes(model_path, patient_id, magnification=1, ext_name=""):
 
     for patient_index, patient_id in enumerate(reversed(patient_ids)):
         logging.info(patient_index, ": ", patient_id)
-
         patient_img, patient_mask, predict_volume = prepare_data(patient_id, magnification)
         patient_predictions_csv = annotate(model, predict_volume, patient_img, patient_mask)
 
@@ -281,8 +280,10 @@ def annotate(model, predict_volume, patient_img, patient_mask):
             continue
 
         if CROP_SIZE != CUBE_SIZE:
-            cube_img = helpers.rescale_patient_images2(cube_img, (CUBE_SIZE, CUBE_SIZE, CUBE_SIZE))
+            cube_img = rescale_patient_images(cube_img, (CUBE_SIZE, CUBE_SIZE, CUBE_SIZE))
 
+        # if you want to consider CROP_SIZE != CUBE_SIZE, see PR #147 for rescale_patient_images2 which
+        # rescales input images to support this case
         batch_list_coords.append((z, y, x))
         img_prep = prepare_image_for_net3D(cube_img)
         batch_list.append(img_prep)

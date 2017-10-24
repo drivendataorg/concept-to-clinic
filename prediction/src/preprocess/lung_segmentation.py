@@ -7,14 +7,11 @@ import cv2
 import dicom
 import numpy
 import scipy
-
 from dicom.errors import InvalidDicomError
 from skimage.filters import roberts
 from skimage.measure import label, regionprops
 from skimage.morphology import disk, binary_erosion, binary_closing
 from skimage.segmentation import clear_border
-
-from ..algorithms.identify.helpers import rescale_patient_images
 
 
 def get_z_range(dicom_path):
@@ -46,8 +43,8 @@ def save_lung_segments(dicom_path, patient_id):
         patient_id: SeriesInstanceUID of the patient
 
     Returns:
-        shape of the original patient images (z, x, y),
-        shape of the rescaled mask images (z, x, y)
+        Original patient images (z, x, y),
+        Rescaled mask images (z, x, y)
     """
     EXTRACTED_IMAGE_DIR = "data/extracted/"
     TARGET_VOXEL_MM = 1.00
@@ -80,7 +77,7 @@ def save_lung_segments(dicom_path, patient_id):
         cv2.imwrite(img_path, org_img * 255)
         cv2.imwrite(img_path.replace("_i.png", "_m.png"), mask * 255)
 
-    return original_image.shape, image.shape
+    return original_image, image
 
 
 def load_patient(src_dir):
@@ -164,3 +161,35 @@ def cv_flip(img, cols, rows, degree):
     M = cv2.getRotationMatrix2D((cols / 2, rows / 2), degree, 1.0)
     dst = cv2.warpAffine(img, M, (cols, rows))
     return dst
+
+
+def rescale_patient_images(images_zyx, org_spacing_xyz, target_voxel_mm, is_mask_image=False):
+    resize_x = 1.0
+    resize_y = org_spacing_xyz[2] / target_voxel_mm
+    interpolation = cv2.INTER_NEAREST if is_mask_image else cv2.INTER_LINEAR
+    res = cv2.resize(images_zyx, dsize=None, fx=resize_x, fy=resize_y,
+                     interpolation=interpolation)  # opencv assumes y, x, channels umpy array, so y = z pfff
+
+    res = res.swapaxes(0, 2)
+    res = res.swapaxes(0, 1)
+
+    resize_x = org_spacing_xyz[0] / target_voxel_mm
+    resize_y = org_spacing_xyz[1] / target_voxel_mm
+    # cv2 can handle max 512 channels..
+    if res.shape[2] > 512:
+        res = res.swapaxes(0, 2)
+        res1 = res[:256]
+        res2 = res[256:]
+        res1 = res1.swapaxes(0, 2)
+        res2 = res2.swapaxes(0, 2)
+        res1 = cv2.resize(res1, dsize=None, fx=resize_x, fy=resize_y, interpolation=interpolation)
+        res2 = cv2.resize(res2, dsize=None, fx=resize_x, fy=resize_y, interpolation=interpolation)
+        res1 = res1.swapaxes(0, 2)
+        res2 = res2.swapaxes(0, 2)
+        res = numpy.vstack([res1, res2])
+        res = res.swapaxes(0, 2)
+    else:
+        res = cv2.resize(res, dsize=None, fx=resize_x, fy=resize_y, interpolation=interpolation)
+    res = res.swapaxes(0, 2)
+    res = res.swapaxes(2, 1)
+    return res

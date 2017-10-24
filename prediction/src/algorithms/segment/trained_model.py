@@ -7,17 +7,21 @@
     descriptive statistics.
 """
 
-import numpy as np
 import os
-import scipy.ndimage
 
+import numpy as np
+import scipy.ndimage
+from keras.models import load_model
+
+from ...algorithms.segment.src.model import dice_coef_loss, dice_coef
+from ...algorithms.segment.src.training import get_best_model_path, get_data_shape
 from ...preprocess.load_ct import load_ct, MetaData
 
 
 def predict(dicom_path, centroids):
     """ Predicts nodule boundaries.
 
-    Given a pth to a DICOM image and a list of centroids
+    Given a path to DICOM images and a list of centroids
         (1) load the segmentation model from its serialized state
         (2) pre-process the dicom data into whatever format the segmentation
             model expects
@@ -38,16 +42,25 @@ def predict(dicom_path, centroids):
             {'binary_mask_path': str,
              'volumes': list[float]}
     """
-    load_ct(dicom_path)
-    segment_path = os.path.join(os.path.dirname(__file__),
-                                'assets', 'test_mask.npy')
+    voxel_data, meta = load_ct(dicom_path)
+    model = load_model(get_best_model_path(), custom_objects={'dice_coef_loss': dice_coef_loss, 'dice_coef': dice_coef})
+    x, y, z, channels = get_data_shape()
+    input_data = np.ndarray((1, x, y, z, channels))  # batch, x, y, z, channels
+    # Crop the input data to the required data shape and pad with zeros
+    padded_data = np.zeros_like(input_data)
+    min_x, min_y, min_z = min(x, voxel_data.shape[0]), min(y, voxel_data.shape[1]), min(z, voxel_data.shape[2])
+    padded_data[0, :min_x, :min_y, :min_z, 0] = voxel_data[:min_x, :min_y, :min_z]
+    input_data = padded_data
+
+    output_data = model.predict(input_data)
+    segment_path = os.path.join(os.path.dirname(__file__), 'assets', "lung-mask.npy")
+    np.save(segment_path, output_data[0, :, :, :, 0])
     volumes = calculate_volume(segment_path, centroids)
-    return_value = {
+
+    return {
         'binary_mask_path': segment_path,
         'volumes': volumes
     }
-
-    return return_value
 
 
 def calculate_volume(segment_path, centroids, ct_path=None):
