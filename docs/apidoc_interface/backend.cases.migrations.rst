@@ -20,6 +20,14 @@ backend.cases.migrations.0002_nodule_lung_orientation module
     :undoc-members:
     :show-inheritance:
 
+backend.cases.migrations.0003_radiology_reporting_template module
+-----------------------------------------------------------------
+
+.. automodule:: backend.cases.migrations.0003_radiology_reporting_template
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
