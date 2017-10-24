@@ -10,6 +10,8 @@ from backend.images.models import ImageSeries, ImageLocation
 from django.test import TestCase
 from django.urls import reverse
 
+from . import enum
+
 
 class SmokeTest(TestCase):
     def test_create_case(self):
@@ -103,16 +105,16 @@ class SmokeTest(TestCase):
         nodule = NoduleFactory()
         url = reverse('nodule-update', kwargs={'nodule_id': nodule.id})
 
-        self.assertEquals(nodule.lung_orientation, Nodule.LungOrientation.NONE.value)
+        self.assertEquals(nodule.lung_orientation, enum.LungOrientation.NONE.value)
 
         self.client.post(url, json.dumps({'lung_orientation': 'LEFT'}), 'application/json')
         nodule.refresh_from_db()
-        self.assertEquals(nodule.lung_orientation, Nodule.LungOrientation.LEFT.value)
+        self.assertEquals(nodule.lung_orientation, enum.LungOrientation.LEFT.value)
 
         self.client.post(url, json.dumps({'lung_orientation': 'RIGHT'}), 'application/json')
         nodule.refresh_from_db()
-        self.assertEquals(nodule.lung_orientation, Nodule.LungOrientation.RIGHT.value)
+        self.assertEquals(nodule.lung_orientation, enum.LungOrientation.RIGHT.value)
 
         self.client.post(url, json.dumps({'lung_orientation': 'NONE'}), 'application/json')
         nodule.refresh_from_db()
-        self.assertEquals(nodule.lung_orientation, Nodule.LungOrientation.NONE.value)
+        self.assertEquals(nodule.lung_orientation, enum.LungOrientation.NONE.value)

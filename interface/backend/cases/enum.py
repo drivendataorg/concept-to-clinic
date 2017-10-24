@@ -37,7 +37,7 @@ SCREENING_VISIT_CHOICES = (
 
 @unique  # ensures all variables are unique
 @django_enum
-class TypesOne(IntEnum):
+class PleuralSpaceChoicesOne(IntEnum):
     NONE = 0
     SMALL = 1
     MODERATE = 2
@@ -46,7 +46,7 @@ class TypesOne(IntEnum):
 
 @unique  # ensures all variables are unique
 @django_enum
-class TypesTwo(IntEnum):
+class PleuralSpaceChoicesTwo(IntEnum):
     NONE = 0
     MILD = 1
     MODERATE = 2

@@ -10,56 +10,36 @@ from rest_framework import serializers
 from . import enum
 
 
-class PleuralSpace(models.Model):
-    created = models.DateTimeField(default=timezone.now)
-
-    effusion = models.IntegerField(
-        choices=enum.format_enum(enum.TypesOne),
-        default=enum.TypesOne.NONE.value)
-
-    calcification = models.IntegerField(
-        choices=enum.format_enum(enum.TypesTwo),
-        default=enum.TypesTwo.NONE.value)
-
-    thickening = models.IntegerField(
-        choices=enum.format_enum(enum.TypesTwo),
-        default=enum.TypesTwo.NONE.value)
-
-    pneumothorax = models.IntegerField(
-        choices=enum.format_enum(enum.TypesOne),
-        default=enum.TypesOne.NONE.value)
-
-
 class Case(models.Model):
     """
     An analysis session on an image series.
     """
     created = models.DateTimeField(default=timezone.now)
-
     series = models.ForeignKey('images.ImageSeries', related_name='cases')
 
-    kVp = models.IntegerField(default=None)
-    mA = models.IntegerField(default=None)
-    DLP = models.IntegerField(default=None)
 
-    screening_visit = models.CharField(max_length=2, choices=enum.SCREENING_VISIT_CHOICES, default="BL")
-    clinical_information = models.CharField(max_length=250, default="Lung cancer screening.")
-    comparison = models.CharField(max_length=250, default="None.")
+class PleuralSpace(models.Model):
+    """
+    Contains the info about the degrees of diseases progress
+    """
+    effusion = models.IntegerField(choices=enum.format_enum(enum.PleuralSpaceChoicesOne),
+                                   help_text="Describes the degree of effusion progress")
 
-    diagnostic_quality = models.CharField(max_length=2, choices=enum.DIAGNOSTIC_QUALITY_CHOICES, default="SF")
-    exam_parameters_comment = models.CharField(max_length=250, default="")
+    calcification = models.IntegerField(choices=enum.format_enum(enum.PleuralSpaceChoicesTwo),
+                                        help_text="Describes the degree of Calcification progress")
 
-    COPD = models.IntegerField(
-        choices=enum.format_enum(enum.ShapeChoices),
-        default=enum.ShapeChoices.NONE.value)
+    thickening = models.IntegerField(choices=enum.format_enum(enum.PleuralSpaceChoicesTwo),
+                                     help_text="Describes the degree of Thickening progress")
 
-    fibrosis = models.IntegerField(
-        choices=enum.format_enum(enum.ShapeChoices),
-        default=enum.ShapeChoices.NONE.value)
+    pneumothorax = models.IntegerField(choices=enum.format_enum(enum.PleuralSpaceChoicesOne),
+                                       help_text="Describes the degree of Pneumothorax progress")
 
-    lymph_nodes = models.CharField(max_length=250, default="None.")
 
-    other_findings = models.CharField(max_length=250, default="None.")
+class CasePleuralSpaces(models.Model):
+    """
+    Contains left and right pleural spaces.
+    """
+    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
 
     left_pleural_space = models.ForeignKey(PleuralSpace,
                                            on_delete=models.CASCADE,
@@ -70,26 +50,100 @@ class Case(models.Model):
                                             related_name="right_pleural_space",
                                             null=True)
 
-    heart_size = models.IntegerField(
-        choices=enum.format_enum(enum.HeartShapeChoices),
-        default=enum.HeartShapeChoices.NORMAL.value)
 
-    coronary_calcification = models.IntegerField(
-        choices=enum.format_enum(enum.ShapeChoices),
-        default=enum.ShapeChoices.NONE.value)
+class TechnicalParameters(models.Model):
+    """
+    Contains configuration of CT scanner.
+    """
+    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
 
-    pericardial_effusion = models.IntegerField(
-        choices=enum.format_enum(enum.ShapeChoices),
-        default=enum.ShapeChoices.NONE.value)
+    kVp = models.IntegerField(help_text="Peak kilovoltage, maximum voltage applied across an X-ray tube")
+    mA = models.IntegerField(help_text="Milli amper")
+    DLP = models.IntegerField(help_text="Dose-length product")
 
-    upper_abdomen = models.CharField(max_length=250, default="None")
-    thorax = models.CharField(max_length=250, default="None")
-    base_of_neck = models.CharField(max_length=250, default="None")
 
-    need_comparison = models.CharField(max_length=250, default="No")
+class ClinicalInformation(models.Model):
+    """
+    Contains patient's information.
+    """
+    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
 
-    repeat_CT = models.CharField(max_length=2, choices=enum.PERIODS, default="T1")
-    see_physician = models.CharField(max_length=2, choices=enum.PHYSICIAN, default="NO")
+    screening_visit = models.CharField(max_length=2, choices=enum.SCREENING_VISIT_CHOICES)
+    clinical_information = models.CharField(max_length=250)
+
+
+class CaseComparison(models.Model):
+    """
+    Contains the information of comparison.
+    """
+    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+
+    comparison = models.CharField(max_length=250, help_text="Comparison with previous screening")
+
+
+class ExamParameters(models.Model):
+    """
+    Contains information of the diagnostic quality.
+    """
+    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+
+    diagnostic_quality = models.CharField(max_length=2, choices=enum.DIAGNOSTIC_QUALITY_CHOICES)
+    exam_parameters_comment = models.CharField(max_length=250, help_text="Comment on the quality of diagnostic")
+
+
+class LungsFindings(models.Model):
+    """
+    Contains the information about findings in lungs.
+    """
+    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+
+    COPD = models.IntegerField(choices=enum.format_enum(enum.ShapeChoices),
+                               help_text="Term used to describe progressive lung diseases. "
+                                         "Describes the degree of copd progress")
+    fibrosis = models.IntegerField(choices=enum.format_enum(enum.ShapeChoices),
+                                   help_text="Describes the degree of fibrosis progress")
+
+    lymph_nodes = models.CharField(max_length=250, help_text="Description of the lymph nodes")
+    other_findings = models.CharField(max_length=250, help_text="Description of other findings")
+
+
+class HeartFindings(models.Model):
+    """
+    Contains the information about findings in heart.
+    """
+    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+
+    heart_size = models.IntegerField(choices=enum.format_enum(enum.HeartShapeChoices))
+
+    coronary_calcification = models.IntegerField(choices=enum.format_enum(enum.ShapeChoices),
+                                                 help_text="Describes the degree of Coronary calcification")
+
+    pericardial_effusion = models.IntegerField(choices=enum.format_enum(enum.ShapeChoices),
+                                               help_text="Describes the degree of Pericardial effusion")
+
+
+class OtherFindings(models.Model):
+    """
+    Contains the information about additional or unrelated findings.
+    """
+    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+
+    upper_abdomen = models.CharField(max_length=250, help_text="describes other findings in upper abdomen")
+    thorax = models.CharField(max_length=250, help_text="describes other findings in thorax")
+    base_of_neck = models.CharField(max_length=250, help_text="describes other findings in the Base of neck")
+
+
+class ExtraInformation(models.Model):
+    """
+    Additional information.
+    """
+    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+
+    need_comparison = models.CharField(max_length=250, help_text="Shows if comparison is needed")
+
+    repeat_CT = models.CharField(max_length=2, choices=enum.PERIODS, help_text="The date of next ct")
+    see_physician = models.CharField(max_length=2, choices=enum.PHYSICIAN,
+                                     help_text="Shows if the patient should visit physician")
 
     impression_comment = models.CharField(max_length=250, default="")
 
@@ -120,21 +174,19 @@ class Nodule(models.Model):
 
     centroid = models.OneToOneField('images.ImageLocation', on_delete=models.CASCADE)
 
-    lung_orientation = models.IntegerField(
-        choices=enum.format_enum(enum.LungOrientation),
-        default=enum.LungOrientation.NONE.value)
+    lung_orientation = models.IntegerField(choices=enum.format_enum(enum.LungOrientation),
+                                           default=enum.LungOrientation.NONE)
 
-    diameter = models.DecimalField(max_digits=5, decimal_places=2, default=None)
 
-    appearance_feature = models.IntegerField(
-        choices=enum.format_enum(enum.AppearanceFeature),
-        default=enum.AppearanceFeature.NONE.value)
+class NoduleFeatures(models.Model):
+    """
+    Contains additional descriptive features of the nodule.
+    """
+    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
 
-    density_feature = models.IntegerField(
-        choices=enum.format_enum(enum.DensityFeature),
-        default=enum.DensityFeature.NONE.value)
-
-    image_no = models.PositiveIntegerField(default=None)
+    appearance_feature = models.IntegerField(choices=enum.format_enum(enum.AppearanceFeature))
+    diameter = models.DecimalField(max_digits=5, decimal_places=2)
+    density_feature = models.IntegerField(choices=enum.format_enum(enum.DensityFeature))
 
 
 class CandidateSerializer(serializers.ModelSerializer):
