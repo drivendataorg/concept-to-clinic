@@ -1,10 +1,12 @@
 import os
+
 from glob import glob
 
 import SimpleITK
 import dicom
 import numpy as np
 import pytest
+
 from src.preprocess import load_ct
 
 
@@ -27,6 +29,7 @@ def test_load_metaimage(metaimage_path, dicom_path):
     assert isinstance(meta, SimpleITK.SimpleITK.Image)
 
     path = glob(os.path.join(dicom_path, '*.dcm'))
+
     try:
         load_ct.load_metaimage(path)
     except BaseException as e:

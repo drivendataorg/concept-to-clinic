@@ -31,5 +31,6 @@ def test_crop_dicom(dicom_path):
     assert np.asarray(cropped_series[0].pixel_array).shape[1] == 20
     assert np.asarray([x for x in cropped_series if x.SliceLocation == -102.5][0].pixel_array)[0][0] == \
         np.asarray([x for x in uncropped_series if x.SliceLocation == -102.5][0].pixel_array)[100][100]
+
     assert np.asarray([x for x in cropped_series if x.SliceLocation == -102.5][0].pixel_array)[19][19] == \
         np.asarray([x for x in uncropped_series if x.SliceLocation == -102.5][0].pixel_array)[119][119]

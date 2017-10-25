@@ -40,6 +40,7 @@ def predict(dicom_path):
 
     reader = sitk.ImageSeriesReader()
     filenames = reader.GetGDCMSeriesFileNames(dicom_path)
+
     if not filenames:
         message = "The path {} doesn't contain any .mhd or .dcm files"
         raise ValueError(message.format(dicom_path))
@@ -83,7 +84,6 @@ def run_prediction(patient_id, magnification=1, ext_name="luna_posnegndsb_v", ve
              'z': int,
              'p_nodule': float}
     """
-
     magnification_choices = [1, 1.5, 2]
     ext_name_choices = ["luna16_fs", "luna_posnegndsb_v"]
     version_choices = [1, 2]
@@ -91,8 +91,10 @@ def run_prediction(patient_id, magnification=1, ext_name="luna_posnegndsb_v", ve
 
     if magnification not in magnification_choices:
         raise ValueError("magnification must be one of {} but was {}".format(magnification_choices, magnification))
+
     if ext_name not in ext_name_choices:
         raise ValueError("ext_name must be one of {} but was {}".format(ext_name_choices, ext_name))
+
     if ext_name == 'luna_posnegndsb_v':
         if version not in version_choices:
             raise ValueError("version must be one of {} but was {}".format(version_choices, version))
@@ -106,4 +108,5 @@ def run_prediction(patient_id, magnification=1, ext_name="luna_posnegndsb_v", ve
         results_df = prediction.predict_cubes(
             "/identify_models/model_luna_posnegndsb_v" + str(version) + "__fs_h" + str(holdout) + "_end.hd5",
             patient_id, magnification=magnification, ext_name="luna_posnegndsb_v" + str(version))
+
     return results_df

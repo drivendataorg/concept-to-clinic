@@ -23,7 +23,6 @@ def get_data_shape():
     # dicom_paths = get_dicom_paths()
     # max_x, max_y, max_z = get_max_scaled_dimensions(dicom_paths)
     # return max_x, max_y, max_z, 1
-
     return 128, 128, 128, 1
 
 
@@ -36,6 +35,7 @@ def get_best_model_path():
 def get_max_scaled_dimensions(dicom_paths):
     """Return the maximum x, y and z dimensions of all scaled DICOM images"""
     max_x, max_y, max_z = 0, 0, 0
+
     for path in dicom_paths:
         print(path)
         directories = path.split('/')
@@ -48,10 +48,13 @@ def get_max_scaled_dimensions(dicom_paths):
 
         if scaled_x > max_x:
             max_x = scaled_x
+
         if scaled_y > max_y:
             max_y = scaled_y
+
         if scaled_z > max_z:
             max_z = scaled_z
+
     return max_x, max_y, max_z
 
 
@@ -75,7 +78,6 @@ def train(load_checkpoint=False):
         model = simple_model_3d(CUBOID_IMAGE_SHAPE)
 
     for batch_index in range(0, len(labels), CUBOID_BATCH):
-
         for index, path in enumerate(dicom_paths[batch_index:batch_index + CUBOID_BATCH]):
             directories = path.split(os.path.sep)
             lidc_id = directories[5]
@@ -84,8 +86,10 @@ def train(load_checkpoint=False):
             output_img = np.load(os.path.join(assets_dir, "segmented_lung_patient_{}.npy").format(lidc_id))
 
             new_input_img, new_output_img = np.zeros(CUBOID_IMAGE_SHAPE), np.zeros(CUBOID_IMAGE_SHAPE)
+
             new_input_img[:, :, :, 0] = input_img[:CUBOID_IMAGE_SHAPE[0], :CUBOID_IMAGE_SHAPE[1],
                                                   :CUBOID_IMAGE_SHAPE[2]]
+
             new_output_img[:, :, :, 0] = output_img[:CUBOID_IMAGE_SHAPE[0], :CUBOID_IMAGE_SHAPE[1],
                                                     :CUBOID_IMAGE_SHAPE[2]]
 

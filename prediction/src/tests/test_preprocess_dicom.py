@@ -14,6 +14,7 @@ def test_create_params():
     preprocess_ct.Params()
     params = preprocess_ct.Params(spacing=1., ndim=3)
     assert len(params.spacing) == 3
+
     spacing = [shape == 1. for shape in params.spacing]
     assert all(spacing)
 

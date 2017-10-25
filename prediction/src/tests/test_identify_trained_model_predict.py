@@ -30,20 +30,14 @@ def nodule_locations_003():
 @skip_if_slow
 def test_identify_nodules_001(dicom_path_001, nodule_locations_001):
     predicted = trained_model.predict(dicom_path_001)
-
     first = predicted[0]
-
     dist = np.sqrt(np.sum([(first[s] - nodule_locations_001[s]) ** 2 for s in ["x", "y", "z"]]))
-
     assert (dist < 10)
 
 
 @skip_if_slow
 def test_identify_nodules_003(dicom_path_003, nodule_locations_003):
     predicted = trained_model.predict(dicom_path_003)
-
     first = predicted[0]
-
     dist = np.sqrt(np.sum([(first[s] - nodule_locations_003[s]) ** 2 for s in ["x", "y", "z"]]))
-
     assert (dist < 10)

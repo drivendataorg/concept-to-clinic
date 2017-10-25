@@ -77,9 +77,9 @@ def test_identify(client, dicom_path):
                     content_type='application/json')
 
     data = get_data(r)
-
     assert isinstance(data['prediction'], list)
     assert len(data['prediction']) > 0
+
     for prediction in data['prediction']:
         assert (0.5 <= prediction['p_nodule'] < 1.0)
         assert prediction['x'] > 0
@@ -96,7 +96,6 @@ def test_classify(client, dicom_path):
                     content_type='application/json')
 
     data = get_data(r)
-
     assert isinstance(data['prediction'], list)
 
 
@@ -109,7 +108,6 @@ def test_segment(client, dicom_path):
                     content_type='application/json')
 
     data = get_data(r)
-
     assert isinstance(data['prediction']['binary_mask_path'], str)
     assert isinstance(data['prediction']['volumes'], list)
 
@@ -126,9 +124,11 @@ def test_wrong_parameter(client):
     # dicom_path missing
     url = client.url_for('predict', algorithm='identify')
     test_data = dict()
+
     r = client.post(url,
                     data=json.dumps(test_data),
                     content_type='application/json')
+
     data = get_data(r)
     assert r.status_code == 500
     assert "'dicom_path'" in data['error']
@@ -136,9 +136,11 @@ def test_wrong_parameter(client):
     # centroids missing
     url = client.url_for('predict', algorithm='segment')
     test_data = dict(dicom_path='')
+
     r = client.post(url,
                     data=json.dumps(test_data),
                     content_type='application/json')
+
     data = get_data(r)
     assert r.status_code == 500
     assert "'centroids'" in data['error']
@@ -146,9 +148,11 @@ def test_wrong_parameter(client):
     # centroids unnecessary
     url = client.url_for('predict', algorithm='identify')
     test_data = dict(dicom_path='', centroids=[])
+
     r = client.post(url,
                     data=json.dumps(test_data),
                     content_type='application/json')
+
     data = get_data(r)
     assert r.status_code == 500
     assert "'centroids'" in data['error']
@@ -157,12 +161,16 @@ def test_wrong_parameter(client):
 # test that other errors are passed through the API
 def test_other_error(client):
     url = client.url_for('predict', algorithm='identify')
+
     # non-existent dicom path as example
     test_data = dict(dicom_path='/')
+
     r = client.post(url,
                     data=json.dumps(test_data),
                     content_type='application/json')
+
     data = get_data(r)
     assert r.status_code == 500
+
     message = "The path / doesn't contain any .mhd or .dcm files"
     assert message in data['error']

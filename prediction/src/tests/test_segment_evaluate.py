@@ -53,7 +53,9 @@ def test_segment_evaluate_evaluate(masks):
                          'sensitivity': 2.0,
                          'specificity': 2.0,
                          'dice_coefficient': 0.5}
+
     calculated = evaluate.evaluate(combined_1, combined_2)
+
     for key, output in desired_behaviour.items():
         assert np.abs(output - calculated[key]) < 1e-4, 'The output of function %s is %f, while %f was expected.' % \
                                                         (key, calculated, output)

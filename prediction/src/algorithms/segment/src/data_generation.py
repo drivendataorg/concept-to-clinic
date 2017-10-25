@@ -16,8 +16,8 @@ def prepare_training_data(in_docker=True):
     INTERMEDIATE_MALICIOUS = 3
     assets_dir = Config.SEGMENT_ASSETS_DIR
     dicom_wildcard = Config.DICOM_PATHS_DOCKER_WILDCARD
-
     dicom_paths = sorted(glob.glob(dicom_wildcard))
+
     for path in dicom_paths:
         directories = path.split(os.path.sep)
         lidc_id_path_index = 2 if in_docker else 5
@@ -29,9 +29,11 @@ def prepare_training_data(in_docker=True):
 
         # Compute and save binary mask with information whether pixel is cancerous
         scan = pl.query(pl.Scan).filter(pl.Scan.patient_id == lidc_id).first()
+
         if scan is None:
             print("Scan for path '{}' was not found".format(path))
             continue
+
         vol = scan.to_volume(verbose=False)  # Leading zeros have to be removed from the DICOM file names
 
         # mask_vol is a boolean, indicator volume for the first annotation of the scan.
@@ -57,4 +59,5 @@ def prepare_training_data(in_docker=True):
             # In case the area already was segmented, don't overwrite it but add the annotated segmentation
             annotation_area = np.index_exp[i1:i2 + 1, j1:j2 + 1, k1:k2 + 1]
             mask_vol[annotation_area] = np.logical_or(mask, mask_vol[annotation_area])
+
         np.save(lung_patient_file, mask_vol)

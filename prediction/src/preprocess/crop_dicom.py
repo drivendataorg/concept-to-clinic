@@ -19,7 +19,7 @@ def crop_dicom(path_to_dicom, begin, end, output=None):
         path_to_dicom: String containing the path containing the DICOM-series
         begin: List containing three numbers representing the starting point for cropping. See examples above.
         end: List containing three numbers representing the starting point for cropping. See examples above.
-        output: (optional) String containg the path to where to save the cropped series.
+        output: (optional) String containing the path to where to save the cropped series.
 
     Returns:
         A list of pydicom Dataset-objects representing the cropped series.
@@ -39,11 +39,13 @@ def crop_dicom(path_to_dicom, begin, end, output=None):
     for file in files:
         if file.SliceLocation > upper_z or file.SliceLocation < lower_z:
             continue
+
         new_file = file
         new_file.PixelData = new_file.pixel_array[begin[0]:end[0], begin[1]:end[1]].tostring()
         new_file.Rows = new_dim_xy[0]
         new_file.Columns = new_dim_xy[1]
         cropped_series.append(new_file)
+
         if output:
             new_file.save_as(output + "/" + str(new_file.SliceLocation) + ".dcm")
 

@@ -34,9 +34,11 @@ def load_patient_images(patient_id, base_dir=EXTRACTED_IMAGE_DIR, wildcard="*.*"
     exclude_wildcards = exclude_wildcards or []
     src_dir = os.path.join(os.getcwd(), base_dir, patient_id)
     src_img_paths = glob.glob(src_dir + wildcard)
+
     for exclude_wildcard in exclude_wildcards:
         exclude_img_paths = glob.glob(src_dir + exclude_wildcard)
         src_img_paths = [im for im in src_img_paths if im not in exclude_img_paths]
+
     src_img_paths.sort()
     images = [cv2.imread(img_path, cv2.IMREAD_GRAYSCALE) for img_path in src_img_paths]
     images = [im.reshape((1,) + im.shape) for im in images]
@@ -55,6 +57,7 @@ def prepare_image_for_net3D(img):
 def filter_patient_nodules_predictions(df_nodule_predictions: pandas.DataFrame, patient_id, view_size):
     patient_mask = load_patient_images(patient_id, wildcard="*_m.png")
     delete_indices = []
+
     for index, row in df_nodule_predictions.iterrows():
         z_perc = row["coord_z"]
         y_perc = row["coord_y"]
@@ -66,6 +69,7 @@ def filter_patient_nodules_predictions(df_nodule_predictions: pandas.DataFrame, 
         start_y = center_y - view_size / 2
         start_x = center_x - view_size / 2
         nodule_in_mask = False
+
         for z_index in [-1, 0, 1]:
             img = patient_mask[z_index + center_z]
             start_x = int(start_x)
@@ -83,8 +87,10 @@ def filter_patient_nodules_predictions(df_nodule_predictions: pandas.DataFrame, 
         else:
             if center_z < 30:
                 logging.info("Z < 30: ", patient_id, " center z:", center_z, " y_perc: ", y_perc)
+
                 if mal_score > 0:
                     mal_score *= -1
+
                 df_nodule_predictions.loc[index, "diameter_mm"] = mal_score
 
             if (z_perc > 0.75 or z_perc < 0.25) and y_perc > 0.85:

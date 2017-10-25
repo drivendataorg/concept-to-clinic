@@ -76,18 +76,15 @@ def predict(algorithm):
 
     # make predictions on POST
     elif request.method == 'POST':
-
         payload = request.json
 
         try:
             predict_method = PREDICTORS[algorithm]
-
             prediction = predict_method(**payload)
 
             response.update({
                 'prediction': prediction,
             })
-
         except Exception as e:
             # pass errors from prediction function along with function chosen
             error = "Error using algorithm '{}': {} ({})."

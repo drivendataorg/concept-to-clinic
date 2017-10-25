@@ -44,7 +44,6 @@ def test_extract_voxel_data(dicom_path):
 
 def test_load_dicom(dicom_path):
     dicom_array, meta = ld.load_dicom(dicom_path)
-
     assert isinstance(dicom_array, np.ndarray)
 
     with pytest.raises(errors.EmptyDicomSeriesException):
@@ -53,5 +52,4 @@ def test_load_dicom(dicom_path):
 
 def test_load_meta(dicom_path):
     dicom_series = ld.load_ct(dicom_path, voxel=False)
-
     assert isinstance(dicom_series, list)

@@ -9,7 +9,7 @@ from . import skip_if_slow
 
 
 def get_dicom_paths():
-    """Return DICOM paths to all LIDC direcotries
+    """Return DICOM paths to all LIDC directories
     e.g. ['../images_full/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
           '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192']"""
     return glob.glob("../images_full/LIDC-IDRI-*/**/**")
@@ -22,6 +22,7 @@ def test_lung_segmentation():
     at this point the lung masks are set to 255."""
 
     dicom_paths = glob.glob(Config.DICOM_PATHS_DOCKER_WILDCARD)
+
     for path in dicom_paths:
         min_z, max_z = get_z_range(path)
         directories = path.split('/')
@@ -30,6 +31,7 @@ def test_lung_segmentation():
         original, mask = save_lung_segments(path, patient_id)
         original_shape, mask_shape = original.shape, mask.shape
         scan = pl.query(pl.Scan).filter(pl.Scan.patient_id == lidc_id).first()
+
         for annotation in scan.annotations:
             centroid_x, centroid_y, centroid_z = annotation.centroid()
             patient_mask = load_patient_images(patient_id, wildcard="*_m.png", exclude_wildcards=[])

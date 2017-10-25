@@ -1,8 +1,8 @@
 import warnings
-
 import SimpleITK as sitk
 import numpy as np
 import pytest
+
 from scipy.ndimage import zoom
 from src.preprocess import load_ct, preprocess_ct, crop_patches
 
@@ -125,6 +125,7 @@ def test_lum_trans(metaimage_path):
     lumed = lum_trans(ct_array)
     functional = preprocess_ct.PreprocessCT(clip_lower=-1200., clip_upper=600.,
                                             min_max_normalize=True, scale=255, dtype='uint8')
+
     processed, _ = functional(ct_array, meta)
     assert np.abs(lumed - processed).sum() == 0
 
@@ -159,11 +160,13 @@ def test_preprocess(metaimage_path):
 
     preprocess = preprocess_ct.PreprocessCT(clip_lower=-1200., clip_upper=600.,
                                             min_max_normalize=True, scale=255, dtype='uint8')
+
     ct_array, meta = preprocess(ct_array, meta)
     preprocess = preprocess_ct.PreprocessCT(spacing=1., order=1)
     ct_array, meta = preprocess(ct_array, meta)
 
     cropped_image_new, coords_new = crop_patches.patches_from_ct(ct_array, meta, 96, nodule_list,
                                                                  stride=4, pad_value=160)[0]
+
     assert np.abs(cropped_image_new - cropped_image).sum() == 0
     assert np.abs(coords_new - coords).sum() == 0

@@ -18,6 +18,7 @@ def mm2voxel(coord, origin=0., spacing=1.):
     """
     if np.isscalar(coord):
         coord = [coord]
+
     coord = np.array(coord)
     origin = scipy.ndimage._ni_support._normalize_sequence(origin, len(coord))
     spacing = scipy.ndimage._ni_support._normalize_sequence(spacing, len(coord))
@@ -47,6 +48,7 @@ def crop_patch(ct_array, meta, patch_shape=None, centroids=None, stride=None, pa
     """
     if centroids is None:
         centroids = []
+
     if patch_shape is None:
         patch_shape = []
 
@@ -59,6 +61,7 @@ def crop_patch(ct_array, meta, patch_shape=None, centroids=None, stride=None, pa
     padding = np.ceil(patch_shape / 2.).astype(np.int)
     padding = np.stack([padding, padding], axis=1)
     ct_array = np.pad(ct_array, padding, mode='constant', constant_values=pad_value)
+
     for centroid in centroids:
         centroid = mm2voxel([centroid[axis] for axis in 'zyx'], meta.origin, meta.spacing)
 
@@ -106,8 +109,10 @@ def patches_from_ct(ct_array, meta, patch_shape=None, centroids=None, stride=Non
     """
     if patch_shape is None:
         patch_shape = []
+
     if centroids is None:
         centroids = []
+
     patch_generator = crop_patch(ct_array, meta, patch_shape, centroids, stride, pad_value)
     patches = itertools.islice(patch_generator, len(centroids))
     return list(patches)

@@ -8,6 +8,7 @@ from ..algorithms.segment import trained_model
 
 def test_correct_paths():
     assert os.path.isdir(Config.SEGMENT_ASSETS_DIR)
+
     for path in glob.glob(Config.DICOM_PATHS_DOCKER_WILDCARD):
         assert os.path.isdir(path)
 
@@ -20,12 +21,10 @@ def dicom_path():
 
 def test_segment_predict(dicom_path):
     predicted = trained_model.predict(dicom_path, [])
-
     assert predicted['volumes'] == []
 
 
 def test_classify_predict_inference(dicom_path):
     predicted = trained_model.predict(dicom_path, [{'x': 50, 'y': 50, 'z': 21}])
-
     assert isinstance(predicted['binary_mask_path'], str)
     assert isinstance(predicted['volumes'], list)
