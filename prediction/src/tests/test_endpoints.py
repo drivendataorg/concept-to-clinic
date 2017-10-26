@@ -170,4 +170,5 @@ def test_other_error(client):
                     content_type='application/json')
     data = get_data(r)
     assert r.status_code == 500
-    assert "The path doesn't contain neither .mhd nor .dcm files" in data['error']
+    message = "The path / doesn't contain any .mhd or .dcm files"
+    assert message in data['error']

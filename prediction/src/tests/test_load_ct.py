@@ -50,7 +50,7 @@ def test_load_ct(metaimage_path, dicom_path):
     try:
         load_ct.load_ct('.')
     except ValueError as e:
-        assert 'neither .mhd nor .dcm files.' in str(e)
+        assert 'contain any .mhd or .dcm files' in str(e)
 
 
 def test_load_meta(metaimage_path, dicom_path):
