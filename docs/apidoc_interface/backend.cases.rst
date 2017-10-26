@@ -19,6 +19,14 @@ backend.cases.apps module
     :undoc-members:
     :show-inheritance:
 
+backend.cases.enums module
+--------------------------
+
+.. automodule:: backend.cases.enums
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 backend.cases.factories module
 ------------------------------
 

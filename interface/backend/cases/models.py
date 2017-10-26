@@ -7,7 +7,7 @@ from django.db import models
 from django.utils import timezone
 from rest_framework import serializers
 
-from . import enum
+from . import enums
 
 
 class Case(models.Model):
@@ -22,16 +22,16 @@ class PleuralSpace(models.Model):
     """
     Contains the info about the degrees of diseases progress
     """
-    effusion = models.IntegerField(choices=enum.format_enum(enum.PleuralSpaceChoicesOne),
+    effusion = models.IntegerField(choices=enums.format_enum(enums.PleuralSpaceChoicesOne),
                                    help_text="Describes the degree of effusion progress")
 
-    calcification = models.IntegerField(choices=enum.format_enum(enum.PleuralSpaceChoicesTwo),
+    calcification = models.IntegerField(choices=enums.format_enum(enums.PleuralSpaceChoicesTwo),
                                         help_text="Describes the degree of Calcification progress")
 
-    thickening = models.IntegerField(choices=enum.format_enum(enum.PleuralSpaceChoicesTwo),
+    thickening = models.IntegerField(choices=enums.format_enum(enums.PleuralSpaceChoicesTwo),
                                      help_text="Describes the degree of Thickening progress")
 
-    pneumothorax = models.IntegerField(choices=enum.format_enum(enum.PleuralSpaceChoicesOne),
+    pneumothorax = models.IntegerField(choices=enums.format_enum(enums.PleuralSpaceChoicesOne),
                                        help_text="Describes the degree of Pneumothorax progress")
 
 
@@ -68,7 +68,7 @@ class ClinicalInformation(models.Model):
     """
     case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
 
-    screening_visit = models.CharField(max_length=2, choices=enum.SCREENING_VISIT_CHOICES)
+    screening_visit = models.CharField(max_length=2, choices=enums.SCREENING_VISIT_CHOICES)
     clinical_information = models.CharField(max_length=250)
 
 
@@ -87,7 +87,7 @@ class ExamParameters(models.Model):
     """
     case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
 
-    diagnostic_quality = models.CharField(max_length=2, choices=enum.DIAGNOSTIC_QUALITY_CHOICES)
+    diagnostic_quality = models.CharField(max_length=2, choices=enums.DIAGNOSTIC_QUALITY_CHOICES)
     exam_parameters_comment = models.CharField(max_length=250, help_text="Comment on the quality of diagnostic")
 
 
@@ -97,10 +97,10 @@ class LungsFindings(models.Model):
     """
     case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
 
-    COPD = models.IntegerField(choices=enum.format_enum(enum.ShapeChoices),
+    COPD = models.IntegerField(choices=enums.format_enum(enums.ShapeChoices),
                                help_text="Term used to describe progressive lung diseases. "
                                          "Describes the degree of copd progress")
-    fibrosis = models.IntegerField(choices=enum.format_enum(enum.ShapeChoices),
+    fibrosis = models.IntegerField(choices=enums.format_enum(enums.ShapeChoices),
                                    help_text="Describes the degree of fibrosis progress")
 
     lymph_nodes = models.CharField(max_length=250, help_text="Description of the lymph nodes")
@@ -113,12 +113,12 @@ class HeartFindings(models.Model):
     """
     case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
 
-    heart_size = models.IntegerField(choices=enum.format_enum(enum.HeartShapeChoices))
+    heart_size = models.IntegerField(choices=enums.format_enum(enums.HeartShapeChoices))
 
-    coronary_calcification = models.IntegerField(choices=enum.format_enum(enum.ShapeChoices),
+    coronary_calcification = models.IntegerField(choices=enums.format_enum(enums.ShapeChoices),
                                                  help_text="Describes the degree of Coronary calcification")
 
-    pericardial_effusion = models.IntegerField(choices=enum.format_enum(enum.ShapeChoices),
+    pericardial_effusion = models.IntegerField(choices=enums.format_enum(enums.ShapeChoices),
                                                help_text="Describes the degree of Pericardial effusion")
 
 
@@ -141,8 +141,8 @@ class ExtraInformation(models.Model):
 
     need_comparison = models.CharField(max_length=250, help_text="Shows if comparison is needed")
 
-    repeat_CT = models.CharField(max_length=2, choices=enum.PERIODS, help_text="The date of next ct")
-    see_physician = models.CharField(max_length=2, choices=enum.PHYSICIAN,
+    repeat_CT = models.CharField(max_length=2, choices=enums.PERIODS, help_text="The date of next ct")
+    see_physician = models.CharField(max_length=2, choices=enums.PHYSICIAN,
                                      help_text="Shows if the patient should visit physician")
 
     impression_comment = models.CharField(max_length=250, default="")
@@ -174,8 +174,8 @@ class Nodule(models.Model):
 
     centroid = models.OneToOneField('images.ImageLocation', on_delete=models.CASCADE)
 
-    lung_orientation = models.IntegerField(choices=enum.format_enum(enum.LungOrientation),
-                                           default=enum.LungOrientation.NONE)
+    lung_orientation = models.IntegerField(choices=enums.format_enum(enums.LungOrientation),
+                                           default=enums.LungOrientation.NONE)
 
 
 class NoduleFeatures(models.Model):
@@ -184,9 +184,9 @@ class NoduleFeatures(models.Model):
     """
     case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
 
-    appearance_feature = models.IntegerField(choices=enum.format_enum(enum.AppearanceFeature))
+    appearance_feature = models.IntegerField(choices=enums.format_enum(enums.AppearanceFeature))
     diameter = models.DecimalField(max_digits=5, decimal_places=2)
-    density_feature = models.IntegerField(choices=enum.format_enum(enum.DensityFeature))
+    density_feature = models.IntegerField(choices=enums.format_enum(enums.DensityFeature))
 
 
 class CandidateSerializer(serializers.ModelSerializer):

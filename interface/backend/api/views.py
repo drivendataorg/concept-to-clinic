@@ -19,7 +19,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..cases import enum
+from ..cases import enums
 
 
 class CaseViewSet(viewsets.ModelViewSet):
@@ -183,11 +183,11 @@ def nodule_update(request, nodule_id):
     if lung_orientation is None:
         lung_orientation = 'NONE'
 
-    orientation_choices = [orientation.name for orientation in enum.LungOrientation]
+    orientation_choices = [orientation.name for orientation in enums.LungOrientation]
 
     if lung_orientation not in orientation_choices:
         return Response({'response': "ValueError: lung_orientation must be one of {}".format(orientation_choices)}, 500)
 
-    Nodule.objects.filter(pk=nodule_id).update(lung_orientation=enum.LungOrientation[lung_orientation].value)
+    Nodule.objects.filter(pk=nodule_id).update(lung_orientation=enums.LungOrientation[lung_orientation].value)
     return Response(
         {'response': "Lung orientation of nodule {} has been changed to '{}'".format(nodule_id, lung_orientation)})
