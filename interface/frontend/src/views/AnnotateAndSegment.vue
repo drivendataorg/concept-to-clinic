@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import NoduleList from '../components/NoduleList'
+import NoduleList from '../components/annotate-and-segment/NoduleList'
 
 export default {
   components: {

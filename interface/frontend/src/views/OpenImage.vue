@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import ImageSeries from '../components/ImageSeries'
+import ImageSeries from '../components/open-image/ImageSeries'
 
 export default {
   components: {

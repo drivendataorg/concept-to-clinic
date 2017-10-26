@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import CandidateList from '../components/CandidateList'
+  import CandidateList from '../components/detect-and-select/CandidateList'
 
   export default {
     components: {
