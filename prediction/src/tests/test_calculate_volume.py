@@ -89,5 +89,4 @@ def test_overlapped_dicom_volume_calculation(tmpdir, dicom_path, centroids_alt, 
 
     # Despite they are overlapped, the amount of volumes must have preserved
     assert len(calculated_volumes) == len(volumes_alt)
-    assert all([1.2360 >= mm / vox >= 1.2358
-                for vox, mm in zip(volumes_alt, calculated_volumes)])
+    assert all(1.2360 >= mm / vox >= 1.2358 for vox, mm in zip(volumes_alt, calculated_volumes))

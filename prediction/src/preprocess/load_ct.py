@@ -160,7 +160,7 @@ class MetaData:
         dicom_meta = False
 
         if isinstance(self.meta, list) and self.meta:
-            dicom_meta = all([isinstance(_slice, dicom.dataset.FileDataset) for _slice in meta])
+            dicom_meta = all(isinstance(_slice, dicom.dataset.FileDataset) for _slice in meta)
 
         mhd_meta = isinstance(self.meta, SimpleITK.SimpleITK.Image)
 
