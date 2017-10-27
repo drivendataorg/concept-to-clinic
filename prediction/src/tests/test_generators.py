@@ -1,16 +1,9 @@
 import os
 import warnings
 import numpy as np
-import pytest
 import scipy.ndimage
 
 from src.preprocess import load_ct, generators
-
-
-@pytest.fixture(scope='session')
-def ct_path():
-    return '../images/LUNA-0001/' \
-           + '1.3.6.1.4.1.14519.5.2.1.6279.6001.102133688497886810253331438797'
 
 
 def test_generators_shift(ct_path):

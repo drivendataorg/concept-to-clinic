@@ -1,7 +1,6 @@
 import warnings
 import SimpleITK as sitk
 import numpy as np
-import pytest
 
 from scipy.ndimage import zoom
 from src.preprocess import load_ct, preprocess_ct, crop_patches
@@ -112,12 +111,6 @@ def resample(imgs, spacing, new_spacing, order=2):
         return newimg, true_spacing
     else:
         raise ValueError('wrong shape')
-
-
-@pytest.fixture
-def metaimage_path():
-    yield '../images/LUNA-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.102133688497886810253331438797/' \
-          '1.3.6.1.4.1.14519.5.2.1.6279.6001.102133688497886810253331438797.mhd'
 
 
 def test_lum_trans(metaimage_path):

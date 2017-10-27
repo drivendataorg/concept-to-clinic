@@ -5,24 +5,12 @@ from glob import glob
 import SimpleITK
 import dicom
 import numpy as np
-import pytest
 
 from ..preprocess.load_ct import load_ct, load_metaimage, MetaData
 
 
-@pytest.fixture
-def metaimage_path():
-    yield '../images/LUNA-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.102133688497886810253331438797'
-
-
-@pytest.fixture
-def dicom_path():
-    yield '../images/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
-          '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192'
-
-
-def test_load_metaimage(metaimage_path, dicom_path):
-    path = glob(os.path.join(metaimage_path, '*.mhd'))[0]
+def test_load_metaimage(ct_path, dicom_path):
+    path = glob(os.path.join(ct_path, '*.mhd'))[0]
     ct_array, meta = load_metaimage(path)
 
     assert isinstance(ct_array, np.ndarray)
@@ -41,12 +29,12 @@ def test_load_metaimage(metaimage_path, dicom_path):
         assert 'PNGImageIO failed to read header for file' in str(e)
 
 
-def test_load_ct(metaimage_path, dicom_path):
+def test_load_ct(ct_path, dicom_path):
     ct_array, meta = load_ct(dicom_path)
     assert isinstance(ct_array, np.ndarray)
     assert ct_array.shape[0] == len(meta)
 
-    ct_array, meta = load_ct(metaimage_path)
+    ct_array, meta = load_ct(ct_path)
     assert isinstance(ct_array, np.ndarray)
     assert isinstance(meta, SimpleITK.SimpleITK.Image)
 
@@ -56,24 +44,24 @@ def test_load_ct(metaimage_path, dicom_path):
         assert 'contain any .mhd or .dcm files' in str(e)
 
 
-def test_load_meta(metaimage_path, dicom_path):
+def test_load_meta(ct_path, dicom_path):
     meta = load_ct(dicom_path, voxel=False)
     assert isinstance(meta, list)
     assert len(meta) > 0
     assert all([isinstance(_slice, dicom.dataset.FileDataset)
                 for _slice in meta])
 
-    meta = load_ct(metaimage_path, voxel=False)
+    meta = load_ct(ct_path, voxel=False)
     assert isinstance(meta, SimpleITK.SimpleITK.Image)
 
 
-def test_metadata(metaimage_path, dicom_path):
+def test_metadata(ct_path, dicom_path):
     meta = load_ct(dicom_path, voxel=False)
     meta = MetaData(meta)
     zipped = zip(meta.spacing, (2.5, 0.703125, 0.703125))
     assert all([m_axis == o_axis for m_axis, o_axis in zipped])
 
-    meta = load_ct(metaimage_path, voxel=False)
+    meta = load_ct(ct_path, voxel=False)
     # the default axes order which is used is: (z, y, x)
     spacing = meta.GetSpacing()[::-1]
     meta = MetaData(meta)

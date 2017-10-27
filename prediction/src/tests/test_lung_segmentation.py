@@ -1,4 +1,3 @@
-import glob
 import pylidc as pl
 import pytest
 
@@ -9,20 +8,11 @@ from ..algorithms.identify.prediction import load_patient_images
 from ..preprocess.lung_segmentation import save_lung_segments, get_z_range
 
 
-def get_dicom_paths():
-    """Return DICOM paths to all LIDC directories
-    e.g. ['../images_full/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
-          '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192']"""
-    return glob.glob("../images_full/LIDC-IDRI-*/**/**")
-
-
 @skip_if_slow
-def test_lung_segmentation():
+def test_lung_segmentation(dicom_paths):
     """Test whether the annotations of the LIDC images are inside the segmented lung masks.
     Iterate over all local LIDC images, fetch the annotations, compute their positions within the masks and check that
     at this point the lung masks are set to 255."""
-
-    dicom_paths = glob.glob(Config.DICOM_PATHS_DOCKER_WILDCARD)
 
     for path in dicom_paths:
         min_z, max_z = get_z_range(path)

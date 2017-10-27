@@ -1,31 +1,20 @@
-import os
-import pytest
-import shutil
-
 from os import path, listdir
+from tempfile import TemporaryDirectory
 
 import numpy as np
-import pytest
 
 from ..preprocess.crop_dicom import crop_dicom
 
 
-@pytest.fixture
-def dicom_path():
-    os.makedirs('./temp')
-    yield '../images/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
-          '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192'
-    shutil.rmtree('./temp')
-
-
 def test_crop_dicom(dicom_path):
-    uncropped_series = crop_dicom(dicom_path, [0, 0, -95], [512, 512, -132.5], './temp/test1')
-    assert path.exists('./temp/test1/-95.000000.dcm')
-    assert path.exists('./temp/test1/-120.000000.dcm')
-    assert len([name for name in listdir('./temp/test1') if path.isfile('./temp/test1/' + name)]) == 16
-    assert len(uncropped_series) == 16
-    assert uncropped_series[0].Rows == 512
-    assert uncropped_series[0].Columns == 512
+    with TemporaryDirectory() as test_path:
+        uncropped_series = crop_dicom(dicom_path, [0, 0, -95], [512, 512, -132.5], test_path)
+        assert path.exists(path.join(test_path, '-95.000000.dcm'))
+        assert path.exists(path.join(test_path, '-120.000000.dcm'))
+        assert len([name for name in listdir(test_path) if path.isfile(path.join(test_path, name))]) == 16
+        assert len(uncropped_series) == 16
+        assert uncropped_series[0].Rows == 512
+        assert uncropped_series[0].Columns == 512
 
     cropped_series = crop_dicom(dicom_path, [100, 100, -101], [120, 120, -106])
     assert len(cropped_series) == 2

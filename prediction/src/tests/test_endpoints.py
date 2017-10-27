@@ -26,12 +26,6 @@ def get_data(response):
 
 
 @pytest.fixture
-def dicom_path():
-    return '../images/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
-           '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192'
-
-
-@pytest.fixture
 def client(request):
     app = create_app(config_mode='Test')
     client = app.test_client()
@@ -68,14 +62,10 @@ def test_endpoint_documentation(client):
 
 
 @skip_if_slow
-def test_identify(client, dicom_path):
+def test_identify(client, dicom_path, content_type):
     url = client.url_for('predict', algorithm='identify')
     test_data = {'dicom_path': dicom_path}
-
-    r = client.post(url,
-                    data=json.dumps(test_data),
-                    content_type='application/json')
-
+    r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
     assert isinstance(data['prediction'], list)
     assert len(data['prediction']) > 0
@@ -87,26 +77,18 @@ def test_identify(client, dicom_path):
         assert prediction['z'] > 0
 
 
-def test_classify(client, dicom_path):
+def test_classify(client, dicom_path, content_type):
     url = client.url_for('predict', algorithm='classify')
     test_data = {'dicom_path': dicom_path, 'centroids': []}
-
-    r = client.post(url,
-                    data=json.dumps(test_data),
-                    content_type='application/json')
-
+    r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
     assert isinstance(data['prediction'], list)
 
 
-def test_segment(client, dicom_path):
+def test_segment(client, dicom_path, content_type):
     url = client.url_for('predict', algorithm='segment')
     test_data = {'dicom_path': dicom_path, 'centroids': []}
-
-    r = client.post(url,
-                    data=json.dumps(test_data),
-                    content_type='application/json')
-
+    r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
     assert isinstance(data['prediction']['binary_mask_path'], str)
     assert isinstance(data['prediction']['volumes'], list)
@@ -120,15 +102,11 @@ def test_bad_algorithm(client):
     assert "'blahblah' is not a valid algorithm" in data['error']
 
 
-def test_wrong_parameter(client):
+def test_wrong_parameter(client, content_type):
     # dicom_path missing
     url = client.url_for('predict', algorithm='identify')
     test_data = {}
-
-    r = client.post(url,
-                    data=json.dumps(test_data),
-                    content_type='application/json')
-
+    r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
     assert r.status_code == 500
     assert "'dicom_path'" in data['error']
@@ -136,11 +114,7 @@ def test_wrong_parameter(client):
     # centroids missing
     url = client.url_for('predict', algorithm='segment')
     test_data = {'dicom_path': ''}
-
-    r = client.post(url,
-                    data=json.dumps(test_data),
-                    content_type='application/json')
-
+    r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
     assert r.status_code == 500
     assert "'centroids'" in data['error']
@@ -148,27 +122,19 @@ def test_wrong_parameter(client):
     # centroids unnecessary
     url = client.url_for('predict', algorithm='identify')
     test_data = {'dicom_path': '', 'centroids': []}
-
-    r = client.post(url,
-                    data=json.dumps(test_data),
-                    content_type='application/json')
-
+    r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
     assert r.status_code == 500
     assert "'centroids'" in data['error']
 
 
 # test that other errors are passed through the API
-def test_other_error(client):
+def test_other_error(client, content_type):
     url = client.url_for('predict', algorithm='identify')
 
     # non-existent dicom path as example
     test_data = {'dicom_path': '/'}
-
-    r = client.post(url,
-                    data=json.dumps(test_data),
-                    content_type='application/json')
-
+    r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
     assert r.status_code == 500
 

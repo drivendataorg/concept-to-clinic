@@ -1,5 +1,7 @@
 import os
 
+from tempfile import NamedTemporaryFile
+
 import dicom
 import dicom_numpy
 import numpy as np
@@ -9,14 +11,6 @@ from ..preprocess import errors
 from ..preprocess.load_ct import read_dicom_files, _extract_voxel_data, load_dicom
 
 
-@pytest.fixture
-def dicom_path():
-    open('./not_a_dcm.xml', 'w+')
-    yield '../images/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
-          '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192'
-    os.remove('./not_a_dcm.xml')
-
-
 def test_read_files(dicom_path):
     files = read_dicom_files(os.path.join(dicom_path, '*.dcm'))
 
@@ -24,8 +18,9 @@ def test_read_files(dicom_path):
     assert len(files) > 0
     assert isinstance(files[0], dicom.dataset.Dataset)
 
-    with pytest.raises(dicom.errors.InvalidDicomError):
-        read_dicom_files('./not_a_dcm.xml')
+    with NamedTemporaryFile() as not_a_dcm:
+        with pytest.raises(dicom.errors.InvalidDicomError):
+            read_dicom_files(not_a_dcm.name)
 
     with pytest.raises(errors.EmptyDicomSeriesException):
         read_dicom_files(os.path.join('.', '*.dcm'))

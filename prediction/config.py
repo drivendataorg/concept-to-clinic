@@ -6,19 +6,22 @@
 """
 import os
 
+from os import path
+
 LIDC_WILDCARD = ['LIDC-IDRI-*', '**', '**']
 
 
 class Config(object):
     PROD_SERVER = os.getenv('PRODUCTION', False)
     DEBUG = False
-    # The following paths are expanded at runtime
-    CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-    PARENT_DIR = os.path.dirname(CURRENT_DIR)
-    SEGMENT_ASSETS_DIR = os.path.abspath(os.path.join(CURRENT_DIR, 'src', 'algorithms', 'segment', 'assets'))
-    DICOM_PATHS_DOCKER_WILDCARD = os.path.join(PARENT_DIR, 'images_full', *LIDC_WILDCARD)
-    DICOM_PATHS_LOCAL_WILDCARD = os.path.join(PARENT_DIR, 'tests', 'assets', 'test_image_data', 'full',
-                                              *LIDC_WILDCARD)
+    CURRENT_DIR = path.dirname(path.realpath(__file__))
+    PARENT_DIR = path.dirname(CURRENT_DIR)
+    ALGOS_DIR = path.abspath(path.join(CURRENT_DIR, 'src', 'algorithms'))
+    SEGMENT_ASSETS_DIR = path.abspath(path.join(ALGOS_DIR, 'segment', 'assets'))
+    FULL_DICOM_PATHS = path.join(PARENT_DIR, 'images_full')
+    SMALL_DICOM_PATHS = path.join(PARENT_DIR, 'images')
+    FULL_DICOM_PATHS_WILDCARD = path.join(FULL_DICOM_PATHS, *LIDC_WILDCARD)
+    SMALL_DICOM_PATHS_WILDCARD = path.join(FULL_DICOM_PATHS, *LIDC_WILDCARD)
 
 
 class Production(Config):
