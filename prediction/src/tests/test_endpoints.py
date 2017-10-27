@@ -75,21 +75,25 @@ def test_identify(client, dicom_path, content_type):
         assert all(prediction[pos] > 0 for pos in ['x', 'y', 'z'])
 
 
-def test_classify(client, dicom_path, content_type):
+def test_classify(client, metaimage_path, luna_nodule, content_type):
     url = client.url_for('predict', algorithm='classify')
-    test_data = {'dicom_path': dicom_path, 'centroids': []}
+    test_data = {'dicom_path': metaimage_path, 'centroids': [luna_nodule]}
     r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
-    assert isinstance(data['prediction'], list)
+    assert 'prediction' in data
+    assert data['prediction']
+    assert 0 <= data['prediction'][0]['p_concerning'] <= 1
 
 
-def test_segment(client, dicom_path, content_type):
+def test_segment(client, dicom_path, nodule_locations, content_type):
     url = client.url_for('predict', algorithm='segment')
-    test_data = {'dicom_path': dicom_path, 'centroids': []}
+    test_data = {'dicom_path': dicom_path, 'centroids': nodule_locations}
     r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
+    assert 'prediction' in data
     assert isinstance(data['prediction']['binary_mask_path'], str)
-    assert isinstance(data['prediction']['volumes'], list)
+    assert data['prediction']['volumes']
+    assert data['prediction']['volumes'][0] > 0
 
 
 def test_bad_algorithm(client):
