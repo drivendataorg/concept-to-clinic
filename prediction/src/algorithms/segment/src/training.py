@@ -15,6 +15,8 @@ try:
 except ValueError:
     from config import Config
 
+BEST_MODEL_PATH = os.path.join(Config.SEGMENT_ASSETS_DIR, 'best_model.hdf5')
+
 
 def get_data_shape():
     # We need a fixed input (and thus output) size of the model. Something like taking the biggest spreads in every
@@ -24,12 +26,6 @@ def get_data_shape():
     # max_x, max_y, max_z = get_max_scaled_dimensions(dicom_paths)
     # return max_x, max_y, max_z, 1
     return 128, 128, 128, 1
-
-
-def get_best_model_path():
-    current_dir = os.path.dirname(os.path.realpath(__file__))
-    assets_dir = os.path.abspath(os.path.join(current_dir, '../assets'))
-    return os.path.join(assets_dir, 'best_model.hdf5')
 
 
 def get_max_scaled_dimensions(dicom_paths):
@@ -64,16 +60,15 @@ def train(load_checkpoint=False):
     CUBOID_BATCH = 1  # How many training pairs should be passed to model.fit in one batch
 
     assets_dir = Config.SEGMENT_ASSETS_DIR
-    dicom_paths = glob.glob(Config.DICOM_PATHS_DOCKER_WILDCARD)
+    dicom_paths = Config.FULL_DICOM_PATHS
 
     labels = glob.glob(os.path.join(assets_dir, "segmented_lung_patient_*.npy"))
 
     input_data = np.zeros((CUBOID_BATCH, *CUBOID_IMAGE_SHAPE))
     output_data = np.zeros((CUBOID_BATCH, *CUBOID_IMAGE_SHAPE))
-    best_model_path = get_best_model_path()
 
-    if os.path.isfile(best_model_path) and load_checkpoint:
-        model = load_model(best_model_path)
+    if os.path.isfile(BEST_MODEL_PATH) and load_checkpoint:
+        model = load_model(BEST_MODEL_PATH)
     else:
         model = simple_model_3d(CUBOID_IMAGE_SHAPE)
 
@@ -96,5 +91,5 @@ def train(load_checkpoint=False):
             input_data[index, :, :, :, :] = new_input_img
             output_data[index, :, :, :, :] = new_output_img
 
-        model_checkpoint = ModelCheckpoint(best_model_path, monitor='loss', verbose=1, save_best_only=True)
+        model_checkpoint = ModelCheckpoint(BEST_MODEL_PATH, monitor='loss', verbose=1, save_best_only=True)
         model.fit(input_data, output_data, callbacks=[model_checkpoint], epochs=10)

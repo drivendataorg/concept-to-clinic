@@ -1,4 +1,3 @@
-import glob
 import os
 
 import numpy as np
@@ -14,15 +13,13 @@ def prepare_training_data(in_docker=True):
         in_docker: whether this method is invoked from within docker or from the prediction directory
     """
     INTERMEDIATE_MALICIOUS = 3
-    assets_dir = Config.SEGMENT_ASSETS_DIR
-    dicom_wildcard = Config.DICOM_PATHS_DOCKER_WILDCARD
-    dicom_paths = sorted(glob.glob(dicom_wildcard))
+    ASSETS_DIR = Config.SEGMENT_ASSETS_DIR
 
-    for path in dicom_paths:
+    for path in Config.FULL_DICOM_PATHS:
         directories = path.split(os.path.sep)
         lidc_id_path_index = 2 if in_docker else 5
         lidc_id = directories[lidc_id_path_index]
-        lung_patient_file = os.path.join(assets_dir, "segmented_lung_patient_{}".format(lidc_id))
+        lung_patient_file = os.path.join(ASSETS_DIR, "segmented_lung_patient_{}".format(lidc_id))
 
         if os.path.isfile(lung_patient_file):
             continue
