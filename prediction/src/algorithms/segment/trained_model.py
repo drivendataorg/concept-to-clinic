@@ -56,11 +56,7 @@ def predict(dicom_path, centroids):
     segment_path = os.path.join(os.path.dirname(__file__), 'assets', "lung-mask.npy")
     np.save(segment_path, output_data[0, :, :, :, 0])
     volumes = calculate_volume(segment_path, centroids)
-
-    return {
-        'binary_mask_path': segment_path,
-        'volumes': volumes
-    }
+    return {'binary_mask_path': segment_path, 'volumes': volumes}
 
 
 def calculate_volume(segment_path, centroids, ct_path=None):
