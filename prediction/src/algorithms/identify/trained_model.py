@@ -94,16 +94,18 @@ def run_prediction(patient_id, magnification=1, ext_name="luna_posnegndsb_v", ve
     holdout_choices = [0, 1]
 
     if magnification not in magnification_choices:
-        raise ValueError("magnification must be one of {} but was {}".format(magnification_choices, magnification))
+        message = 'magnification must be one of {} but was {}'
+        raise ValueError(message.format(magnification_choices, magnification))
 
     if ext_name not in ext_name_choices:
-        raise ValueError("ext_name must be one of {} but was {}".format(ext_name_choices, ext_name))
+        raise ValueError('ext_name must be one of {} but was {}'.format(ext_name_choices, ext_name))
 
     if ext_name == 'luna_posnegndsb_v':
         if version not in version_choices:
-            raise ValueError("version must be one of {} but was {}".format(version_choices, version))
+            raise ValueError('version must be one of {} but was {}'.format(version_choices, version))
+
         if holdout not in holdout_choices:
-            raise ValueError("holdout must be one of {} but was {}".format(holdout_choices, holdout))
+            raise ValueError('holdout must be one of {} but was {}'.format(holdout_choices, holdout))
 
     if ext_name == 'luna16_fs':
         model_path = path.join(MODELS_DIR, 'model_luna16_full__fs_best.hd5')
