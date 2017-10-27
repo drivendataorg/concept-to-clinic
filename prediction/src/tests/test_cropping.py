@@ -4,6 +4,8 @@ from tempfile import TemporaryDirectory
 import numpy as np
 
 from ..preprocess.crop_dicom import crop_dicom
+from ..preprocess.load_ct import load_ct
+from ..preprocess.crop_patches import patches_from_ct
 
 
 def test_crop_dicom(dicom_path):
@@ -27,3 +29,10 @@ def test_crop_dicom(dicom_path):
 
     assert np.asarray([x for x in cropped_series if x.SliceLocation == -102.5][0].pixel_array)[19][19] == \
         np.asarray([x for x in uncropped_series if x.SliceLocation == -102.5][0].pixel_array)[119][119]
+
+
+def test_patches_from_ct(ct_path, luna_nodules):
+    patches = patches_from_ct(*load_ct(ct_path), patch_shape=12, centroids=luna_nodules)
+    assert isinstance(patches, list)
+    assert len(patches) == 3
+    assert all(patch.shape == (12, 12, 12) for patch in patches)
