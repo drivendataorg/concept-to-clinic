@@ -67,14 +67,12 @@ def test_identify(client, dicom_path, content_type):
     test_data = {'dicom_path': dicom_path}
     r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
-    assert isinstance(data['prediction'], list)
-    assert len(data['prediction']) > 0
+    assert 'prediction' in data
+    assert data['prediction']
 
     for prediction in data['prediction']:
         assert (0.5 <= prediction['p_nodule'] < 1.0)
-        assert prediction['x'] > 0
-        assert prediction['y'] > 0
-        assert prediction['z'] > 0
+        assert all(prediction[pos] > 0 for pos in ['x', 'y', 'z'])
 
 
 def test_classify(client, dicom_path, content_type):

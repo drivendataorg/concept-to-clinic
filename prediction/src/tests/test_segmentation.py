@@ -20,4 +20,5 @@ def test_segment_predict(dicom_path):
 def test_classify_predict_inference(dicom_path, nodule_locations):
     predicted = predict(dicom_path, nodule_locations)
     assert isinstance(predicted['binary_mask_path'], str)
-    assert isinstance(predicted['volumes'], list)
+    assert predicted['volumes']
+    assert predicted['volumes'][0] > 0

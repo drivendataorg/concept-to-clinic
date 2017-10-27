@@ -44,7 +44,3 @@ def test_load_dicom(dicom_path):
     with pytest.raises(errors.EmptyDicomSeriesException):
         load_dicom('.')
 
-
-def test_load_meta(dicom_path):
-    dicom_series = load_ct(dicom_path, voxel=False)
-    assert isinstance(dicom_series, list)

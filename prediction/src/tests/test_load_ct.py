@@ -44,12 +44,11 @@ def test_load_ct(ct_path, dicom_path):
         assert 'contain any .mhd or .dcm files' in str(e)
 
 
-def test_load_meta(ct_path, dicom_path):
+def test_load_ct_no_voxel(ct_path, dicom_path):
     meta = load_ct(dicom_path, voxel=False)
     assert isinstance(meta, list)
     assert len(meta) > 0
-    assert all([isinstance(_slice, dicom.dataset.FileDataset)
-                for _slice in meta])
+    assert all([isinstance(_slice, dicom.dataset.FileDataset) for _slice in meta])
 
     meta = load_ct(ct_path, voxel=False)
     assert isinstance(meta, SimpleITK.SimpleITK.Image)

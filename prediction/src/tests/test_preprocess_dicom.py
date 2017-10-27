@@ -14,14 +14,12 @@ def test_create_params():
 
     with pytest.raises(TypeError):
         preprocess_ct.Params(clip_lower='one', clip_upper=0)
-    with pytest.raises(ValueError):
         preprocess_ct.Params(clip_lower=1, clip_upper=0)
-    with pytest.raises(ValueError):
         preprocess_ct.Params(ndim=0)
+        preprocess_ct.Params(min_max_normalize=[False])
+
     with pytest.raises(RuntimeError):
         preprocess_ct.Params(spacing=(1, 1, 1, 1), ndim=3)
-    with pytest.raises(TypeError):
-        preprocess_ct.Params(min_max_normalize=[False])
 
 
 def test_preprocess_dicom_pure(dicom_path):
