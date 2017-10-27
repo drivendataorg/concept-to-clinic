@@ -1,3 +1,5 @@
+from os import path
+
 import numpy as np
 import torch
 
@@ -5,6 +7,7 @@ from scipy.special import expit
 from torch import nn
 from torch.autograd import Variable
 
+from config import Config
 from src.preprocess import preprocess_ct, load_ct
 from src.preprocess.extract_lungs import extract_lungs
 
@@ -465,7 +468,7 @@ def filter_lungs(image, spacing=(1, 1, 1), fill_value=170):
     return extracted, mask
 
 
-def predict(ct_path, model_path="src/algorithms/identify/assets/dsb2017_detector.ckpt"):
+def predict(ct_path, model_path=None):
     """
 
     Args:
@@ -477,6 +480,10 @@ def predict(ct_path, model_path="src/algorithms/identify/assets/dsb2017_detector
       List of Nodule locations and probabilities
 
     """
+    if not model_path:
+        INDENTIFY_DIR = path.join(Config.ALGOS_DIR, 'identify')
+        model_path = path.join(INDENTIFY_DIR, 'assets', 'dsb2017_detector.ckpt')
+
     ct_array, meta = load_ct.load_ct(ct_path)
     meta = load_ct.MetaImage(meta)
     spacing = np.array(meta.spacing)

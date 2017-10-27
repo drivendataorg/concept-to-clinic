@@ -1,9 +1,12 @@
+from os import path
+
 import numpy as np
 import torch
 
 from torch import nn
 from torch.autograd import Variable
 
+from config import Config
 from src.preprocess.crop_patches import patches_from_ct
 from src.preprocess.load_ct import load_ct
 from src.preprocess.preprocess_ct import PreprocessCT
@@ -227,7 +230,7 @@ class CaseNet(nn.Module):
         return nodulePred, casePred, out
 
 
-def predict(ct_path, nodule_list, model_path="src/algorithms/classify/assets/gtr123_model.ckpt"):
+def predict(ct_path, nodule_list, model_path=None):
     """
 
     Args:
@@ -239,6 +242,10 @@ def predict(ct_path, nodule_list, model_path="src/algorithms/classify/assets/gtr
       List of nodules, and probabilities
 
     """
+    if not model_path:
+        CLASSIFY_DIR = path.join(Config.ALGOS_DIR, 'classify')
+        model_path = path.join(CLASSIFY_DIR, 'assets', 'gtr123_model.ckpt')
+
     if not nodule_list:
         return []
 
