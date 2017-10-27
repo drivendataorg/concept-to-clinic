@@ -1,6 +1,7 @@
 import pytest
 
-from src.preprocess import load_ct, crop_patches
+from ..preprocess.load_ct import load_ct
+from ..preprocess.crop_patches import patches_from_ct
 
 
 @pytest.fixture
@@ -12,7 +13,7 @@ def ct_path():
 def test_patches_from_ct(ct_path):
     centroids = [[556, 101, -70], [556, 121, -20], [556, 221, -77]]
     centroids = [{'z': centroid[0], 'y': centroid[1], 'x': centroid[2]} for centroid in centroids]
-    patches = crop_patches.patches_from_ct(*load_ct.load_ct(ct_path), patch_shape=12, centroids=centroids)
+    patches = patches_from_ct(*load_ct(ct_path), patch_shape=12, centroids=centroids)
     assert isinstance(patches, list)
     assert len(patches) == 3
     assert all([patch.shape == (12, 12, 12) for patch in patches])

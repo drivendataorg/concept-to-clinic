@@ -3,7 +3,7 @@ import glob
 import pytest
 from config import Config
 
-from ..algorithms.segment import trained_model
+from ..algorithms.segment.trained_model import predict
 
 
 def test_correct_paths():
@@ -20,11 +20,11 @@ def dicom_path():
 
 
 def test_segment_predict(dicom_path):
-    predicted = trained_model.predict(dicom_path, [])
+    predicted = predict(dicom_path, [])
     assert predicted['volumes'] == []
 
 
 def test_classify_predict_inference(dicom_path):
-    predicted = trained_model.predict(dicom_path, [{'x': 50, 'y': 50, 'z': 21}])
+    predicted = predict(dicom_path, [{'x': 50, 'y': 50, 'z': 21}])
     assert isinstance(predicted['binary_mask_path'], str)
     assert isinstance(predicted['volumes'], list)

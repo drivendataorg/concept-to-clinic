@@ -1,7 +1,7 @@
-import torch  # noqa # pylint: disable=unused-import
 import sys
 import os
 import pytest
+import torch  # noqa # pylint: disable=unused-import
 
 sys.path.append(os.path.join(os.path.dirname(__file__),
                              os.path.pardir,

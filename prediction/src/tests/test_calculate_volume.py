@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from ..algorithms.segment import trained_model
+from ..algorithms.segment.trained_model import calculate_volume
 
 
 def generate_motes(mask, centroid, volume):
@@ -33,7 +33,7 @@ def test_calculate_volume_over_unconnected_components(tmpdir):
     path = tmpdir.mkdir("masks").join("mask.npy")
     np.save(str(path), mask)
 
-    volumes_calculated = trained_model.calculate_volume(str(path), centroids)
+    volumes_calculated = calculate_volume(str(path), centroids)
     assert len(volumes_calculated) == 3
     assert volumes_calculated == [100, 20, 30]
 
@@ -54,7 +54,7 @@ def get_mask_connected(tmpdir_factory):
 
 def test_calculate_volume_over_connected_components(get_mask_connected):
     path, centroids = get_mask_connected
-    volumes_calculated = trained_model.calculate_volume(str(path), centroids)
+    volumes_calculated = calculate_volume(str(path), centroids)
 
     # Despite they are overlapped, the amount of volumes must have preserved
     assert len(volumes_calculated) == 3
@@ -66,7 +66,7 @@ def test_calculate_volume_over_connected_components_with_dicom_path(get_mask_con
     voxels_volumes = [100, 100, 30]
     dicom_path = '../images/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
                  '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192'
-    real_volumes = trained_model.calculate_volume(str(path), centroids, dicom_path)
+    real_volumes = calculate_volume(str(path), centroids, dicom_path)
 
     # Despite they are overlapped, the amount of volumes must have preserved
     assert len(real_volumes) == len(voxels_volumes)

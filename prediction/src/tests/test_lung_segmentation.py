@@ -1,11 +1,12 @@
 import glob
 import pylidc as pl
-from config import Config
 import pytest
-from src.algorithms.identify.prediction import load_patient_images
-from src.preprocess.lung_segmentation import save_lung_segments, get_z_range
+
+from config import Config
 
 from . import skip_if_slow
+from ..algorithms.identify.prediction import load_patient_images
+from ..preprocess.lung_segmentation import save_lung_segments, get_z_range
 
 
 def get_dicom_paths():

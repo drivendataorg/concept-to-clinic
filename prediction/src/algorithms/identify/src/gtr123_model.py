@@ -2,10 +2,11 @@ import numpy as np
 import torch
 
 from scipy.special import expit
-from src.preprocess import preprocess_ct, load_ct
-from src.preprocess.extract_lungs import extract_lungs
 from torch import nn
 from torch.autograd import Variable
+
+from src.preprocess import preprocess_ct, load_ct
+from src.preprocess.extract_lungs import extract_lungs
 
 """"
 Detector model from team gtr123

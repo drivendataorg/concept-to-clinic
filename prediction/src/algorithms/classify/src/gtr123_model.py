@@ -1,9 +1,13 @@
 import numpy as np
 import torch
-from src.preprocess import load_ct, preprocess_ct, crop_patches
 
 from torch import nn
 from torch.autograd import Variable
+
+from src.preprocess.crop_patches import patches_from_ct
+from src.preprocess.load_ct import load_ct
+from src.preprocess.preprocess_ct import PreprocessCT
+
 
 """"
 Classification model from team gtr123
@@ -247,12 +251,12 @@ def predict(ct_path, nodule_list, model_path="src/algorithms/classify/assets/gtr
     # else:
     #     casenet = torch.nn.parallel.DistributedDataParallel(casenet)
 
-    preprocess = preprocess_ct.PreprocessCT(clip_lower=-1200., clip_upper=600., spacing=1., order=1,
-                                            min_max_normalize=True, scale=255, dtype='uint8')
+    preprocess = PreprocessCT(clip_lower=-1200., clip_upper=600., spacing=1., order=1,
+                              min_max_normalize=True, scale=255, dtype='uint8')
 
-    ct_array, meta = preprocess(*load_ct.load_ct(ct_path))
-    patches = crop_patches.patches_from_ct(ct_array, meta, config['crop_size'], nodule_list,
-                                           stride=config['stride'], pad_value=config['filling_value'])
+    ct_array, meta = preprocess(*load_ct(ct_path))
+    patches = patches_from_ct(ct_array, meta, config['crop_size'], nodule_list,
+                              stride=config['stride'], pad_value=config['filling_value'])
 
     results = []
 
