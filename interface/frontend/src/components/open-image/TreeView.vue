@@ -15,14 +15,17 @@
                    :key="child.name"
                    :model="child"
         ></tree-view>
-        <li v-for="file in model.files" class="text-muted">{{ file.name }}</li>
+        <li @click="select(file.path)" v-for="file in model.files" class="text-muted">{{ file.name }}</li>
       </ul>
     </li>
   </ul>
 </template>
 
+
+
 <script>
   import TreeView from './TreeView'
+  import { EventBus } from '../../main.js'
 
   export default {
     name: 'tree-view',
@@ -70,6 +73,9 @@
     methods: {
       toggle: function () {
         this.$set(this, 'open', !this.open)
+      },
+      select: function (path) {
+        EventBus.$emit('dicom-selection', path)
       }
     }
   }

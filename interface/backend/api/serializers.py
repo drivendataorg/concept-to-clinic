@@ -1,6 +1,7 @@
 import dicom
 import base64
 from PIL import Image
+import numpy as np
 from io import BytesIO
 from backend.cases.models import (
     Case,
@@ -110,7 +111,7 @@ class DicomMetadataSerializer(serializers.BaseSerializer):
             'image': self.dicom_to_base64(obj),
         }
 
-    def dicom_to_base64(self, ds):
+    def dicom_to_base64_depricated(self, ds):
         """
         Returning base64 encoded string for a dicom image
         """
@@ -120,6 +121,18 @@ class DicomMetadataSerializer(serializers.BaseSerializer):
         preamble = 'data:image/jpg;base64,'
         base64_encoded = base64.b64encode(buff_output.getvalue()).decode()
         return preamble + base64_encoded
+
+    def pixel_data2str(self, buf):
+        _min, _max = buf.min(), buf.max()
+        buf = 254 * (np.array(buf, dtype=np.float) - _min) / (_max - _min) + 1
+        return buf.astype(np.uint16)
+
+    def dicom_to_base64(self, ds):
+        """
+        Returning base64 encoded string for a dicom image
+        """
+        rescaled = self.pixel_data2str(ds.pixel_array)
+        return base64.b64encode(rescaled.tobytes())
 
     def _sanitise_unicode(self, s):
         return s.replace(u"\u0000", "").strip()

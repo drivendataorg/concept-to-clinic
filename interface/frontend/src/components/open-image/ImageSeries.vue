@@ -35,8 +35,9 @@
           <div class="card-header">
             Import image series
           </div>
-          <div class="card-block">
-            <tree-view class="item" :model="directories"></tree-view>
+          <div class="card-block left">
+            <tree-view class="item left" :model="directories"></tree-view>
+            <open-dicom class="right" :view="preview"></open-dicom>
           </div>
         </div>
       </div>
@@ -76,11 +77,14 @@
 </template>
 
 <script>
+  import { EventBus } from '../../main.js'
   import TreeView from './TreeView'
+  import OpenDicom from './OpenDICOM'
 
   export default {
     components: {
-      TreeView
+      TreeView,
+      OpenDicom
     },
     data () {
       return {
@@ -89,6 +93,12 @@
           name: 'root',
           children: []
         },
+        preview: {
+          type: 'DICOM',
+          prefixCS: ':/',
+          prefixUrl: '/api/images/metadata?dicom_location=/',
+          path: ''
+        },
         selected: null,
         showImport: false
       }
@@ -96,6 +106,12 @@
     created () {
       this.fetchData()
       this.fetchAvailableImages()
+    },
+    mounted: function () {
+      EventBus.$on('dicom-selection', (path) => {
+        this.preview.path = path
+        console.log(this.preview)
+      })
     },
     methods: {
       fetchData () {
@@ -125,4 +141,10 @@
 </script>
 
 <style lang="scss" scoped>
+  .left {
+    float: left;
+  }
+  .right {
+    float: right;
+  }
 </style>

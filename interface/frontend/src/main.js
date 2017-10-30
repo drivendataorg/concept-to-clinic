@@ -9,7 +9,7 @@ import './assets/css/bootstrap.min.css'
 import './assets/css/font-awesome.min.css'
 import './assets/css/project.css'
 import './assets/js/ie10-viewport-bug-workaround.js'
-
+export const EventBus = new Vue()
 Vue.use(VueResource)
 Vue.use(VueRouter)
 Vue.prototype.$constants = constants
