@@ -11,8 +11,8 @@
 
     <div class="lung-select-container">
       <form>
-        <radio-input v-model="lungOrientation" name="lung" :value="lungOrientations.left" label="Left lung"></radio-input>
-        <radio-input v-model="lungOrientation" name="lung" :value="lungOrientations.right" label="Right lung"></radio-input>
+        <radio-input v-model="lungOrientation" name="lung" :value="LUNG_ORIENTATION.LEFT" label="Left lung"></radio-input>
+        <radio-input v-model="lungOrientation" name="lung" :value="LUNG_ORIENTATION.RIGHT" label="Right lung"></radio-input>
       </form>
     </div>
 
@@ -57,7 +57,7 @@ export default {
   props: ['nodule', 'index'],
   data () {
     return {
-      lungOrientations: this.$constants.lungOrientations,
+      LUNG_ORIENTATION: this.$constants.LUNG_ORIENTATION,
       solidity: 'solid',
       condition: 'unchanged',
       lungOrientation: this.nodule.lung_orientation,
@@ -71,10 +71,10 @@ export default {
   methods: {
     update (nodule) {
       this.$axios.put(nodule.url, {
-        solidity: this.solidity,
-        concerning: this.concerning,
         lung_orientation: this.lungOrientation,
+        concerning: this.concerning,
         condition: this.condition,
+        solidity: this.solidity,
         note: this.note
       })
       .then((response) => {

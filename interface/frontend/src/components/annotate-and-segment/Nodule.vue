@@ -26,8 +26,7 @@ export default {
   data () {
     return {
       isOpen: false,
-      selected: this.nodule.lung_orientation,
-      lungOrientations: this.$constants.lungOrientations
+      selected: this.nodule.lung_orientation
     }
   },
   created () {

@@ -1,116 +1,143 @@
 <template>
-  <div>
-    <h2>Technical parameters</h2>
-    <li>kVp: {{ study.kVp }}</li>
-    <li>mA: {{ study.mA }}</li>
-    <li>DLP: {{ study.DLP }}</li>
+<div class="offset-top container">
+  <div class="row">
+    <div class='col-md-3'>
+      <outline-nav :outlines="outlines" v-model="activeOutlineId"></outline-nav>
+    </div>
 
-    <h2>Clinical information</h2>
-    <li>Screening visit: {{ study.screeningVisit }}</li>
-    <li>{{ study.clinicalInformation }}</li>
+    <div class='col-md-9'>
+      <rsna-standard-template
+        v-show="activeOutlineId === '#RSNA'"
+        :rsna="study">
+      </rsna-standard-template>
 
+      <acr-lung-rad-findings
+        v-show="activeOutlineId === '#ACR'">
+      </acr-lung-rad-findings>
 
-    <h2>Comparison</h2>
-    <li>{{ study.comparison }}</li>
+      <export-3d-imagery
+        v-show="activeOutlineId === '#Export3D'">
+      </export-3d-imagery>
 
-    <h2>Findings</h2>
-    <h4>Exam parameters</h4>
-    <li>Diagnostic quality: {{ study.diagnosticQuality }}</li>
-    <li>Comments: {{ study.examParametersComment }}</li>
-
-    <h4>Lung nodules</h4>
-
-    {% for nodule in study.nodules %}
-    <li>{{ nodule.diameter }} </li>
-    <li>{{ nodule.appearanceFeature }} </li>
-    <li>{{ nodule.densityFeature }} </li>
-    <li>{{ nodule.imageNo }} </li>
-    {% endfor %}
-
-    <li v-for='nodule in study.nodules'>
-      <a href='#' @click='selectSeries(series)'>{{ series.series_instance_uid }}</a>
-      <span v-if='series == selected'>&larr;</span>
-    </li>
-
-
-    <h4>Lungs</h4>
-    <li>COPD: {{ study.COPD }}</li>
-    <li>Filiosis: {{ study.filiosis }}</li>
-    <li>Lymph nodes: {{ study.lymphNodes }}</li>
-    <li>Other findings: {{ study.otherFindings }}</li>
-
-    <h4>Right pleural space</h4>
-    <li>Effusion: {{ study.rightPleuralSpace.effusion }}</li>
-    <li>Calcification: {{ study.rightPleuralSpace.calcification }}</li>
-    <li>Thickening: {{ study.rightPleuralSpace.thickening }}</li>
-    <li>Pneumothorax: {{ study.rightPleuralSpace.pneumothorax }}</li>
-
-    <h4>Left pleural space</h4>
-    <li>Effusion: {{ study.rightPleuralSpace.effusion }}</li>
-    <li>Calcification: {{ study.rightPleuralSpace.calcification }}</li>
-    <li>Thickening: {{ study.rightPleuralSpace.thickening }}</li>
-    <li>Pneumothorax: {{ study.rightPleuralSpace.pneumothorax }}</li>
-
-    <h4>Heart</h4>
-    <li>Heart size: {{ study.heartSize }}</li>
-    <li>Coronary calcification: {{ study.coronaryCalcification }}</li>
-    <li>Pericardial effusion: {{ study.pericardialEffusion }}</li>
-
-    <h4>Other findings</h4>
-    <li>Upper abdomen: {{ study.upper_abdomen }}</li>
-    <li>Thorax: {{ study.thorax }}</li>
-    <li>Base of neck: {{ study.base_of_neck }}</li>
-    <h2>Impression</h2>
-    <li>Need comparison: {{ study.need_comparison }}</li>
-    <li>Repeat CT: {{ study.repeatCT }}</li>
-    <li>See physician: {{ study.see_physician }}</li>
-    <li>{{ study.impressionComment }}</li>
+    </div>
 
   </div>
+
+</div>
 </template>
 
+<style media="screen" lang="scss" scoped>
+.offset-top {
+    margin-top: 5em;
+}
+@media screen and (max-width: 990px) {
+    .offset-top {
+        margin-top: 10em;
+    }
+}
+</style>
+
 <script>
-  export default {
-    data () {
-      return {
-        study: {
-          kVp: null,
-          mA: null,
-          DLP: null,
-          screeningVisit: 'BL',
-          clinicalInformation: '',
-          comparison: 'null',
-          diagnosticQuality: 'SF',
-          examParametersComment: '',
-          COPD: 0,
-          filiosis: 0,
-          lymphNodes: 'null.',
-          otherFindings: 'null.',
+import OutlineNav from '../components/report-and-export/OutlineNav'
+
+import RSNAStandardTemplate from '../components/report-and-export/RSNAStandardTemplate'
+import ACRLungRADFindings from '../components/report-and-export/ACRLungRADFindings'
+import Export3DImagery from '../components/report-and-export/Export3DImagery'
+
+export default {
+  components: {
+    OutlineNav,
+    'rsna-standard-template': RSNAStandardTemplate,
+    'acr-lung-rad-findings': ACRLungRADFindings,
+    'export-3d-imagery': Export3DImagery
+  },
+  data () {
+    return {
+      activeOutlineId: '#RSNA',
+      outlines: [
+        // {
+        //   name: 'Overview',
+        //   id: '#Overview'
+        // },
+        {
+          name: 'RSNA Standard Template',
+          id: '#RSNA'
+        },
+        {
+          name: 'ACR Lung-RAD™ Findings',
+          id: '#ACR'
+        },
+        {
+          name: 'Export 3D Imagery',
+          id: '#Export3D'
+        }
+      ],
+      study: {
+        technical: {
+          kVp: {
+            value: 120
+          },
+          mA: {
+            value: 93
+          },
+          DLP: {
+            value: 18,
+            unit: 'µSv/mGy'
+          }
+        },
+        clinical: {
+          visit: 'Year 1',
+          reason: 'Lung cancer screening'
+        },
+        comparison: 'None.',
+        findings: {
+          exam: {
+            diagnosticQuality: this.$constants.DIAGNOSTIC_QUALITY.SATISFACTORY,
+            comments: 'None.'
+          },
+          lungNodules: [{
+            solidity: this.$constants.SOLIDITY.SOLID,
+            lung_orientation: this.$constants.LUNG_ORIENTATION.LEFT,
+            condition: this.$constants.CONDITION.INCREASED,
+            image: '/path/to/image'
+          }],
+          lungs: {
+            copd: this.$constants.SEVERITY.SEVERE,
+            fibrosis: this.$constants.SEVERITY.MILD,
+            lymphNodes: 'None.',
+            otherFindings: 'None.'
+          },
           rightPleuralSpace: {
-            effusion: 0,
-            calcification: 0,
-            thickening: 0,
-            pneumothorax: 0
+            effusion: this.$constants.SIZE.MODERATE,
+            calcification: this.$constants.SPREAD.EXTENSIVE,
+            thickening: this.$constants.SPREAD.NONE,
+            pneumothorax: this.$constants.SIZE.LARGE
           },
           leftPleuralSpace: {
-            effusion: 0,
-            calcification: 0,
-            thickening: 0,
-            pneumothorax: 0
+            effusion: this.$constants.SIZE.MODERATE,
+            calcification: this.$constants.SPREAD.EXTENSIVE,
+            thickening: this.$constants.SPREAD.NONE,
+            pneumothorax: this.$constants.SIZE.LARGE
           },
-          heartSize: 0,
-          coronaryCalcification: 0,
-          pericardialEffusion: 0,
-          upperAbdomen: 'null',
-          thorax: 'null',
-          baseOfNeck: 'null',
-          needComparison: 'No',
-          repeatCT: 'T1',
-          seePhysician: 'NO',
-          impressionComment: ''
+          heart: {
+            sizeEnlargement: this.$constants.SIZE.LARGE,
+            coronaryCalcification: this.$constants.SEVERITY.MODERATE,
+            pericardialEffusion: this.$constants.SEVERITY.SEVERE
+          },
+          other: {
+            upperAbdomen: 'None.',
+            thorax: 'None.',
+            baseOfNeck: 'None.'
+          }
         },
-        nodule: []
+        impression: {
+          needComparison: 'Yes',
+          repeatCT: this.$constants.REPEAT_CT.SIX_MONTH,
+          seePhysician: this.$constants.PHYSICIAN_VISIT.YES_CANCER,
+          comments: 'None.'
+        }
       }
     }
   }
+}
 </script>
