@@ -72,6 +72,7 @@ services:
       - FLASK_APP=src/factory.py
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
+      - RUN_SLOW_TESTS=false
     volumes:
       - ./prediction/:/app:cached
       - ./tests/assets/test_image_data/small:/images:cached
