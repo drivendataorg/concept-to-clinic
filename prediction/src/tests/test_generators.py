@@ -1,16 +1,9 @@
 import os
 import warnings
-
 import numpy as np
-import pytest
 import scipy.ndimage
+
 from src.preprocess import load_ct, generators
-
-
-@pytest.fixture(scope='session')
-def ct_path():
-    return '../images/LUNA-0001/' \
-           + '1.3.6.1.4.1.14519.5.2.1.6279.6001.102133688497886810253331438797'
 
 
 def test_generators_shift(ct_path):
@@ -62,6 +55,7 @@ def test_generators_rotate_in_flow(ct_path):
     augmented = next(dg.flow(batch, batch_size=1, seed=21))
     assert len(augmented.shape) == 5
     assert augmented.shape == batch.shape
+
     np.random.seed(21)
     rotated = generators.random_rotation(batch[0], (45, 45, 45))
     assert not np.abs(rotated - augmented).sum()
@@ -74,6 +68,7 @@ def test_generators_shift_in_flow(ct_path):
     augmented = next(dg.flow(batch, batch_size=1, seed=21))
     assert len(augmented.shape) == 5
     assert augmented.shape == batch.shape
+
     np.random.seed(21)
     shifted = generators.random_shift(batch[0], (.1, .4, .4))
     assert not np.abs(shifted - augmented).sum()
@@ -87,6 +82,7 @@ def test_generators_zoom_in_flow(ct_path):
     augmented = next(dg.flow(batch, batch_size=1, seed=21))
     assert len(augmented.shape) == 5
     assert augmented.shape == batch.shape
+
     np.random.seed(21)
     zoomed = generators.random_zoom(batch[0], zoom_lower=[1, .8, .8], zoom_upper=[1, 1.2, 1.2], independent=True)
     assert not np.abs(zoomed - augmented).sum()
@@ -99,6 +95,7 @@ def test_generators_shear_in_flow(ct_path):
     augmented = next(dg.flow(batch, batch_size=1, seed=21))
     assert len(augmented.shape) == 5
     assert augmented.shape == batch.shape
+
     np.random.seed(21)
     sheared = generators.random_shear(batch[0], (10, 10, 10))
     assert not np.abs(sheared - augmented).sum()
@@ -111,12 +108,14 @@ def test_generators_standardization(ct_path):
                                   featurewise_std_normalization=True,
                                   samplewise_center=True,
                                   samplewise_std_normalization=True)
+
     with warnings.catch_warnings():
         warnings.filterwarnings('error')
         try:
             next(dg.flow(batch, batch_size=1))
         except Warning as w:
             assert "Fit it first by calling `.fit(numpy_data)`" in str(w)
+
     dg.fit(batch)
     normalized = next(dg.flow(batch, batch_size=1))
     assert len(normalized.shape) == 5
@@ -133,12 +132,14 @@ def test_generators_save_to_dir(ct_path, tmpdir):
                                                       index=0,
                                                       hash=np.random.randint(1e4),
                                                       format='npy')
+
     fname = str(tmpdir.mkdir("processed").join(fname))
     batch = next(dg.flow(batch,
                          seed=1,
                          batch_size=1,
                          save_to_dir=os.path.dirname(fname),
                          save_prefix=save_prefix))
+
     saved = np.load(fname)
     assert len(saved.shape) == 4
     assert saved.shape == batch[0].shape

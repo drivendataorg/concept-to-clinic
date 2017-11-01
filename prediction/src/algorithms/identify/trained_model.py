@@ -6,11 +6,15 @@
     An API for a trained identification model to make predictions
     for where the centroids of nodules are in the DICOM image.
 """
+from os import path
 
 import SimpleITK as sitk
 
+from config import Config
 from . import prediction
 from .src import gtr123_model
+
+MODELS_DIR = path.join(Config.CURRENT_DIR, 'identify_models')
 
 
 def predict(dicom_path):
@@ -40,6 +44,7 @@ def predict(dicom_path):
 
     reader = sitk.ImageSeriesReader()
     filenames = reader.GetGDCMSeriesFileNames(dicom_path)
+
     if not filenames:
         message = "The path {} doesn't contain any .mhd or .dcm files"
         raise ValueError(message.format(dicom_path))
@@ -83,27 +88,33 @@ def run_prediction(patient_id, magnification=1, ext_name="luna_posnegndsb_v", ve
              'z': int,
              'p_nodule': float}
     """
-
     magnification_choices = [1, 1.5, 2]
     ext_name_choices = ["luna16_fs", "luna_posnegndsb_v"]
     version_choices = [1, 2]
     holdout_choices = [0, 1]
 
     if magnification not in magnification_choices:
-        raise ValueError("magnification must be one of {} but was {}".format(magnification_choices, magnification))
+        message = 'magnification must be one of {} but was {}'
+        raise ValueError(message.format(magnification_choices, magnification))
+
     if ext_name not in ext_name_choices:
-        raise ValueError("ext_name must be one of {} but was {}".format(ext_name_choices, ext_name))
+        raise ValueError('ext_name must be one of {} but was {}'.format(ext_name_choices, ext_name))
+
     if ext_name == 'luna_posnegndsb_v':
         if version not in version_choices:
-            raise ValueError("version must be one of {} but was {}".format(version_choices, version))
+            raise ValueError('version must be one of {} but was {}'.format(version_choices, version))
+
         if holdout not in holdout_choices:
-            raise ValueError("holdout must be one of {} but was {}".format(holdout_choices, holdout))
+            raise ValueError('holdout must be one of {} but was {}'.format(holdout_choices, holdout))
 
     if ext_name == 'luna16_fs':
-        results_df = prediction.predict_cubes("/identify_models/model_luna16_full__fs_best.hd5", patient_id,
-                                              magnification=magnification, ext_name="luna16_fs")
+        model_path = path.join(MODELS_DIR, 'model_luna16_full__fs_best.hd5')
+        ext = 'luna16_fs'
+        results_df = prediction.predict_cubes(model_path, patient_id, magnification=magnification, ext_name=ext)
     else:
-        results_df = prediction.predict_cubes(
-            "/identify_models/model_luna_posnegndsb_v" + str(version) + "__fs_h" + str(holdout) + "_end.hd5",
-            patient_id, magnification=magnification, ext_name="luna_posnegndsb_v" + str(version))
+        model = 'model_luna_posnegndsb_v{}__fs_h{}_end.hd5'
+        model_path = path.join(MODELS_DIR, model.format(version, holdout))
+        ext = 'luna_posnegndsb_v{}'.format(version)
+        results_df = prediction.predict_cubes(model_path, patient_id, magnification=magnification, ext_name=ext)
+
     return results_df

@@ -103,7 +103,7 @@ def evaluate(ground_true, predicted, threshold=0., uns_smooth=1e-1):
              specificity (double)
              dice_coefficient (double)}.
     """
-    metrics = dict()
+    metrics = {}
     metrics['hausdorff_distance'] = hausdorff_distance(ground_true, predicted)
     metrics['dice_coefficient_uns'] = dice_coefficient_uns(ground_true, predicted, uns_smooth)
 

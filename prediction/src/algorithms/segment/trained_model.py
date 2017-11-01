@@ -14,7 +14,7 @@ import scipy.ndimage
 from keras.models import load_model
 
 from ...algorithms.segment.src.model import dice_coef_loss, dice_coef
-from ...algorithms.segment.src.training import get_best_model_path, get_data_shape
+from ...algorithms.segment.src.training import BEST_MODEL_PATH, get_data_shape
 from ...preprocess.load_ct import load_ct, MetaData
 
 
@@ -43,7 +43,7 @@ def predict(dicom_path, centroids):
              'volumes': list[float]}
     """
     voxel_data, meta = load_ct(dicom_path)
-    model = load_model(get_best_model_path(), custom_objects={'dice_coef_loss': dice_coef_loss, 'dice_coef': dice_coef})
+    model = load_model(BEST_MODEL_PATH, custom_objects={'dice_coef_loss': dice_coef_loss, 'dice_coef': dice_coef})
     x, y, z, channels = get_data_shape()
     input_data = np.ndarray((1, x, y, z, channels))  # batch, x, y, z, channels
     # Crop the input data to the required data shape and pad with zeros
@@ -56,11 +56,7 @@ def predict(dicom_path, centroids):
     segment_path = os.path.join(os.path.dirname(__file__), 'assets', "lung-mask.npy")
     np.save(segment_path, output_data[0, :, :, :, 0])
     volumes = calculate_volume(segment_path, centroids)
-
-    return {
-        'binary_mask_path': segment_path,
-        'volumes': volumes
-    }
+    return {'binary_mask_path': segment_path, 'volumes': volumes}
 
 
 def calculate_volume(segment_path, centroids, ct_path=None):

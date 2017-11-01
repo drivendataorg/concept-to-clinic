@@ -4,9 +4,9 @@
 
     Provides unit tests for the API endpoints.
 """
-import os
-from functools import partial
 import json
+
+from functools import partial
 
 import pytest
 
@@ -14,13 +14,7 @@ from flask import url_for
 from src.algorithms import classify, identify, segment
 from src.factory import create_app
 
-
-def skip_slow_test():
-    """
-    Skip the wrapped test function unless the environment variable RUN_SLOW_TESTS is set.
-    """
-    value = os.environ.get('RUN_SLOW_TESTS')
-    return value.lower() not in {'1', 'true'}
+from . import skip_if_slow
 
 
 def get_data(response):
@@ -29,12 +23,6 @@ def get_data(response):
     content_type = response.headers.get('content-type', '')
     is_json = ('json' in mimetype) or ('json' in content_type)
     return json.loads(data) if is_json else data
-
-
-@pytest.fixture
-def dicom_path():
-    return '../images/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
-           '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192'
 
 
 @pytest.fixture
@@ -73,49 +61,33 @@ def test_endpoint_documentation(client):
         assert data['description'] == docstrings[algorithm]
 
 
-@pytest.mark.skipif(skip_slow_test, reason='Takes very long')
-def test_identify(client, dicom_path):
+@skip_if_slow
+def test_identify(client, dicom_path, content_type):
     url = client.url_for('predict', algorithm='identify')
-    test_data = dict(dicom_path=dicom_path)
-
-    r = client.post(url,
-                    data=json.dumps(test_data),
-                    content_type='application/json')
-
+    test_data = {'dicom_path': dicom_path}
+    r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
+    assert 'prediction' in data
+    assert data['prediction']
 
-    assert isinstance(data['prediction'], list)
-    assert len(data['prediction']) > 0
     for prediction in data['prediction']:
         assert (0.5 <= prediction['p_nodule'] < 1.0)
-        assert prediction['x'] > 0
-        assert prediction['y'] > 0
-        assert prediction['z'] > 0
+        assert all(prediction[pos] > 0 for pos in ['x', 'y', 'z'])
 
 
-def test_classify(client, dicom_path):
+def test_classify(client, dicom_path, content_type):
     url = client.url_for('predict', algorithm='classify')
-    test_data = dict(dicom_path=dicom_path, centroids=[])
-
-    r = client.post(url,
-                    data=json.dumps(test_data),
-                    content_type='application/json')
-
+    test_data = {'dicom_path': dicom_path, 'centroids': []}
+    r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
-
     assert isinstance(data['prediction'], list)
 
 
-def test_segment(client, dicom_path):
+def test_segment(client, dicom_path, content_type):
     url = client.url_for('predict', algorithm='segment')
-    test_data = dict(dicom_path=dicom_path, centroids=[])
-
-    r = client.post(url,
-                    data=json.dumps(test_data),
-                    content_type='application/json')
-
+    test_data = {'dicom_path': dicom_path, 'centroids': []}
+    r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
-
     assert isinstance(data['prediction']['binary_mask_path'], str)
     assert isinstance(data['prediction']['volumes'], list)
 
@@ -128,47 +100,41 @@ def test_bad_algorithm(client):
     assert "'blahblah' is not a valid algorithm" in data['error']
 
 
-def test_wrong_parameter(client):
+def test_wrong_parameter(client, content_type):
     # dicom_path missing
     url = client.url_for('predict', algorithm='identify')
-    test_data = dict()
-    r = client.post(url,
-                    data=json.dumps(test_data),
-                    content_type='application/json')
+    test_data = {}
+    r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
     assert r.status_code == 500
     assert "'dicom_path'" in data['error']
 
     # centroids missing
     url = client.url_for('predict', algorithm='segment')
-    test_data = dict(dicom_path='')
-    r = client.post(url,
-                    data=json.dumps(test_data),
-                    content_type='application/json')
+    test_data = {'dicom_path': ''}
+    r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
     assert r.status_code == 500
     assert "'centroids'" in data['error']
 
     # centroids unnecessary
     url = client.url_for('predict', algorithm='identify')
-    test_data = dict(dicom_path='', centroids=[])
-    r = client.post(url,
-                    data=json.dumps(test_data),
-                    content_type='application/json')
+    test_data = {'dicom_path': '', 'centroids': []}
+    r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
     assert r.status_code == 500
     assert "'centroids'" in data['error']
 
 
 # test that other errors are passed through the API
-def test_other_error(client):
+def test_other_error(client, content_type):
     url = client.url_for('predict', algorithm='identify')
+
     # non-existent dicom path as example
-    test_data = dict(dicom_path='/')
-    r = client.post(url,
-                    data=json.dumps(test_data),
-                    content_type='application/json')
+    test_data = {'dicom_path': '/'}
+    r = client.post(url, data=json.dumps(test_data), content_type=content_type)
     data = get_data(r)
     assert r.status_code == 500
+
     message = "The path / doesn't contain any .mhd or .dcm files"
     assert message in data['error']

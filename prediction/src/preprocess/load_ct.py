@@ -48,6 +48,7 @@ def load_dicom(path, voxel=True):
 
     file_pattern = os.path.join(path, '*.dcm')
     meta = read_dicom_files(file_pattern)
+
     if voxel:
         voxel_data = _extract_voxel_data(meta)
         meta = [voxel_data, meta]
@@ -69,6 +70,7 @@ def load_metaimage(path, voxel=True):
     """
 
     meta = SimpleITK.ReadImage(path)
+
     if voxel:
         voxel_data = SimpleITK.GetArrayFromImage(meta)
         meta = [voxel_data, meta]
@@ -96,6 +98,7 @@ def load_ct(path, voxel=True):
     mhd_pattern = os.path.join(path, '*.mhd')
     mhd_pattern = [path] + glob(mhd_pattern)
     mhd_pattern = next(filter(lambda x: x[-4:].lower() == '.mhd', mhd_pattern), None)
+
     if dicom_pattern:
         meta = load_dicom(path, voxel=voxel)
     elif mhd_pattern:
@@ -155,9 +158,12 @@ class MetaData:
         self.origin = None
 
         dicom_meta = False
+
         if isinstance(self.meta, list) and self.meta:
-            dicom_meta = all([isinstance(_slice, dicom.dataset.FileDataset) for _slice in meta])
+            dicom_meta = all(isinstance(_slice, dicom.dataset.FileDataset) for _slice in meta)
+
         mhd_meta = isinstance(self.meta, SimpleITK.SimpleITK.Image)
+
         if dicom_meta:
             # list of methods for DICOM meta
             self.spacing = self.extract_spacing_dcm()
