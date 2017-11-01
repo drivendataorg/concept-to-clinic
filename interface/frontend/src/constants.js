@@ -4,50 +4,104 @@ export default {
     LEFT: 1,
     RIGHT: 2
   },
+  LUNG_ORIENTATION_STRINGS: ['None', 'Left', 'Right'],
   DIAGNOSTIC_QUALITY: {
-    NONE: 'Non-diagnostic',
-    LIMITED: 'Limited, but interpretable',
-    SATISFACTORY: 'Satisfactory'
+    NONE: 0,
+    LIMITED: 1,
+    SATISFACTORY: 2
   },
+  DIAGNOSTIC_QUALITY_STRINGS: [
+    'Non-diagnostic',
+    'Limited, but interpretable',
+    'Satisfactory'
+  ],
   SOLIDITY: {
-    SOLID: 'Solid',
-    SEMI_SOLID: 'Semi-solid',
-    GROUND_GLASS: 'Ground glass'
+    SOLID: 0,
+    SEMI_SOLID: 1,
+    GROUND_GLASS: 2
   },
+  SOLIDITY_STRINGS: [
+    'Solid',
+    'Semi-solid',
+    'Ground glass'
+  ],
   CONDITION: {
-    UNCHANGED: 'Unchanged',
-    INCREASED: 'Increased',
-    DECREASED: 'Decreased',
-    NEW: 'New'
+    UNCHANGED: 0,
+    INCREASED: 1,
+    DECREASED: 2,
+    NEW: 3
   },
+  CONDITION_STRINGS: [
+    'Unchanged',
+    'Increased',
+    'Decreased',
+    'New'
+  ],
   SEVERITY: {
     NONE: 0,
     MILD: 1,
     MODERATE: 2,
     SEVERE: 3
   },
+  SEVERITY_STRINGS: [
+    'None',
+    'Mild',
+    'Moderate',
+    'Severe'
+  ],
+  HEART_ENLARGEMENT_STRINGS: [
+    'Normal',
+    'Mildly enlarged',
+    'Moderately enlarged',
+    'Severely enlarged'
+  ],
   SPREAD: {
     NONE: 0,
     MILD: 1,
     MODERATE: 2,
     EXTENSIVE: 3
   },
+  SPREAD_STRINGS: [
+    'None',
+    'Mild',
+    'Moderate',
+    'Extensive'
+  ],
   SIZE: {
     NONE: 0,
     SMALL: 1,
     MODERATE: 2,
     LARGE: 3
   },
+
+  SIZE_STRINGS: [
+    'None',
+    'Small',
+    'Moderate',
+    'Large'
+  ],
   PHYSICIAN_VISIT: {
-    NO: 'No',
-    YES_CANCER: 'YES. Suspect cancer',
-    YES_NON_MALIGNANT: 'YES, non-malignant finding'
+    NO: 0,
+    YES_CANCER: 1,
+    YES_NON_MALIGNANT: 2
   },
+  PHYSICIAN_VISIT_STRINGS: [
+    'No',
+    'YES. Suspect cancer',
+    'YES, non-malignant finding'
+  ],
   REPEAT_CT: {
-    THREE_MONTH: '3 months from screening exam',
-    SIX_MONTH: '6 months from screening exam',
-    THREE_TO_SIX_MONTH: '3 to 6 months from screening exam',
-    TWELVE_MONTH: '12 months from screening exam',
-    TWENTY_FOUR_MONTH: '24 months from screening exam'
-  }
+    THREE_MONTH: 0,
+    SIX_MONTH: 1,
+    THREE_TO_SIX_MONTH: 2,
+    TWELVE_MONTH: 3,
+    TWENTY_FOUR_MONTH: 4
+  },
+  REPEAT_CT_STRING: [
+    '3 months from screening exam',
+    '6 months from screening exam',
+    '3 to 6 months from screening exam',
+    '12 months from screening exam',
+    '24 months from screening exam'
+  ]
 }
