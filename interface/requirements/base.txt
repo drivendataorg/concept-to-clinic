@@ -2,7 +2,7 @@ Django==1.11.3
 djangorestframework==3.6.3
 
 # Database
-psycopg2==2.7.1
+psycopg2==2.7.3.1
 
 # Config
 django-dotenv==1.4.1

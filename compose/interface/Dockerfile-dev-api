@@ -1,10 +1,4 @@
-FROM python:3.6
-ENV PYTHONUNBUFFERED 1
-
-# Requirements have to be pulled and installed here, otherwise caching won't work
-COPY ./interface/requirements /requirements/interface
-RUN pip install -U pip
-RUN pip install -r /requirements/interface/local.txt
+FROM concepttoclinic_base
 
 # Copy the scripts into the container
 COPY ./compose/interface/entrypoint.sh /entrypoint.sh
