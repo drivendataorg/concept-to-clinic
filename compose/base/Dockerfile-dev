@@ -8,6 +8,9 @@ RUN python3.6 get-pip.py
 RUN rm /usr/bin/python
 RUN ln -s /usr/bin/python3.6 /usr/bin/python
 
+# Removing existing __pycache__ files
+RUN find . -type d -name __pycache__ -exec rm -r {} \+
+
 # Interface
 COPY ./interface/requirements /requirements/interface
 RUN pip install -U pip
