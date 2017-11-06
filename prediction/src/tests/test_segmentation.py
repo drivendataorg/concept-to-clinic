@@ -46,7 +46,7 @@ def test_lung_segmentation(dicom_paths):
 
         for annotation in scan.annotations:
             centroid_x, centroid_y, centroid_z = annotation.centroid()
-            patient_mask = load_patient_images(patient_id, wildcard="*_m.png", exclude_wildcards=[])
+            patient_mask = load_patient_images(patient_id, wildcard="*_m.png")
             x_mask = int(mask_shape[1] / original_shape[1] * centroid_x)
             y_mask = int(mask_shape[2] / original_shape[2] * centroid_y)
             z_mask = int(abs(min_z) - abs(centroid_z))
