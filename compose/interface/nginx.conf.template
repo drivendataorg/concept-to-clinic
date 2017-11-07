@@ -10,11 +10,16 @@ http {
     access_log /dev/stdout;
     server {
         listen   80;
-        server_name  C2C;
+        server_name  $NGINX_HOST;
 
         location / {
             root /app/dist;
             autoindex on;
+        }
+
+        location /api {
+            proxy_pass $NGINX_API_URL;
+            proxy_pass_request_headers on;
         }
     }
 }

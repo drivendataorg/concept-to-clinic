@@ -1,3 +1,3 @@
 #!/bin/sh
-# python /app/manage.py collectstatic --noinput
-/usr/local/bin/gunicorn config.wsgi -w 1 -b 0.0.0.0:5000 --chdir=/app
+python /app/manage.py migrate --settings=config.settings.production
+/usr/local/bin/gunicorn config.wsgi -w 1 -b 0.0.0.0:$PORT --chdir=/app
