@@ -1,0 +1,12 @@
+FROM node:8-slim
+
+
+RUN apt-get update && apt-get install -y nginx bzip2
+
+COPY ./interface/frontend /app
+RUN cd /app && npm install
+RUN cd /app && npm run build
+
+COPY ./compose/interface/nginx.conf /app/nginx.conf
+
+CMD ["nginx", "-c", "/app/nginx.conf"]

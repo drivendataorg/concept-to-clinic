@@ -1,0 +1,22 @@
+FROM ubuntu:rolling
+ENV PYTHONUNBUFFERED 1
+RUN apt-get update && apt-get install -y python3.6 wget
+RUN wget https://bootstrap.pypa.io/get-pip.py
+RUN python3.6 get-pip.py
+
+# Default to Python 3.6
+RUN ln -s /usr/bin/python3.6 /usr/bin/python
+
+# Prediction
+COPY ./interface/requirements/base.txt /requirements/base.txt
+COPY ./interface/requirements/production.txt /requirements/production.txt
+RUN pip install -r /requirements/production.txt
+
+COPY ./interface /app
+COPY ./compose/interface/gunicorn.sh /app/gunicorn.sh
+
+WORKDIR /app
+
+RUN chmod +x gunicorn.sh
+
+ENTRYPOINT ["/app/gunicorn.sh"]
