@@ -1,9 +1,11 @@
 <template>
   <ul>
     <li>
-      {{ model.name }}
-      <span v-if="isOpenable"  @click="toggle">
-        [{{open ? '-' : '+'}}]
+      <span @click="toggle" v-if="isOpenable">
+        {{ model.name }} [{{open ? '-' : '+'}}]
+      </span>
+      <span v-else>
+        {{ model.name }}
       </span>
       <span class="badge badge-default" v-if="hasFiles">
         {{ model.files.length }}
