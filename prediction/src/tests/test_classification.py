@@ -1,7 +1,7 @@
 from ..algorithms.classify import trained_model
 
 
-def test_classify_predict_model_load(metaimage_path, model_path):
+def test_classify_predict_load(metaimage_path, model_path):
     assert not trained_model.predict(metaimage_path, [], model_path)
 
 
