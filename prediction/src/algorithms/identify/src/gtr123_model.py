@@ -485,7 +485,7 @@ def predict(ct_path, model_path=None):
         model_path = path.join(INDENTIFY_DIR, 'assets', 'dsb2017_detector.ckpt')
 
     ct_array, meta = load_ct.load_ct(ct_path)
-    meta = load_ct.MetaImage(meta)
+    meta = load_ct.MetaData(meta)
     spacing = np.array(meta.spacing)
     masked_image, mask = filter_lungs(ct_array)
 
