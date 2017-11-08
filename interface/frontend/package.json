@@ -83,7 +83,7 @@
     "vue-template-compiler": "^2.4.2",
     "cornerstone-core": " 0.13.0",
     "cornerstone-tools": " 0.10.0",
-    "jquery": "^3.2.1",
+    "jquery-slim": "^3.0.0",
     "webpack": "^2.6.1",
     "webpack-bundle-analyzer": "^2.2.1",
     "webpack-dev-middleware": "^1.10.0",

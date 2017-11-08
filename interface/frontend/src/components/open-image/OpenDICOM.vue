@@ -8,7 +8,7 @@
 <script>
   const cornerstone = require('cornerstone-core')
   const cornerstoneTools = require('cornerstone-tools')
-  const jquery = require('jquery')
+  const jquery = require('jquery-slim')
   cornerstoneTools.external.cornerstone = cornerstone
   cornerstoneTools.external.$ = jquery
 
