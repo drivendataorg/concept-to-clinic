@@ -22,6 +22,8 @@ class Config(object):
     SMALL_DICOM_PATHS = path.join(PARENT_DIR, 'images')
     FULL_DICOM_PATHS_WILDCARD = path.join(FULL_DICOM_PATHS, *LIDC_WILDCARD)
     SMALL_DICOM_PATHS_WILDCARD = path.join(FULL_DICOM_PATHS, *LIDC_WILDCARD)
+    DATA_DIR = path.abspath(path.join(CURRENT_DIR, 'data'))
+    EXTRACTED_IMAGE_DIR = path.abspath(path.join(CURRENT_DIR, 'extracted'))
 
 
 class Production(Config):

@@ -15,10 +15,15 @@ from keras.optimizers import SGD
 
 from ...preprocess.lung_segmentation import rescale_patient_images
 
+try:
+    from ....config import Config
+except ValueError:
+    from config import Config
+
 CUBE_SIZE = 32
 CROP_SIZE = 32
 MEAN_PIXEL_VALUE = 41
-EXTRACTED_IMAGE_DIR = "data/extracted/"
+EXTRACTED_IMAGE_DIR = Config.EXTRACTED_IMAGE_DIR
 NODULE_DETECTION_DIR = "data/detections/"
 K.set_image_dim_ordering("tf")
 POS_WEIGHT = 2

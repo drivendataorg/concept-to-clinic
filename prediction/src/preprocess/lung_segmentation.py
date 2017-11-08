@@ -14,6 +14,11 @@ from skimage.measure import label, regionprops
 from skimage.morphology import disk, binary_erosion, binary_closing
 from skimage.segmentation import clear_border
 
+try:
+    from ...config import Config
+except ValueError:
+    from config import Config
+
 
 def get_z_range(dicom_path):
     """Return the Z range of the images in the DICOM path
@@ -47,7 +52,7 @@ def save_lung_segments(dicom_path, patient_id):
         Original patient images (z, x, y),
         Rescaled mask images (z, x, y)
     """
-    EXTRACTED_IMAGE_DIR = "data/extracted/"
+    EXTRACTED_IMAGE_DIR = Config.EXTRACTED_IMAGE_DIR
     TARGET_VOXEL_MM = 1.00
     target_dir = os.path.join(os.getcwd(), EXTRACTED_IMAGE_DIR, patient_id)
     os.makedirs(target_dir, exist_ok=True)
