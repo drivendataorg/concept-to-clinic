@@ -64,7 +64,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/prediction/Dockerfile-dev
-    command: flask run --host=0.0.0.0 --port=8001
+    command: python -m flask run --host=0.0.0.0 --port=8001
     depends_on:
       - base
     environment:
