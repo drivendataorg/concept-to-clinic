@@ -25,7 +25,7 @@ before_install:
 - docker-compose -v
 - docker -v
 install:
-- pip install flake8 pycodestyle
+- pip install flake8 pycodestyle requests
 before_script:
 - docker-compose -f local.yml build
 script:
