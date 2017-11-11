@@ -1,0 +1,6 @@
+template_path: templates/c2c.yaml
+parameters:
+  UIVersion: "{{ var.UIVersion }}"
+  APIVersion: "{{ var.APIVersion }}"
+  PredictionVersion: "{{ var.PredictionVersion }}"
+  PostgresVersion: "{{ var.PostgresVersion }}"

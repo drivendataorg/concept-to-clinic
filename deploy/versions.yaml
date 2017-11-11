@@ -1,0 +1,4 @@
+  UIVersion: 0.0.23
+  APIVersion: 0.0.22
+  PredictionVersion: latest
+  PostgresVersion: 9.6
