@@ -3,10 +3,14 @@ FROM node:8-slim
 RUN apt-get update && apt-get install -y nginx bzip2 gettext-base
 
 # get code
-COPY ./interface/frontend /app
+COPY ./interface/frontend/package.json /app/package.json
+COPY ./interface/frontend/package-lock.json /app/package-lock.json
 
 # install packages
 RUN cd /app && npm install
+
+# get code
+COPY ./interface/frontend /app
 
 # build application
 RUN cd /app && npm run build
@@ -14,6 +18,9 @@ RUN cd /app && npm run build
 COPY ./compose/interface/nginx.conf.template /app/nginx.conf.template
 
 COPY ./compose/interface/entrypoint-vue.sh /app
+
+# Add mime types
+COPY ./compose/interface/mime.types /app
 
 WORKDIR /app
 

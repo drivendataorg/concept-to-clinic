@@ -7,6 +7,8 @@ RUN python3.6 get-pip.py
 # Default to Python 3.6
 RUN ln -s /usr/bin/python3.6 /usr/bin/python
 
+COPY ./tests/assets/test_image_data/small /images
+
 # Prediction
 COPY ./interface/requirements/base.txt /requirements/base.txt
 COPY ./interface/requirements/production.txt /requirements/production.txt
