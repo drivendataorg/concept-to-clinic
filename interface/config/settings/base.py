@@ -14,9 +14,6 @@ import environ
 BASE_DIR = environ.Path(__file__) - 3
 APPS_DIR = BASE_DIR.path('backend')
 
-# Datasource from where the images will be loaded initially
-DATASOURCE_DIR = '/images'
-
 env = environ.Env()
 env.read_env(str(BASE_DIR.path('.env')))
 
@@ -136,3 +133,6 @@ try:
         APP_VERSION_NUMBER = f.readlines()[-1].split(' ')[1][:7]
 except (IOError, IndexError):
     APP_VERSION_NUMBER = '(unknown)'
+
+# Datasource from where the images will be loaded initially
+DATASOURCE_DIR = env("DATASOURCE_DIR", default='/images')
