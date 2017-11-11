@@ -8,6 +8,7 @@ events {
 
 http {
     access_log /dev/stdout;
+    include    /app/mime.types;
     server {
         listen   80;
         server_name  $NGINX_HOST;
