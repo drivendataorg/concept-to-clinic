@@ -10,7 +10,7 @@ pip install --user sceptre # install sceptre cli w/o sudo
 export PATH=$PATH:$HOME/.local/bin
 
 # docker login using AWS env vars
-eval $(aws ecr get-login --region us-east-1)
+eval $(aws ecr get-login --region us-east-1 --no-include-email)
 
 # build, tag, push API
 docker build -t concept-to-clinic/api:$VERSION --file ./compose/interface/Dockerfile-api .
@@ -29,4 +29,4 @@ docker push 113913174193.dkr.ecr.us-east-1.amazonaws.com/c2c-api:$VERSION
 
 # deploy to AWS
 sceptre --dir 'deploy/' --var "APIVersion=$VERSION" --var "UIVersion=$VERSION" --var "PredictionVersion=$VERSION" \
-    --var-file=versions.yaml update-stack dev c2c
+    --var-file=deploy/versions.yaml update-stack dev c2c
