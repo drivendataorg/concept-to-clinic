@@ -7,6 +7,10 @@
 
 <script>
   const cornerstone = require('cornerstone-core')
+  const cornerstoneTools = require('cornerstone-tools')
+  const jquery = require('jquery-slim')
+  cornerstoneTools.external.cornerstone = cornerstone
+  cornerstoneTools.external.$ = jquery
 
   export default {
     name: 'open-dicom',
@@ -17,25 +21,46 @@
           type: 'DICOM',
           prefixCS: ':/',
           prefixUrl: null,
-          path: null
+          paths: []
         }
       }
     },
     data () {
       return {
-        base64data: null
+        stack: {
+          currentImageIdIndex: 0,
+          imageIds: []
+        },
+        base64data: null,
+        pool: []
+      }
+    },
+    watch: {
+      'view.paths': function (val) {
+        const element = this.$refs.DICOM
+        this.pool = []
+        this.stack.currentImageIdIndex = 0
+        this.stack.imageIds = this.view.paths.map((path) => {
+          return this.view.type + this.view.prefixCS + path
+        }, this)
+        cornerstone.disable(element)
+        this.initCS(element)
       }
     },
     computed: {
       async info () {
-        const response = await this.$axios.get(this.view.prefixUrl + this.view.path)
-        return response.data
+        if (this.pool.length <= this.stack.currentImageIdIndex) {
+          const hola = await this.$axios.get(this.view.prefixUrl + this.view.paths[this.stack.currentImageIdIndex])
+          this.pool.push(hola)
+        }
+        return this.pool[this.stack.currentImageIdIndex]
       },
       async dicom () {
-        const info = await this.info
+        let info = await this.info
+        info = info.data
         this.base64data = info.image
         return {
-          imageId: this.view.type + this.view.prefixCS + this.view.path,
+          imageId: this.stack.imageIds[this.stack.currentImageIdIndex],
           slope: info.metadata['Rescale Slope'],
           rows: info.metadata['Rows'],
           columns: info.metadata['Columns'],
@@ -57,8 +82,6 @@
       async display () {
         const element = this.$refs.DICOM
         const dicom = await this.dicom
-        this.initCS(element)
-
         cornerstone.registerImageLoader(this.view.type, () => {
           return new Promise((resolve) => { resolve(dicom) })
         })
@@ -73,6 +96,13 @@
           cornerstone.getEnabledElement(element)
         } catch (e) {
           cornerstone.enable(element)
+          cornerstoneTools.mouseInput.enable(element)
+          cornerstoneTools.addStackStateManager(element, ['stack'])
+          cornerstoneTools.addToolState(element, 'stack', this.stack)
+          cornerstoneTools.stackScroll.activate(element, 1)
+          cornerstoneTools.stackScrollWheel.activate(element)
+          cornerstoneTools.scrollIndicator.enable(element)
+          cornerstoneTools.wwwc.activate(element, 1)
         }
       },
       str2pixelData (str) {
