@@ -16,6 +16,7 @@ services:
       context: .
       dockerfile: ./compose/base/Dockerfile-dev
     container_name: base
+    image: concepttoclinic_base
 
   interface:
     build:
