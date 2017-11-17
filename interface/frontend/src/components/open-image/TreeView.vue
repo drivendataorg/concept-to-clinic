@@ -17,7 +17,7 @@
                    :key="child.name"
                    :model="child"
         ></tree-view>
-        <li @click="select()" v-for="file in model.files" class="text-muted">{{ file.name }}</li>
+        <li @click="select()" v-for="file in model.files" class="text-muted" :key="file.name">{{ file.name }}</li>
       </ul>
     </li>
   </ul>

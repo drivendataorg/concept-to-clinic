@@ -55,7 +55,11 @@ class ImageMetadataApiView(APIView):
             type: string
         '''
         path = request.GET['dicom_location']
-        ds = dicom.read_file(path, force=True)
+        try:
+            ds = dicom.read_file(path, force=True)
+        except IOError as err:
+            print(err)
+            return Response(serializers.DicomMetadataSerializer().data)
         return Response(serializers.DicomMetadataSerializer(ds).data)
 
 

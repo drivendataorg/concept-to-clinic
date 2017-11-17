@@ -5,7 +5,7 @@
       <div v-if="nodules.length">
         <div id="accordion" role="tablist" aria-multiselectable="true">
           <template v-for="(nodule, index) in nodules">
-            <nodule :nodule="nodule" :index="index">
+            <nodule :nodule="nodule" :index="index" :key="index">
               <annotate v-if="annotate" :nodule="nodule" :index="index" slot="add-on-editor">
               </annotate>
             </nodule>

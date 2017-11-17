@@ -5,7 +5,7 @@
       <template v-if="candidates.length">
         <div id="accordion">
         <template v-for="(candidate, index) in candidates">
-          <candidate :candidate="candidate" :index="index"></candidate>
+          <candidate :candidate="candidate" :index="index" :key="index"></candidate>
         </template>
       </div>
       </template>
@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     fetchCandidates () {
-      this.$axios.get('/api/candidates')
+      this.$axios.get('/api/candidates/')
         .then((response) => {
           this.candidates = response.data
         })

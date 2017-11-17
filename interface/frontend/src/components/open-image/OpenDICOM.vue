@@ -9,6 +9,7 @@
   const cornerstone = require('cornerstone-core')
   const cornerstoneTools = require('cornerstone-tools')
   const jquery = require('jquery-slim')
+  const _ = require('lodash')
   cornerstoneTools.external.cornerstone = cornerstone
   cornerstoneTools.external.$ = jquery
 
@@ -58,36 +59,42 @@
       async dicom () {
         let info = await this.info
         info = info.data
-        this.base64data = info.image
-        return {
-          imageId: this.stack.imageIds[this.stack.currentImageIdIndex],
-          slope: info.metadata['Rescale Slope'],
-          rows: info.metadata['Rows'],
-          columns: info.metadata['Columns'],
-          height: info.metadata['Rows'],
-          width: info.metadata['Columns'],
-          columnPixelSpacing: info.metadata['Pixel Spacing']['0'],
-          rowPixelSpacing: info.metadata['Pixel Spacing']['1'],
-          sizeInBytes: info.metadata['Rows'] * info.metadata['Columns'] * 2,
-          minPixelValue: 0,
-          maxPixelValue: 255,
-          intercept: 0,
-          windowCenter: 110,
-          windowWidth: 100,
-          render: cornerstone.renderGrayscaleImage,
-          getPixelData: this.getPixelData,
-          color: false
+        if (!info) return {}
+        else {
+          this.base64data = info.image
+          return {
+            imageId: this.stack.imageIds[this.stack.currentImageIdIndex],
+            slope: info.metadata['Rescale Slope'],
+            rows: info.metadata['Rows'],
+            columns: info.metadata['Columns'],
+            height: info.metadata['Rows'],
+            width: info.metadata['Columns'],
+            columnPixelSpacing: info.metadata['Pixel Spacing']['0'],
+            rowPixelSpacing: info.metadata['Pixel Spacing']['1'],
+            sizeInBytes: info.metadata['Rows'] * info.metadata['Columns'] * 2,
+            minPixelValue: 0,
+            maxPixelValue: 255,
+            intercept: 0,
+            windowCenter: 110,
+            windowWidth: 100,
+            render: cornerstone.renderGrayscaleImage,
+            getPixelData: this.getPixelData,
+            color: false
+          }
         }
       },
       async display () {
         const element = this.$refs.DICOM
         const dicom = await this.dicom
-        cornerstone.registerImageLoader(this.view.type, () => {
-          return new Promise((resolve) => { resolve(dicom) })
-        })
-        const image = await cornerstone.loadImage(dicom.imageId)
-        cornerstone.displayImage(element, image)
-        return image
+        if (_.isEmpty(dicom)) return ''
+        else {
+          cornerstone.registerImageLoader(this.view.type, () => {
+            return new Promise((resolve) => { resolve(dicom) })
+          })
+          const image = await cornerstone.loadImage(dicom.imageId)
+          cornerstone.displayImage(element, image)
+          return image
+        }
       }
     },
     methods: {

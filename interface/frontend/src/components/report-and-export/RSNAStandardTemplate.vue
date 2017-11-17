@@ -63,7 +63,7 @@
       </p>
 
       <div class="nodule-list" v-else>
-        <nodule v-for="(nodule, index) in findings.lungNodules" :nodule="nodule" :index="index">
+        <nodule v-for="(nodule, index) in findings.lungNodules" :nodule="nodule" :index="index" :key="index">
           <div class="nodule-info-container" slot="add-on-editor">
             <!-- {{ nodule }} -->
             <div class="nodule-info">

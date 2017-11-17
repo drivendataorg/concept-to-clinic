@@ -10,7 +10,7 @@
           <div class="card-block">
             <template v-if="availableSeries.length">
               <ul>
-                <li v-for="series in availableSeries">
+                <li v-for="series in availableSeries" :key="series.series_instance_uid">
                   <a href="#" @click="selectSeries(series)">{{ series.series_instance_uid }}</a>
                   <span v-if="series == selected">&larr;</span>
                 </li>
