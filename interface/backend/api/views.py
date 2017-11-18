@@ -22,22 +22,32 @@ from rest_framework.views import APIView
 from ..cases import enums
 
 
-class CaseViewSet(viewsets.ModelViewSet):
+class ViewSetBase(viewsets.ModelViewSet):
+    def get_serializer_context(self):
+        context = super(ViewSetBase, self).get_serializer_context()
+
+        # getting rid of absulute URLs
+        context.update({'request': None})
+
+        return context
+
+
+class CaseViewSet(ViewSetBase):
     queryset = Case.objects.all()
     serializer_class = serializers.CaseSerializer
 
 
-class CandidateViewSet(viewsets.ModelViewSet):
+class CandidateViewSet(ViewSetBase):
     queryset = Candidate.objects.all()
     serializer_class = serializers.CandidateSerializer
 
 
-class NoduleViewSet(viewsets.ModelViewSet):
+class NoduleViewSet(ViewSetBase):
     queryset = Nodule.objects.all()
     serializer_class = serializers.NoduleSerializer
 
 
-class ImageSeriesViewSet(viewsets.ModelViewSet):
+class ImageSeriesViewSet(ViewSetBase):
     queryset = ImageSeries.objects.all()
     serializer_class = serializers.ImageSeriesSerializer
 
