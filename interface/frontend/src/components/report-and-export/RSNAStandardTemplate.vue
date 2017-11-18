@@ -197,6 +197,8 @@ import RSNAStandardTemplateFancy from './RSNAStandardTemplateFancy'
 import OneLineParagraph from './OneLineParagraph'
 
 import Nodule from '../annotate-and-segment/Nodule'
+import html2canvas from 'html2canvas'
+import JSPDF from 'jspdf'
 
 export default {
   components: {
@@ -213,7 +215,27 @@ export default {
   props: [ 'rsna' ],
   methods: {
     exportRSNA () {
-
+      // specified the column with all the 3 components in the view
+      const pdfSection = this.$refs.pdfSection
+      html2canvas(pdfSection).then(canvas => {
+        const imgData = canvas.toDataURL('image/png')
+        /* https://github.com/MrRio/jsPDF/issues/434 @wangzhixuan answer */
+        const imgWidth = 210
+        const pageHeight = 295
+        const imgHeight = canvas.height * imgWidth / canvas.width
+        let heightLeft = imgHeight
+        const doc = new JSPDF('p', 'mm')
+        let position = 0
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+        heightLeft -= pageHeight
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight
+          doc.addPage()
+          doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+          heightLeft -= pageHeight
+        }
+        doc.save('rsna-standard-template.pdf')
+      })
     }
   }
 }

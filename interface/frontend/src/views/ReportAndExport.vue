@@ -5,7 +5,7 @@
       <outline-nav :outlines="outlines" v-model="activeOutlineId"></outline-nav>
     </div>
 
-    <div class='col-md-9'>
+    <div class='col-md-9' ref='pdfSection'>
       <rsna-standard-template
         v-show="activeOutlineId === '#RSNA'"
         :rsna="study">
