@@ -4,20 +4,12 @@ from backend.cases.factories import (
     CandidateFactory,
     NoduleFactory
 )
-from django.test import (
-    RequestFactory,
-    TestCase
-)
+from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APIRequestFactory
 
 
 class ViewTest(TestCase):
-    def setUp(self):
-        self.factory = RequestFactory()
-        self.rest_factory = APIRequestFactory()
-
     def test_nodule_list_viewset(self):
         # first try an endpoint without a nodule
         url = reverse('nodule-list')
@@ -28,8 +20,7 @@ class ViewTest(TestCase):
         # now create a nodule and figure out what we expect to see in the list
         case = CaseFactory()
         nodules = NoduleFactory.create_batch(size=3, case=case)
-        request = self.factory.get(url)
-        serialized = [NoduleSerializer(n, context={'request': request}) for n in nodules]
+        serialized = [NoduleSerializer(n, context={'request': None}) for n in nodules]
         expected = [s.data for s in serialized]
 
         # check the actual response
