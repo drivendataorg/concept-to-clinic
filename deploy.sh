@@ -28,5 +28,4 @@ docker tag concept-to-clinic/prediction:$VERSION 113913174193.dkr.ecr.us-east-1.
 docker push 113913174193.dkr.ecr.us-east-1.amazonaws.com/c2c-prediction:$VERSION
 
 # deploy to AWS
-sceptre --dir 'deploy/' --var "APIVersion=$VERSION" --var "UIVersion=$VERSION" --var "PredictionVersion=$VERSION" \
-    --var-file=deploy/versions.yaml update-stack dev c2c
+sceptre --dir 'deploy/' --var "ImageVersion=$VERSION" update-stack dev c2c
