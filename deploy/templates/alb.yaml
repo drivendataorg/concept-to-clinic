@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: c2c alb and listener
+Resources:
+  ALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Subnets:
+        - subnet-b5a337d1
+        - subnet-b03fc29f
+      Name: c2c
+      SecurityGroups:
+        - !ImportValue c2c-ecs-loadbalancersecuritygroup
+
+  DefaultTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn: ALB
+    Properties:
+      Port: 80
+      Protocol: HTTP
+      VpcId: vpc-93f442eb
+      Name: c2c
+
+  ALBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    DependsOn: DefaultTargetGroup
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DefaultTargetGroup
+      LoadBalancerArn: !Ref ALB
+      Port: 80
+      Protocol: HTTP
+
+Outputs:
+  ListenerArn:
+    Description: The ARN of the listener for this ALB
+    Value: !Ref ALBListener
+    Export:
+      Name: c2c-alb-listenerarn
+  LoadBalancerFullName:
+    Description: Full name used as an alarm dimension
+    Value: !GetAtt ALB.LoadBalancerFullName
+    Export:
+      Name: c2c-alb-loadbalancerfullname
+  TargetGroupArn:
+    Description: ARN of the default target group
+    Value: !Ref DefaultTargetGroup
+    Export:
+      Name: c2c-alb-defaulttargetgrouparn
+  TargetGroupFullName:
+    Description: Target Group full name
+    Value: !GetAtt DefaultTargetGroup.TargetGroupFullName
+    Export:
+      Name: c2c-alb-defaulttargetgroupfullname

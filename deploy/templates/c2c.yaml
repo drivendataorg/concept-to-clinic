@@ -1,0 +1,142 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: c2c task definition and service and logging
+Parameters:
+  ImageVersion:
+    Type: String
+Resources:
+
+  UILogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: c2c-ui
+
+  APILogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: c2c-api
+
+  PredictionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: c2c-ml
+
+  PostgresLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: c2c-postgres
+
+  ListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !ImportValue c2c-alb-listenerarn
+      Priority: 1
+      Actions:
+        - Type: forward
+          TargetGroupArn: !ImportValue c2c-alb-defaulttargetgrouparn
+      Conditions:
+        - Field: path-pattern
+          Values:
+            - /
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: c2c
+      ContainerDefinitions:
+        - Name: c2c-ui
+          Image: !Sub 113913174193.dkr.ecr.us-east-1.amazonaws.com/c2c-ui:${ImageVersion}
+          MemoryReservation: 256
+          Essential: true
+          Environment:
+            - Name: NGINX_API_URL
+              Value: http://c2c-api:5000/api
+            - Name: NGINX_HOST
+              Value: c2c-ui
+          PortMappings:
+            - ContainerPort: 80
+              HostPort: 0
+          Links:
+            - c2c-api
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-group: !Ref UILogGroup
+        - Name: c2c-api
+          Image: !Sub 113913174193.dkr.ecr.us-east-1.amazonaws.com/c2c-api:${ImageVersion}
+          MemoryReservation: 256
+          Essential: true
+          Links:
+            - c2c-postgres
+          Environment:
+            - Name: SECRET_KEY
+              Value: REALLY_A_SECRET_1098590109385NLKAJKF
+            - Name: DJANGO_SETTINGS_MODULE
+              Value: config.settings.production
+            - Name: DATABASE_URL
+              Value: postgres://concepttoclinic@c2c-postgres:5432/c2c-db
+            - Name: PORT
+              Value: 5000
+            - Name: DEBUG
+              Value: True
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-group: !Ref APILogGroup
+        - Name: c2c-prediction
+          Image: !Sub 113913174193.dkr.ecr.us-east-1.amazonaws.com/c2c-prediction:${ImageVersion}
+          MemoryReservation: 256
+          Essential: true
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-group: !Ref PredictionLogGroup
+        - Name: c2c-postgres
+          Image: !Sub postgres:9.6
+          MemoryReservation: 256
+          Essential: true
+          Environment:
+            - Name: POSTGRES_USER
+              Value: concepttoclinic
+            - Name: POSTGRES_DB
+              Value: c2c-db
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-group: !Ref PostgresLogGroup
+
+  Service:
+    Type: AWS::ECS::Service
+    Properties:
+      Role:  arn:aws:iam::113913174193:role/concept-to-clinic-ecs-service-role
+      PlacementStrategies:
+        - Type: spread
+          Field: instanceId
+      Cluster: c2c
+      DesiredCount: 1
+      TaskDefinition: !Ref TaskDefinition
+      LoadBalancers:
+        - TargetGroupArn: !ImportValue c2c-alb-defaulttargetgrouparn
+          ContainerPort: 80
+          ContainerName: c2c-ui
+
+  HealthHostsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Healthy host alarm for c2c
+      AlarmName: c2c-healthyhosts
+      MetricName: HealthyHostCount
+      ComparisonOperator: LessThanThreshold
+      EvaluationPeriods: 1
+      Dimensions:
+        - Name: LoadBalancer
+          Value: !ImportValue c2c-alb-loadbalancerfullname
+        - Name: TargetGroup
+          Value: !ImportValue c2c-alb-defaulttargetgroupfullname
+      Namespace: AWS/ApplicationELB
+      Period: 60
+      Statistic: Maximum
+      Threshold: 1

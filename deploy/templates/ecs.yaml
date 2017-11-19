@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: c2c ecs cluster
+Resources:
+
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Ingress from the load balancer
+      VpcId: vpc-93f442eb
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+          FromPort: 0
+          ToPort: 65535
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Ingress from the outside world
+      VpcId: vpc-93f442eb
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+          FromPort: 80
+          ToPort: 80
+
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: c2c
+
+  LaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      AssociatePublicIpAddress: true
+      KeyName: dockcloud-swarm-useast-1
+      SecurityGroups:
+        - !Ref InstanceSecurityGroup
+      IamInstanceProfile: arn:aws:iam::113913174193:instance-profile/concept-to-clinic-ecs-instance-profile
+      ImageId: ami-20ff515a
+      InstanceType: c5.large
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash -xe
+            echo ECS_CLUSTER=c2c >> /etc/ecs/ecs.config
+
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    DependsOn: LaunchConfiguration
+    Properties:
+      LaunchConfigurationName: !Ref LaunchConfiguration
+      VPCZoneIdentifier:
+        - subnet-b5a337d1
+        - subnet-b03fc29f
+      MinSize: 1
+      MaxSize: 1
+      DesiredCapacity: 1
+      Tags:
+        - Key: Name
+          Value: c2c-ecs
+          PropagateAtLaunch: true
+Outputs:
+  LoadBalancerSecurityGroup:
+    Description: Security group ID of the security group that new ALBs should use
+    Value: !Ref LoadBalancerSecurityGroup
+    Export:
+      Name: c2c-ecs-loadbalancersecuritygroup
