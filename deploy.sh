@@ -4,10 +4,8 @@ set -ex
 # use shortform git hash as version
 VERSION=$(git show -s --format=%h)
 
-pip install --user awscli # install aws cli w/o sudo
-pip install --user sceptre # install sceptre cli w/o sudo
-
-export PATH=$PATH:$HOME/.local/bin
+pip install awscli # install aws cli
+pip install sceptre # install sceptre cli
 
 # docker login using AWS env vars
 eval $(aws ecr get-login --region us-east-1 --no-include-email)
