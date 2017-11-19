@@ -66,3 +66,4 @@ prediction/data/*
 # ignore data
 data/
 docs/apidoc_*/**/*.rst
+!docs/apidoc_*/*_doc.rst
