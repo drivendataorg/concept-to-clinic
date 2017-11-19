@@ -37,17 +37,9 @@ script:
 deploy:
   # deploy branch to hosted demo
   - provider: script
-    script: deploy.sh
+    script: sh deploy.sh
     on:
       branch: deploy
-after_success:
-  - docker --version  # document the version travis is using
-  - pip install --user awscli # install aws cli w/o sudo
-  - export PATH=$PATH:$HOME/.local/bin # put aws in the path
-  - eval $(aws ecr get-login --region us-east-1) #needs AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY envvars
-  - docker build -t my_example_app .
-  - docker tag my_example_app:latest [your_ecr_account].dkr.ecr.us-east-1.amazonaws.com/my_example_app:latest
-  - docker push [your_ecr_account].dkr.ecr.us-east-1.amazonaws.com/my_example_app:latest
 notifications:
   webhooks:
   - https://app.fossa.io/hooks/travisci
