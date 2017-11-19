@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-# use longform git hash as version
+# use shortform git hash as version
 VERSION=$(git show -s --format=%h)
 
 pip install --user awscli # install aws cli w/o sudo
