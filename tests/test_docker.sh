@@ -22,4 +22,4 @@ docker-compose -f local.yml run interface python manage.py test
 docker-compose -f local.yml run interface python manage.py makemigrations --dry-run --check || { echo "ERROR: there were changes in the models, but migration listed above have not been created and are not saved in version control"; exit 1; }
 
 # Start the docker containers and discard the output, otherwise we could hit the Travis log length limit. After 60 seconds test the routes.
-docker-compose -f local.yml up &> /dev/null & sleep 60; python tests/test_routes.py || { echo "ERROR: test_routes.py did not pass. Check above for details."; exit 1; }
+docker-compose -f local.yml up &> /dev/null & python tests/test_routes.py || { echo "ERROR: test_routes.py did not pass. Check above for details."; exit 1; }
