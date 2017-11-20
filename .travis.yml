@@ -37,7 +37,7 @@ script:
 deploy:
   # deploy branch to hosted demo
   - provider: script
-    script: travis_wait "sh deploy.sh"
+    script: sh deploy.sh
     on:
       branch: deploy
 notifications:
