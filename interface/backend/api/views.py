@@ -8,9 +8,9 @@ from backend.cases.models import (
     Case,
     Candidate,
     Nodule,
-    CaseSerializer,
-    CandidateSerializer
+    CaseSerializer
 )
+
 from backend.images.models import ImageSeries
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -200,7 +200,7 @@ def update_candidate_location(request, candidate_id):
 
     candidate.centroid.save()
 
-    return Response(CandidateSerializer(candidate).data)
+    return Response(serializers.CandidateSerializer(candidate, context={'request': None}).data)
 
 
 @api_view(['GET'])
