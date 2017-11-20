@@ -8,7 +8,8 @@ from backend.cases.models import (
     Case,
     Candidate,
     Nodule,
-    CaseSerializer
+    CaseSerializer,
+    CandidateSerializer
 )
 from backend.images.models import ImageSeries
 from django.conf import settings
@@ -179,6 +180,27 @@ def candidate_mark(request, candidate_id):
 @api_view(['GET'])
 def candidate_dismiss(request, candidate_id):
     return Response({'response': "Candidate {} was dismissed".format(candidate_id)})
+
+
+@api_view(['POST'])
+def update_candidate_location(request, candidate_id):
+    try:
+        request_body = json.loads(request.body)
+        x = request_body['x']
+        y = request_body['y']
+        z = request_body['z']
+    except Exception as e:
+        return Response({'response': "An error occurred: {}".format(e)}, 500)
+
+    # find the candidate and update the centroid location
+    candidate = Candidate.objects.get(pk=candidate_id)
+    candidate.centroid.x = x
+    candidate.centroid.y = y
+    candidate.centroid.z = z
+
+    candidate.centroid.save()
+
+    return Response(CandidateSerializer(candidate).data)
 
 
 @api_view(['GET'])
