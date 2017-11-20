@@ -17,9 +17,11 @@ export default {
   components: {
     NoduleList
   },
-  updateStore () {
-    // Using a true boolean for now, but it can be anything
-    Store.setRouteResult(this.$route.path, true)
+  methods: {
+    updateStore () {
+      // Using a true boolean for now, but it can be anything
+      Store.setRouteResult(this.$route.path, true)
+    }
   }
 }
 </script>
