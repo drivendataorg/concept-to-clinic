@@ -2,10 +2,13 @@
   <div class="DICOM-container">
     <div class="DICOM-description">{{ display }}</div>
     <div class="DICOM" ref="DICOM"></div>
+    <nodule-marker :marker="marker" :zoomRate="zoomRate" :offsetX="offsetX" :offsetY="offsetY"></nodule-marker>
   </div>
 </template>
 
 <script>
+  import NoduleMarker from './NoduleMarker'
+
   const cornerstone = require('cornerstone-core')
   const cornerstoneTools = require('cornerstone-tools')
   const jquery = require('jquery-slim')
@@ -14,6 +17,7 @@
   cornerstoneTools.external.$ = jquery
 
   export default {
+    components: {NoduleMarker},
     name: 'open-dicom',
     props: {
       view: {
@@ -24,7 +28,9 @@
           prefixUrl: null,
           paths: []
         }
-      }
+      },
+      // a marker that indicates the nodule centroid location ({ x, y, z })
+      marker: null
     },
     data () {
       return {
@@ -32,6 +38,13 @@
           currentImageIdIndex: 0,
           imageIds: []
         },
+
+        // user should be able to zoom, pan, and navigate through slices in the image viewer
+        // TODO implement these features
+        zoomRate: 1.0,
+        offsetX: 0,
+        offsetY: 0,
+
         base64data: null,
         pool: []
       }
