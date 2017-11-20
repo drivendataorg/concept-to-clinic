@@ -26,17 +26,6 @@
 </div>
 </template>
 
-<style media="screen" lang="scss" scoped>
-.offset-top {
-    margin-top: 5em;
-}
-@media screen and (max-width: 990px) {
-    .offset-top {
-        margin-top: 10em;
-    }
-}
-</style>
-
 <script>
 import OutlineNav from '../components/report-and-export/OutlineNav'
 

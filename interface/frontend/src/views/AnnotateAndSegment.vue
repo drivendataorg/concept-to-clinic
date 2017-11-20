@@ -13,16 +13,3 @@ export default {
   }
 }
 </script>
-
-<style media="screen">
-.offset-top {
-  margin-top: 5em;
-}
-
-@media screen and (max-width: 990px) {
-  .offset-top {
-    margin-top: 10em;
-  }
-}
-
-</style>
