@@ -17,7 +17,7 @@
                    :key="child.name"
                    :model="child"
         ></tree-view>
-        <li @click="select()" v-for="file in model.files" class="text-muted" :key="file.name">{{ file.name }}</li>
+        <li @click="select(file)" v-for="file in model.files" class="text-muted" :key="file.name">{{ file.name }}</li>
       </ul>
     </li>
   </ul>
@@ -76,8 +76,12 @@
       toggle: function () {
         this.$set(this, 'open', !this.open)
       },
-      select: function () {
-        EventBus.$emit('dicom-selection', this.model.files.map((file) => { return file.path }))
+      select: function (file) {
+        EventBus.$emit('dicom-selection',
+          {
+            paths: this.model.files.map((file) => { return file.path }),
+            state: file.path
+          })
       }
     }
   }

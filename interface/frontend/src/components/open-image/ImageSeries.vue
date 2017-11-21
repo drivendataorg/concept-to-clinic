@@ -97,7 +97,8 @@
           type: 'DICOM',
           prefixCS: '://',
           prefixUrl: '/api/images/metadata?dicom_location=/',
-          paths: []
+          paths: [],
+          state: ''
         },
         selected: null,
         showImport: false
@@ -108,8 +109,9 @@
       this.fetchAvailableImages()
     },
     mounted: function () {
-      EventBus.$on('dicom-selection', (path) => {
-        this.preview.paths = path
+      EventBus.$on('dicom-selection', (context) => {
+        this.preview.paths = context.paths
+        this.preview.state = context.state
         console.log(this.preview)
       })
     },
