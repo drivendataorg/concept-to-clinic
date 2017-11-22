@@ -1,10 +1,12 @@
 import os
+import time
 
 import pylidc as pl
+import pytest
 
 from config import Config
 
-from . import skip_if_slow
+from . import get_timeout
 from ..algorithms.identify.prediction import load_patient_images
 from ..algorithms.segment.trained_model import predict
 from ..preprocess.lung_segmentation import save_lung_segments, get_z_range
@@ -33,7 +35,7 @@ def test_nodule_segmentation(dicom_path, nodule_001):
     predict(dicom_path, [nodule_001])
 
 
-@skip_if_slow
+@pytest.mark.stop_timeout
 def test_lung_segmentation(dicom_paths):
     """Test whether the annotations of the LIDC images are inside the segmented lung masks.
     Iterate over all local LIDC images, fetch the annotations, compute their positions within the masks and check that
@@ -56,3 +58,11 @@ def test_lung_segmentation(dicom_paths):
             z_mask = int(abs(min_z) - abs(centroid_z))
             mask_value = patient_mask[z_mask, x_mask, y_mask]
             assert mask_value == 255
+
+
+@pytest.mark.stop_timeout
+def test_stop_timeout():
+    timeout = get_timeout()
+    if timeout > 0:
+        time.sleep(timeout + 1)
+        raise ValueError("This test should timeout")

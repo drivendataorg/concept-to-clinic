@@ -74,6 +74,7 @@ services:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
       - RUN_SLOW_TESTS=false
+      - TESTS_TIMEOUT=1
     volumes:
       - ./prediction/:/app:cached
       - ./tests/assets/test_image_data/small:/images:cached

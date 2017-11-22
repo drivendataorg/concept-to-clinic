@@ -14,8 +14,6 @@ from flask import url_for
 from src.algorithms import classify, identify, segment
 from src.factory import create_app
 
-from . import skip_if_slow
-
 
 def get_data(response):
     data = response.get_data(as_text=True)
@@ -61,7 +59,7 @@ def test_endpoint_documentation(client):
         assert data['description'] == docstrings[algorithm]
 
 
-@skip_if_slow
+@pytest.mark.stop_timeout
 def test_identify(client, dicom_path, content_type):
     url = client.url_for('predict', algorithm='identify')
     test_data = {'dicom_path': dicom_path}

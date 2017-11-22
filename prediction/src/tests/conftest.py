@@ -1,9 +1,11 @@
-from os import path
+import signal
 from glob import glob
+from os import path
 
 import pytest
-
 from config import Config
+
+from . import get_timeout
 
 
 @pytest.fixture
@@ -81,3 +83,56 @@ def model_path(scope='session'):
 @pytest.fixture
 def content_type(scope='session'):
     yield 'application/json'
+
+
+"""Adapted from https://stackoverflow.com/questions/46766899/pytest-timeout-fail-test-instead-killing-whole-test-run"""
+
+
+class Termination(SystemExit):
+    pass
+
+
+class TimeoutExit(BaseException):
+    pass
+
+
+def _terminate(signum, frame):
+    raise Termination("Runner is terminated from outside.")
+
+
+def _timeout(signum, frame):
+    raise TimeoutExit("Runner timeout is reached, runner is terminating.")
+
+
+@pytest.hookimpl
+def pytest_configure(config):
+    # Install the signal handlers that we want to process.
+    signal.signal(signal.SIGTERM, _terminate)
+    signal.signal(signal.SIGALRM, _timeout)
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_protocol(item, nextitem):
+    timeout = get_timeout()
+    found_timeout_marker = False
+
+    for k in item.keywords:
+        found_timeout_marker |= (k == "stop_timeout")
+
+    if timeout == 0 or not found_timeout_marker:
+        # All slow tests should be run or the test does not have a stop_timeout marker
+        # The hook needs to yield exactly once, otherwise there'll be an error. Without the return it would yield twice,
+        # without the yield it wouldn't yield at all.
+        yield
+        return
+
+    signal.alarm(timeout)
+    item.add_marker(pytest.mark.xfail(raises=TimeoutExit, reason="Test was stopped after timeout"))
+
+    try:
+        # Run the setup, test body, and teardown stages.
+        yield
+    finally:
+        # Disable the alarm when the test passes or fails.
+        # I.e. when we get into the framework's body.
+        signal.alarm(0)

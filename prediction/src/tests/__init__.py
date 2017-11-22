@@ -1,6 +1,5 @@
 import sys
 import os
-import pytest
 import torch  # noqa # pylint: disable=unused-import
 
 sys.path.append(os.path.join(os.path.dirname(__file__),
@@ -8,12 +7,16 @@ sys.path.append(os.path.join(os.path.dirname(__file__),
                              os.path.pardir))
 
 
-def skip_slow_test():
+def get_timeout():
     """
-    Skip the wrapped test function unless the environment variable RUN_SLOW_TESTS is set.
+    If RUN_SLOW_TESTS is set to True, all tests should be run. Thus, no timeout is desired and this returns 0.
+    Otherwise the content of TESTS_TIMEOUT is returned.
+    :return: Time limit after which certain tests should be stopped
     """
-    value = os.environ.get('RUN_SLOW_TESTS', '')
-    return value.lower() not in {'1', 'true'}
-
-
-skip_if_slow = pytest.mark.skipif(skip_slow_test(), reason='Takes very long')
+    DEFAULT_TIMEOUT = 15
+    run_slow_tests_variable = os.environ.get('RUN_SLOW_TESTS', '')
+    run_slow_tests = (run_slow_tests_variable.lower() in {'1', 'true'})
+    if run_slow_tests:
+        return 0
+    else:
+        return int(os.environ.get('TESTS_TIMEOUT', DEFAULT_TIMEOUT))
