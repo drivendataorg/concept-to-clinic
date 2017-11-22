@@ -69,7 +69,7 @@ services:
     depends_on:
       - interface
     environment:
-      NODE_ENV: test
+      NODE_ENV: testing
     volumes:
       - ./interface/frontend/src:/app/src:cached
       - ./interface/frontend/build:/app/build:cached
@@ -89,7 +89,7 @@ services:
       dockerfile: ./compose/interface/Dockerfile-e2e-test-vue
     command: npm run e2e
     environment:
-      NODE_ENV: test
+      NODE_ENV: testing
     depends_on:
       - interface
       - selenium_hub

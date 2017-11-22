@@ -12,7 +12,14 @@ module.exports = {
       launch_url: 'http://interface',
       selenium_port: 4444,
       selenium_host: 'selenium_hub',
-      silent: true
+      desiredCapabilities: {
+        browserName: 'chrome'
+      },
+      screenshots: {
+        enabled: true,
+        on_failure: true,
+        path: 'test/e2e/screenshots'
+      }
     },
 
     chrome: {

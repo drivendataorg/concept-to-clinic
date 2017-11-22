@@ -43,7 +43,8 @@ compiler.plugin('compilation', function (compilation) {
     cb()
   })
 })
-
+// NOTE: Move these route variable to a config variable file?
+// Also, most of these can be done with webpack-dev-server...
 app.use('/api', proxy({target: 'http://interface:8000', changeOrigin: true}))
 
 // handle fallback for HTML5 history API
