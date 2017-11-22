@@ -1,6 +1,17 @@
 <template>
   <div class="DICOM-container">
     <div class="DICOM-description">{{ display }}</div>
+    <div class="DICOM-toolbar">
+      <input
+        class="DICOM-range"
+        type="range"
+        min="0"
+        v-bind:max="view.paths.length"
+        v-bind:value="stack.currentImageIdIndex"
+        v-on:input="rangeSlice($event)"
+      >
+      {{ stack.currentImageIdIndex }}
+    </div>
     <div class="DICOM" ref="DICOM"></div>
     <nodule-marker :marker="marker" :zoomRate="zoomRate" :offsetX="offsetX" :offsetY="offsetY"></nodule-marker>
   </div>
@@ -113,6 +124,9 @@
       }
     },
     methods: {
+      rangeSlice (e) {
+        this.stack.currentImageIdIndex = e.target.value
+      },
       initCS (element) {
         try {
           cornerstone.getEnabledElement(element)
@@ -144,6 +158,11 @@
 </script>
 
 <style lang="scss" scoped>
+  .DICOM-toolbar {
+    position: relative;
+    top: 100%;
+  }
+
   .DICOM-container {
     width:512px;
     height:512px;

@@ -9,3 +9,8 @@ div#version {
 div.container {
   width: 100%;
 }
+
+input[type=range] {
+  width: 100%;
+  background: transparent;
+}
