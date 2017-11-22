@@ -11,4 +11,4 @@ EXPOSE 8080
 
 WORKDIR /app
 
-CMD [ "npm", "run" "test" ]
+CMD [ "npm", "run" "e2e" ]

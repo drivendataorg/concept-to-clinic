@@ -6,3 +6,5 @@ selenium-debug.log
 test/unit/coverage
 test/e2e/reports
 static/
+.nyc_output
+coverage

@@ -61,13 +61,15 @@ services:
     ports:
       - "8080:8080"
 
-  vue_test:
+  vue_unit_test:
     build:
       context: .
-      dockerfile: ./compose/interface/Dockerfile-test-vue
-    command: npm run test
+      dockerfile: ./compose/interface/Dockerfile-unit-test-vue
+    command: npm run unit
     depends_on:
       - interface
+    environment:
+      NODE_ENV: test
     volumes:
       - ./interface/frontend/src:/app/src:cached
       - ./interface/frontend/build:/app/build:cached
@@ -80,6 +82,57 @@ services:
       - interface
     ports:
       - "8080:8080"
+
+  vue_e2e_test:
+    build:
+      context: .
+      dockerfile: ./compose/interface/Dockerfile-e2e-test-vue
+    command: npm run e2e
+    environment:
+      NODE_ENV: test
+    depends_on:
+      - interface
+      - selenium_hub
+      - chrome
+      - firefox
+    volumes:
+      - ./interface/frontend/src:/app/src:cached
+      - ./interface/frontend/build:/app/build:cached
+      - ./interface/frontend/config:/app/config:cached
+      - ./interface/frontend/dist:/app/dist:cached
+      - ./interface/frontend/static:/app/static:cached
+      - ./interface/frontend/test:/app/test:cached
+      - ./.git/logs/HEAD:/HEAD:cached
+    links:
+      - interface
+    ports:
+      - "8080:8080"
+
+  selenium_hub:
+    image: selenium/hub
+    environment:
+      GRID_BROWSER_TIMEOUT: 120000
+      GRID_TIMEOUT: 120000
+      VIRTUAL_HOST: selenium.hub.docker
+    ports:
+      - "4444:4444"
+
+  firefox:
+    image: selenium/node-firefox
+    environment: &SELENIUM_NODE_ENV
+      # this is a necessary workaround due to a known bug
+      # https://github.com/SeleniumHQ/docker-selenium/issues/133
+      HUB_PORT_4444_TCP_ADDR: selenium_hub
+      HUB_PORT_4444_TCP_PORT: 4444
+    depends_on:
+      - selenium_hub
+
+  chrome:
+    image: selenium/node-chrome
+    environment:
+      <<: *SELENIUM_NODE_ENV
+    depends_on:
+      - selenium_hub
 
   prediction:
     build:
