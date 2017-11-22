@@ -10,7 +10,7 @@ const {
 
 const interfaceUrl = `${launch_url}:${launch_port}`
 
-const ssOkPath = `${screenshots.path}/defaults/ok`
+const ssOkPath = `${screenshots.path}/default/ok`
 
 module.exports = {
   'C2C header ok': function (browser) {
