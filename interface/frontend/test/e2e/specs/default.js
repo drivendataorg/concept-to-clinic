@@ -8,7 +8,7 @@ const {
   screenshots
 } = nightwatchConfig.test_settings.default;
 
-const interfaceUrl = `${launch_url}:${launch_port}`
+const interfaceUrl = `${launch_url}:${launch_port}/#/`
 
 const ssOkPath = `${screenshots.path}/default/ok`
 
@@ -23,18 +23,15 @@ module.exports = {
       .saveScreenshot(ssPath)
       .end()
   },
-  'Block navigation if prerequiste not met': async function (browser) {
+  'Block navigation if prerequiste not met': function (browser) {
 
-    await browser
+    browser
       .url(interfaceUrl)
       .waitForElementVisible('#app-container', 5000)
-      .assert.elementPresent('#navbar');
-
-    const originalUrl = browser.value;
-
-    await browser.click('a[href="#/detect-and-select"]')
+      .assert.elementPresent('#navbar')
+      .click('a[href="#/detect-and-select"]')
       .pause(500)
-      .assert.urlEquals(originalUrl)
+      .assert.urlEquals(interfaceUrl)
       .end()
   }
 }

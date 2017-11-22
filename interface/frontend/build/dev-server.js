@@ -16,7 +16,7 @@ var webpackConfig = (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV 
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
-var host = 'vue'
+var host = '0.0.0.0'
 // automatically open browser, if not set will be false
 var autoOpenBrowser = !!config.dev.autoOpenBrowser
 
