@@ -16,7 +16,7 @@ var webpackConfig = (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV 
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
-var host = '0.0.0.0'
+var host = 'interface'
 // automatically open browser, if not set will be false
 var autoOpenBrowser = !!config.dev.autoOpenBrowser
 
@@ -43,8 +43,7 @@ compiler.plugin('compilation', function (compilation) {
     cb()
   })
 })
-// NOTE: Move these route variable to a config variable file?
-// Also, most of these can be done with webpack-dev-server...
+
 app.use('/api', proxy({target: 'http://interface:8000', changeOrigin: true}))
 
 // handle fallback for HTML5 history API

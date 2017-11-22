@@ -10,6 +10,7 @@ module.exports = {
   test_settings: {
     default: {
       launch_url: 'http://interface',
+      launch_port: 8080,
       selenium_port: 4444,
       selenium_host: 'selenium_hub',
       desiredCapabilities: {

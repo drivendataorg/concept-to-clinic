@@ -67,21 +67,11 @@ services:
       dockerfile: ./compose/interface/Dockerfile-unit-test-vue
     command: npm run unit
     depends_on:
-      - interface
+      - vue
     environment:
       NODE_ENV: testing
     volumes:
-      - ./interface/frontend/src:/app/src:cached
-      - ./interface/frontend/build:/app/build:cached
-      - ./interface/frontend/config:/app/config:cached
-      - ./interface/frontend/dist:/app/dist:cached
-      - ./interface/frontend/static:/app/static:cached
       - ./interface/frontend/test:/app/test:cached
-      - ./.git/logs/HEAD:/HEAD:cached
-    links:
-      - interface
-    ports:
-      - "8080:8080"
 
   vue_e2e_test:
     build:
@@ -90,23 +80,13 @@ services:
     command: npm run e2e
     environment:
       NODE_ENV: testing
+    volumes:
+      - ./interface/frontend/test:/app/test:cached
     depends_on:
-      - interface
+      - vue
       - selenium_hub
       - chrome
       - firefox
-    volumes:
-      - ./interface/frontend/src:/app/src:cached
-      - ./interface/frontend/build:/app/build:cached
-      - ./interface/frontend/config:/app/config:cached
-      - ./interface/frontend/dist:/app/dist:cached
-      - ./interface/frontend/static:/app/static:cached
-      - ./interface/frontend/test:/app/test:cached
-      - ./.git/logs/HEAD:/HEAD:cached
-    links:
-      - interface
-    ports:
-      - "8080:8080"
 
   selenium_hub:
     image: selenium/hub
