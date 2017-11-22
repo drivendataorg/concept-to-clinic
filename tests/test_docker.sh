@@ -23,3 +23,8 @@ docker-compose -f local.yml run interface python manage.py makemigrations --dry-
 
 # Start the docker containers and discard the output, otherwise we could hit the Travis log length limit. After 60 seconds test the routes.
 docker-compose -f local.yml up &> /dev/null & python tests/test_routes.py || { echo "ERROR: test_routes.py did not pass. Check above for details."; exit 1; }
+
+# Run unit and e2e test
+docker-compose -f local.yml run vue_unit_test
+
+docker-compose -f local.yml run vue_e2e_test

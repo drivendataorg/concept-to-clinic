@@ -54,7 +54,17 @@ You should now be able to open a browser and interact with the services:
 - `interface` frontend at http://localhost:8080
 - `interface` API at http://localhost:8000/api/
 - `prediction` service at http://localhost:8001
+- `documentation` service at http://localhost:8002
 
+## Run tests
+
+For the vue frontend interface, you can run the unit test with:
+
+    $ docker-compose -f local.yml run vue_unit_test
+
+And the end to end test with:
+
+    $ docker-compose -f local.yml run vue_e2e_test
 
 ## Code changes
 
