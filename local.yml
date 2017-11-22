@@ -61,6 +61,26 @@ services:
     ports:
       - "8080:8080"
 
+  vue_test:
+    build:
+      context: .
+      dockerfile: ./compose/interface/Dockerfile-test-vue
+    command: npm run test
+    depends_on:
+      - interface
+    volumes:
+      - ./interface/frontend/src:/app/src:cached
+      - ./interface/frontend/build:/app/build:cached
+      - ./interface/frontend/config:/app/config:cached
+      - ./interface/frontend/dist:/app/dist:cached
+      - ./interface/frontend/static:/app/static:cached
+      - ./interface/frontend/test:/app/test:cached
+      - ./.git/logs/HEAD:/HEAD:cached
+    links:
+      - interface
+    ports:
+      - "8080:8080"
+
   prediction:
     build:
       context: .
