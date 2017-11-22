@@ -29,6 +29,10 @@ def test_segment_predict_inference(dicom_path, nodule_locations):
     assert predicted['volumes'][0] > 0
 
 
+def test_nodule_segmentation(dicom_path, nodule_001):
+    predict(dicom_path, [nodule_001])
+
+
 @skip_if_slow
 def test_lung_segmentation(dicom_paths):
     """Test whether the annotations of the LIDC images are inside the segmented lung masks.

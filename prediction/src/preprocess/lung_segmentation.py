@@ -7,7 +7,6 @@ import cv2
 import dicom
 import numpy
 import scipy
-
 from dicom.errors import InvalidDicomError
 from skimage.filters import roberts
 from skimage.measure import label, regionprops
@@ -18,6 +17,8 @@ try:
     from ...config import Config
 except ValueError:
     from config import Config
+
+DATA_SHAPE = (512, 512, 1024, 1)
 
 
 def get_z_range(dicom_path):

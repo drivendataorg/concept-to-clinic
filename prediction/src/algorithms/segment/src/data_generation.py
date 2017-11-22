@@ -3,22 +3,22 @@ import os
 import numpy as np
 import pylidc as pl
 from config import Config
+from tqdm import tqdm
 
 
-def prepare_training_data(in_docker=True):
+def prepare_training_data():
     """Save a boolean mask of each DICOM scan at ../assets/segmented_lung_patient_{LIDC-ID}.npy that indicates whether
     a pixel was annotate by an expert as at least intermediate malicious or not.
-
-    Args:
-        in_docker: whether this method is invoked from within docker or from the prediction directory
     """
     INTERMEDIATE_MALICIOUS = 3
     ASSETS_DIR = Config.SEGMENT_ASSETS_DIR
+    IMAGES_FULL_DIR = 'images_full'
+    lidc_idri_directories = [os.path.join(Config.FULL_DICOM_PATHS, name) for name in os.listdir(Config.FULL_DICOM_PATHS)
+                             if os.path.isdir(os.path.join(Config.FULL_DICOM_PATHS, name))]
 
-    for path in Config.FULL_DICOM_PATHS:
-        directories = path.split(os.path.sep)
-        lidc_id_path_index = 2 if in_docker else 5
-        lidc_id = directories[lidc_id_path_index]
+    for path in tqdm(lidc_idri_directories):
+        lidc_dir = path.split(IMAGES_FULL_DIR)[1]
+        lidc_id = lidc_dir.split(os.path.sep)[1]
         lung_patient_file = os.path.join(ASSETS_DIR, "segmented_lung_patient_{}".format(lidc_id))
 
         if os.path.isfile(lung_patient_file):
@@ -55,6 +55,8 @@ def prepare_training_data(in_docker=True):
 
             # In case the area already was segmented, don't overwrite it but add the annotated segmentation
             annotation_area = np.index_exp[i1:i2 + 1, j1:j2 + 1, k1:k2 + 1]
+            if mask.shape != mask_vol[annotation_area].shape:
+                annotation_area = np.index_exp[i1:i2 + 1, j1:j2 + 1, k1:k2]
             mask_vol[annotation_area] = np.logical_or(mask, mask_vol[annotation_area])
 
         np.save(lung_patient_file, mask_vol)

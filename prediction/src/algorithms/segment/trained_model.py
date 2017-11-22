@@ -7,15 +7,12 @@
     descriptive statistics.
 """
 
-import os
-
 import numpy as np
 import scipy.ndimage
-from keras.models import load_model
 
-from ...algorithms.segment.src.model import dice_coef_loss, dice_coef
-from ...algorithms.segment.src.training import BEST_MODEL_PATH, get_data_shape
+from ...algorithms.segment.src.models.simple_3d_model import Simple3DModel
 from ...preprocess.load_ct import load_ct, MetaData
+from ...preprocess.lung_segmentation import DATA_SHAPE
 
 
 def predict(dicom_path, centroids):
@@ -43,18 +40,14 @@ def predict(dicom_path, centroids):
              'volumes': list[float]}
     """
     voxel_data, meta = load_ct(dicom_path)
-    model = load_model(BEST_MODEL_PATH, custom_objects={'dice_coef_loss': dice_coef_loss, 'dice_coef': dice_coef})
-    x, y, z, channels = get_data_shape()
-    input_data = np.ndarray((1, x, y, z, channels))  # batch, x, y, z, channels
-    # Crop the input data to the required data shape and pad with zeros
-    padded_data = np.zeros_like(input_data)
-    min_x, min_y, min_z = min(x, voxel_data.shape[0]), min(y, voxel_data.shape[1]), min(z, voxel_data.shape[2])
-    padded_data[0, :min_x, :min_y, :min_z, 0] = voxel_data[:min_x, :min_y, :min_z]
-    input_data = padded_data
-
-    output_data = model.predict(input_data)
-    segment_path = os.path.join(os.path.dirname(__file__), 'assets', "lung-mask.npy")
-    np.save(segment_path, output_data[0, :, :, :, 0])
+    # Bring voxel data to shape X, Y, Z
+    voxel_data = voxel_data.swapaxes(0, 2)
+    voxel_data = voxel_data.swapaxes(0, 1)
+    # Pad to input shape
+    input_data = np.zeros((1, *DATA_SHAPE))
+    input_data[0, :voxel_data.shape[0], :voxel_data.shape[1], :voxel_data.shape[2], 0] = voxel_data
+    model = Simple3DModel().load_best()
+    segment_path = model.predict(input_data)
     volumes = calculate_volume(segment_path, centroids)
     return {'binary_mask_path': segment_path, 'volumes': volumes}
 
