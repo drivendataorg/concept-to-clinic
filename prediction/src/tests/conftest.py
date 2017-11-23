@@ -88,16 +88,8 @@ def content_type(scope='session'):
 """Adapted from https://stackoverflow.com/questions/46766899/pytest-timeout-fail-test-instead-killing-whole-test-run"""
 
 
-class Termination(SystemExit):
-    pass
-
-
 class TimeoutExit(BaseException):
     pass
-
-
-def _terminate(signum, frame):
-    raise Termination("Runner is terminated from outside.")
 
 
 def _timeout(signum, frame):
@@ -107,7 +99,7 @@ def _timeout(signum, frame):
 @pytest.hookimpl
 def pytest_configure(config):
     # Install the signal handlers that we want to process.
-    signal.signal(signal.SIGTERM, _terminate)
+    signal.signal(signal.SIGTERM, _timeout)
     signal.signal(signal.SIGALRM, _timeout)
 
 
