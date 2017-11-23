@@ -1,5 +1,5 @@
 <template>
-  <div class="offset-top container">
+  <div id="annotate-and-segment" class="offset-top container">
     <button type="button" class="btn btn-block btn-success" @click="updateStore()">
       Test Validating AnnotateAndSegment route
     </button>

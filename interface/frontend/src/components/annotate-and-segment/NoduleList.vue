@@ -2,7 +2,7 @@
 <div class='container'>
   <div class='row'>
     <div class='col-md-4'>
-      <div v-if="nodules.length">
+      <div v-if="nodules && nodules.length">
         <div id="accordion" role="tablist" aria-multiselectable="true">
           <template v-for="(nodule, index) in nodules">
             <nodule :nodule="nodule" :index="index" :key="index">
@@ -38,13 +38,9 @@ export default {
   },
   methods: {
     fetchNodules () {
-      this.$axios.get('/api/nodules.json')
-        .then((response) => {
-          this.nodules = response.data
-        })
-        .catch(() => {
-          // TODO: error callback
-        })
+      const response = await this.$axios.get('/api/nodules.json');
+
+      this.nodules = response.data || []
     }
   }
 }

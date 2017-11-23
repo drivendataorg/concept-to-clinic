@@ -1,5 +1,5 @@
 // 1. start the dev server using production config
-process.env.NODE_ENV = 'testing'
+process.env.NODE_ENV = 'test'
 var spawn = require('cross-spawn')
 
 // 2. run the nightwatch test suite against it

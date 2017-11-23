@@ -69,7 +69,7 @@ services:
     depends_on:
       - vue
     environment:
-      NODE_ENV: testing
+      NODE_ENV: test
     volumes:
       - ./interface/frontend/test:/app/test:cached
 
@@ -79,7 +79,7 @@ services:
       dockerfile: ./compose/interface/Dockerfile-e2e-test-vue
     command: npm run e2e
     environment:
-      NODE_ENV: testing
+      NODE_ENV: test
     volumes:
       - ./interface/frontend/test:/app/test:cached
     depends_on:

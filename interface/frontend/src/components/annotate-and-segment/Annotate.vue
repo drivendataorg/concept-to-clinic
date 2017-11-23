@@ -1,5 +1,5 @@
 <template>
-  <div id="annotate">
+  <div class="annotate-container">
     <a @click="update(nodule)">
       <button type="button" class="btn btn-block btn-success">Accept</button>
     </a>

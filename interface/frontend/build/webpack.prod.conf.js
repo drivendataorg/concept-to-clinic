@@ -9,7 +9,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
-var env = process.env.NODE_ENV === 'testing'
+var env = process.env.NODE_ENV === 'test'
   ? require('../config/test.env')
   : config.build.env
 
@@ -52,7 +52,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     // you can customize output by editing /src/index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
-      filename: process.env.NODE_ENV === 'testing'
+      filename: process.env.NODE_ENV === 'test'
         ? 'index.html'
         : config.build.index,
       template: 'src/index.html',
