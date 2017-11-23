@@ -19,6 +19,10 @@
     "include": [
       "src/**/*.{js,vue}"
     ],
+    "exclude": [
+      "test",
+      "node_modules"
+    ],
     "extension": [
       ".js",
       ".vue"
