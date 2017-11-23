@@ -71,6 +71,7 @@ services:
     environment:
       NODE_ENV: test
     volumes:
+      - ./interface/frontend/src:/app/src:cached
       - ./interface/frontend/test:/app/test:cached
 
   vue_e2e_test:
@@ -81,6 +82,7 @@ services:
     environment:
       NODE_ENV: test
     volumes:
+      - ./interface/frontend/src:/app/src:cached
       - ./interface/frontend/test:/app/test:cached
     depends_on:
       - vue

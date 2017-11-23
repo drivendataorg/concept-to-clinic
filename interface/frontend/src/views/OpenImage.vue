@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <button type="button" class="btn btn-block btn-success" @click="updateStore()">
+    <button id="openimage-mock" type="button" class="btn btn-block btn-success" @click="updateStore()">
       Test Validating Open Image route (/)
     </button>
     <image-series></image-series>

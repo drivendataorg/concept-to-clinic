@@ -33,5 +33,17 @@ module.exports = {
       .pause(500)
       .assert.urlEquals(interfaceUrl)
       .end()
+  },
+  'Allow navigation if prerequiste is met': function (browser) {
+    // NOTE: Refactor this once a real prerequiste has been implemented
+    browser
+      .url(interfaceUrl)
+      .waitForElementVisible('#app-container', 5000)
+      .assert.elementPresent('#navbar')
+      .click('button[id="openimage-mock"]')
+      .pause(500)
+      .click('a[href="#/detect-and-select"]')
+      .assert.urlEquals(interfaceUrl)
+      .end()
   }
 }
