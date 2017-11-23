@@ -38,8 +38,7 @@ export default {
   },
   methods: {
     async fetchNodules () {
-      const response = await this.$axios.get('/api/nodules.json');
-
+      const response = await this.$axios.get('/api/nodules.json')
       this.nodules = response.data || []
     }
   }

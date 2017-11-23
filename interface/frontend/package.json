@@ -16,8 +16,8 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "nyc": {
-    "exclude": [
-      "node_modules"
+    "include": [
+      "src/**/*.{js,vue}"
     ],
     "extension": [
       ".js",

@@ -40,10 +40,10 @@ module.exports = {
       .url(interfaceUrl)
       .waitForElementVisible('#app-container', 5000)
       .assert.elementPresent('#navbar')
-      .click('button[id="openimage-mock"]')
+      .click('#openimage-mock')
       .pause(500)
       .click('a[href="#/detect-and-select"]')
-      .assert.urlEquals(interfaceUrl)
+      .assert.urlContains('/detect-and-select')
       .end()
   }
 }
