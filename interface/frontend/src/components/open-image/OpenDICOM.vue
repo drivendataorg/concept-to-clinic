@@ -14,10 +14,12 @@
     </div>
     <div class="DICOM" ref="DICOM"></div>
     <nodule-marker :marker="marker" :zoomRate="zoomRate" :offsetX="offsetX" :offsetY="offsetY"></nodule-marker>
+    <area-select @selection-changed="areaSelectChange" v-if="showAreaSelect"></area-select>
   </div>
 </template>
 
 <script>
+  import AreaSelect from './AreaSelect'
   import NoduleMarker from './NoduleMarker'
 
   const cornerstone = require('cornerstone-core')
@@ -28,7 +30,7 @@
   cornerstoneTools.external.$ = jquery
 
   export default {
-    components: {NoduleMarker},
+    components: {AreaSelect, NoduleMarker},
     name: 'open-dicom',
     props: {
       view: {
@@ -58,7 +60,8 @@
         offsetY: 0,
 
         base64data: null,
-        pool: []
+        pool: [],
+        showAreaSelect: false
       }
     },
     watch: {
@@ -124,6 +127,9 @@
       }
     },
     methods: {
+      areaSelectChange (newCoords) {
+        console.log('areaSelectChanged', JSON.stringify(newCoords))
+      },
       rangeSlice (e) {
         this.stack.currentImageIdIndex = e.target.value
       },
