@@ -3,7 +3,7 @@
     <button id="openimage-mock" type="button" class="btn btn-block btn-success" @click="updateStore()">
       Test Validating Open Image route (/)
     </button>
-    <image-series></image-series>
+    <image-series v-on:series-selected='updateStore'></image-series>
   </div>
 </template>
 

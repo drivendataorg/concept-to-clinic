@@ -128,6 +128,7 @@
       selectSeries (series) {
         console.log(series.uri)
         this.selected = series
+        this.$emit('series-selected', series)
       },
       fetchAvailableImages () {
         this.$http.get('/api/images/available')
