@@ -1,0 +1,14 @@
+FROM node:8-slim
+
+# Install Selenium dependencies
+RUN apt-get update && apt-get install -y bzip2
+
+# Install Node dependencies
+COPY ./interface/frontend /app
+RUN cd /app && npm install
+
+EXPOSE 8080
+
+WORKDIR /app
+
+CMD [ "npm", "run" "unit" ]
