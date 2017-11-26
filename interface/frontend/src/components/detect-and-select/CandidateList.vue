@@ -98,7 +98,6 @@
         this.$axios
             .post(selectedCandidate.url + 'move', {x, y, z})
             .then((response) => {
-              debugger
               if (response.status === 200) {
                 Vue.set(candidates, selectedCandidateIndex, response.data)
               }
