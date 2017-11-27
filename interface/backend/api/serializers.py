@@ -1,8 +1,11 @@
+import glob
+import os
 import dicom
 import base64
 from PIL import Image
 import numpy as np
 from io import BytesIO
+from urllib import parse
 from django.urls import reverse
 from backend.cases.models import (
     Case,
@@ -20,6 +23,14 @@ class ImageSeriesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ImageSeries
         fields = '__all__'
+
+    image_files = serializers.SerializerMethodField()
+
+    def get_image_files(self, obj):
+        parts = list(parse.urlparse(obj.uri))
+        image_path = os.path.abspath(os.path.join(*parts))
+        files = glob.glob(os.path.join(image_path, '*.dcm'))
+        return files
 
 
 class ImageLocationSerializer(serializers.ModelSerializer):
