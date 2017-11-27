@@ -160,6 +160,9 @@ class Candidate(models.Model):
 
     probability_concerning = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
 
+    class Meta:
+        ordering = ['-probability_concerning']
+
 
 class Nodule(models.Model):
     """
