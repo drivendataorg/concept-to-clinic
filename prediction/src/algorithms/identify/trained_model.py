@@ -42,11 +42,15 @@ def predict(dicom_path):
              'p_nodule': float}
     """
     reader = sitk.ImageSeriesReader()
-    filenames = reader.GetGDCMSeriesFileNames(dicom_path)
-
-    if not filenames:
-        message = "The path {} doesn't contain any .mhd or .dcm files"
-        raise ValueError(message.format(dicom_path))
+    if dicom_path.endswith('.mhd'):
+        if not path.isfile(dicom_path):
+            message = "The path {} does not exist"
+            raise ValueError(message.format(dicom_path))
+    else:
+        filenames = reader.GetGDCMSeriesFileNames(dicom_path)
+        if not filenames:
+            message = "The path {} doesn't contain any .mhd or .dcm files"
+            raise ValueError(message.format(dicom_path))
 
     # all required preprocssing and prediction is implemented in gtr123_model
     result = gtr123_model.predict(dicom_path)

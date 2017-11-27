@@ -18,3 +18,11 @@ def test_identify_nodules_003(dicom_path_003, nodule_003):
     first = predicted[0]
     dist = np.sqrt(np.sum([(first[s] - nodule_003[s]) ** 2 for s in ["x", "y", "z"]]))
     assert (dist < 10)
+
+
+@pytest.mark.stop_timeout
+def test_identify_luna(metaimage_path, luna_nodule):
+    predicted = trained_model.predict(metaimage_path)
+    first = predicted[0]
+    dist = np.sqrt(np.sum([(first[s] - luna_nodule[s]) ** 2 for s in ["x", "y", "z"]]))
+    assert (dist < 10)
