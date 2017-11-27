@@ -1,9 +1,10 @@
 <template>
   <div class="container">
-    <button id="openimage-mock" type="button" class="btn btn-block btn-success" @click="updateStore()">
-      Test Validating Open Image route (/)
-    </button>
-    <image-series v-on:series-selected='updateStore'></image-series>
+    <div class="row">
+      <div class="col-md-12">
+        <image-series v-on:series-selected='updateStore'></image-series>
+      </div>
+    </div>
   </div>
 </template>
 
