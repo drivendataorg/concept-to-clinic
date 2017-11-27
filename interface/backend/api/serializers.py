@@ -3,6 +3,7 @@ import base64
 from PIL import Image
 import numpy as np
 from io import BytesIO
+from django.urls import reverse
 from backend.cases.models import (
     Case,
     Candidate,
@@ -48,6 +49,7 @@ class CandidateSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ('created',)
 
     centroid = ImageLocationSerializer()
+    modify_urls = serializers.SerializerMethodField()
 
     def create(self, validated_data):
         case_data = validated_data.pop('case')
@@ -55,6 +57,15 @@ class CandidateSerializer(serializers.HyperlinkedModelSerializer):
         image_location = ImageLocation.objects.create(**centroid_data)
         candidate = Candidate.objects.create(case=case_data, centroid=image_location, **validated_data)
         return candidate
+
+    def get_modify_urls(self, obj):
+        kwargs = {'candidate_id': obj.pk}
+        d = {
+            'mark': reverse('candidate-mark', kwargs=kwargs),
+            'dismiss': reverse('candidate-dismiss', kwargs=kwargs),
+            'move': reverse('update-candidate-location', kwargs=kwargs)
+        }
+        return d
 
 
 class NoduleSerializer(serializers.HyperlinkedModelSerializer):

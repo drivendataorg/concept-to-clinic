@@ -96,7 +96,7 @@
 
         // send data to backend
         this.$axios
-            .post(selectedCandidate.url + 'move', {x, y, z})
+            .post(selectedCandidate.modify_urls.move, {x, y, z})
             .then((response) => {
               if (response.status === 200) {
                 Vue.set(candidates, selectedCandidateIndex, response.data)
