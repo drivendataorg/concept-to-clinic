@@ -55,7 +55,7 @@ services:
       - ./interface/frontend/dist:/app/dist:cached
       - ./interface/frontend/static:/app/static:cached
       - ./interface/frontend/test:/app/test:cached
-      - ./.git/logs/HEAD:/HEAD:cached
+      - ./.git/logs/HEAD:/app/HEAD:cached
     links:
       - interface
     ports:

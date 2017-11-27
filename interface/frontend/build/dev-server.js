@@ -5,6 +5,10 @@ if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 }
 
+if (!process.env.GIT_HASH_VERSION) {
+  process.env.GIT_HASH_VERSION = JSON.parse(config.dev.env.GIT_HASH_VERSION)
+}
+
 var opn = require('opn')
 var path = require('path')
 var express = require('express')

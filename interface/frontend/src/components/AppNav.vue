@@ -28,7 +28,7 @@
 export default {
   data () {
     return {
-      appVersion: 'a0b1c2d'
+      appVersion: process.env.GIT_HASH_VERSION || 'Git hash not found'
     }
   }
 }
