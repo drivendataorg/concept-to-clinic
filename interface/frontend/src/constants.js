@@ -103,5 +103,10 @@ export default {
     '3 to 6 months from screening exam',
     '12 months from screening exam',
     '24 months from screening exam'
-  ]
+  ],
+  CANDIDATE_REVIEW_RESULT: {
+    NONE: 0,
+    MARKED: 1,
+    DISMISSED: 2
+  }
 }

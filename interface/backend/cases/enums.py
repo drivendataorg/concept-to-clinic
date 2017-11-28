@@ -96,3 +96,11 @@ class DensityFeature(IntEnum):
     SOLID = 1
     SEMI_SOLID = 2
     GROUND_GLASS = 3
+
+
+@unique  # ensures all variables are unique
+@django_enum
+class CandidateReviewResult(IntEnum):
+    NONE = 0
+    MARKED = 1
+    DISMISSED = 2

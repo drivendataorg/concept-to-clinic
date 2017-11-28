@@ -160,6 +160,10 @@ class Candidate(models.Model):
 
     probability_concerning = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
 
+    # defines whether the nodule was marked for further analysis or not(feedback given by user)
+    review_result = models.IntegerField(choices=enums.format_enum(enums.CandidateReviewResult),
+                                        default=enums.CandidateReviewResult.NONE)
+
 
 class Nodule(models.Model):
     """
