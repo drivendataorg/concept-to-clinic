@@ -8,8 +8,11 @@
             <template v-for="(candidate, index) in candidates">
               <div class="card">
                 <div class="card-header cursor-pointer" @click="toggleShow(index)">
-                  <p class="mb-0">
-                    <b>Candidate {{ index + 1 }}</b> (p={{ candidate.probability_concerning.toFixed(3) }})
+                  <p class="mb-0" :class="{ 'candidate-dismissed': candidate.review_result === REVIEW_RESULT.DISMISSED,
+                      'candidate-marked': candidate.review_result === REVIEW_RESULT.MARKED}">
+                    <span class="candidate-title">
+                      Candidate {{ index + 1 }}
+                    </span> (p={{ candidate.probability_concerning.toFixed(3) }})
                     <i class="pull-right" v-if="candidate._saving">Saving...</i>
                   </p>
                 </div>
@@ -17,10 +20,10 @@
                 <div class="collapse" :class="{ show: selectedCandidateIndex == index }">
                   <div class="card-block">
                     <candidate :candidate="candidate" :index="index"></candidate>
-                    <a @click="dismiss(candidate)">
+                    <a @click="markOrDismiss(candidate, REVIEW_RESULT.DISMISSED)">
                       <button type="button" class="btn btn-sm btn-secondary">Dismiss</button>
                     </a>
-                    <a @click="mark(candidate)">
+                    <a @click="markOrDismiss(candidate, REVIEW_RESULT.MARKED)">
                       <button type="button" class="btn btn-sm btn-danger">Mark concerning</button>
                     </a>
                   </div>
@@ -51,6 +54,7 @@
     components: {Candidate, OpenDicom},
     data () {
       return {
+        REVIEW_RESULT: this.$constants.CANDIDATE_REVIEW_RESULT,
         candidates: [],
         selectedCandidateIndex: -1,
         viewerData: {
@@ -144,19 +148,17 @@
       toggleShow (index) {
         this.selectedCandidateIndex = this.selectedCandidateIndex === index ? -1 : index
       },
-      mark (candidate) {
-        this.$axios.get(candidate.url + 'mark')
+      markOrDismiss (candidate, result) {
+        candidate._saving = true
+
+        this.$axios.post(candidate.url + 'review', {review_result: result})
             .then((response) => {
-              console.log(response)
-            })
-            .catch(() => {
-              // TODO: error callback
-            })
-      },
-      dismiss (candidate) {
-        this.$axios.get(candidate.url + 'dismiss')
-            .then((response) => {
-              console.log(response)
+              if (response.status === 200) {
+                candidate._saving = false
+                candidate.review_result = result
+              } else {
+                console.log('saving review result failed with response: ', response)
+              }
             })
             .catch(() => {
               // TODO: error callback
@@ -165,3 +167,13 @@
     }
   }
 </script>
+
+<style lang="scss" scoped>
+  .candidate-dismissed {
+    opacity: 0.5;
+  }
+
+  .candidate-marked .candidate-title {
+    font-weight: bold;
+  }
+</style>
