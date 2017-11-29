@@ -3,13 +3,13 @@
     <template v-if="candidates.length">
 
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div id="accordion">
             <template v-for="(candidate, index) in candidates">
               <div class="card">
                 <div class="card-header cursor-pointer" @click="toggleShow(index)">
                   <p class="mb-0">
-                    <b>Candidate {{ index + 1 }}</b> (p={{ candidate.probability_concerning }})
+                    <b>Candidate {{ index + 1 }}</b> (p={{ candidate.probability_concerning.toFixed(3) }})
                     <i class="pull-right" v-if="candidate._saving">Saving...</i>
                   </p>
                 </div>
@@ -30,15 +30,14 @@
             </template>
           </div>
         </div>
-        <div class="col-md-8">
-          <open-dicom :view="viewerData" :marker="marker"></open-dicom>
+        <div class="col-md-9">
+          <open-dicom v-show="selectedCandidate" :view="viewerData" :marker="marker"></open-dicom>
         </div>
       </div>
     </template>
     <template v-else>
       <p class="card-text">No candidates available.</p>
     </template>
-    <button @click="showDicom">Show DICOM</button>
   </div>
 </template>
 
@@ -58,8 +57,10 @@
           type: 'DICOM',
           prefixCS: ':/',
           prefixUrl: '/api/images/metadata?dicom_location=/',
-          paths: []
-        }
+          paths: [],
+          sliceIndex: 0
+        },
+        lastViewedSeriesId: null
       }
     },
     computed: {
@@ -74,7 +75,23 @@
         return {x, y, z}
       },
       selectedCandidate () {
-        return this.candidates[this.selectedCandidateIndex] || null
+        // selected candidate is changing
+        const candidate = this.candidates[this.selectedCandidateIndex] || null
+
+        if (candidate) {
+          this.viewerData.sliceIndex = candidate.centroid.z
+
+          // to avoid screen refreshes - reinit viewer only when new candidate comes from other case
+          if (this.lastViewedCaseUrl !== candidate.case.url) {
+            this.viewerData.paths = candidate._filesPaths
+          }
+
+          this.lastViewedCaseUrl = candidate.case.url
+        } else {
+          this.lastViewedCaseUrl = null
+        }
+
+        return candidate
       }
     },
     created () {
@@ -98,7 +115,6 @@
         this.$axios
             .post(selectedCandidate.url + 'move', {x, y, z})
             .then((response) => {
-              debugger
               if (response.status === 200) {
                 Vue.set(candidates, selectedCandidateIndex, response.data)
               }
@@ -106,22 +122,20 @@
       })
     },
     methods: {
-      showDicom () {
-        this.viewerData.paths = ['/images/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178' +
-                                 '/1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192/-115.000000.dcm']
-      },
       fetchCandidates () {
-        this.$axios.get('/api/candidates/')
+        this.$axios.get('/api/candidates-info')
             .then((response) => {
               for (let candidate of response.data) {
                 // extending result data with technical properties
                 candidate._saving = false
+
+                let series = candidate.case.series
+                candidate._filesPaths = series.files.map((fileName) => {
+                  return series.uri + '/' + fileName
+                })
               }
 
               this.candidates = response.data
-
-              this.viewerData.paths = ['/images/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178' +
-                                       '/1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192/-115.000000.dcm']
             })
             .catch(() => {
               // TODO: error callback

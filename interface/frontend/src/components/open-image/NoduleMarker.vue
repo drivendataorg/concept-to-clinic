@@ -1,6 +1,6 @@
 <template>
-  <vue-draggable-resizable class="nodule-marker" v-if="scaledMarker"
-                           :x="scaledMarker.x" :y="scaledMarker.y"
+  <vue-draggable-resizable class="nodule-marker" :class="{ overlapped: markerOverlappedBySlice }"
+                           v-if="scaledMarker" :x="scaledMarker.x" :y="scaledMarker.y"
                            :w="markerImageSize" :h="markerImageSize"
                            :minw="markerImageSize" :minh="markerImageSize"
                            :resizable="false" v-on:dragstop="onDragFinished">
@@ -10,12 +10,20 @@
 <script>
   import Vue from 'vue'
   import VueDraggableResizable from 'vue-draggable-resizable'
-  import { EventBus } from '../../main.js'
+  import {EventBus} from '../../main.js'
 
   export default {
     components: {VueDraggableResizable},
     name: 'open-dicom',
-    props: ['zoomRate', 'offsetX', 'offsetY', 'marker'],
+    props: {
+      zoomRate: null,
+      offsetX: null,
+      offsetY: null,
+      marker: null,
+      sliceIndex: {
+        type: Number
+      }
+    },
     data () {
       const markerImageSize = 32
       return {
@@ -56,6 +64,10 @@
         scaledInfo.y = scaledInfo.y * this.zoomRate - this.offsetY - this.markerImageSize / 2
 
         return scaledInfo
+      },
+      markerOverlappedBySlice () {
+        const val = this.scaledMarker.z !== this.sliceIndex
+        return val
       }
     },
     methods: {
@@ -63,16 +75,26 @@
         var scaledX = x / this.zoomRate + this.offsetX + this.markerImageSize / 2
         var scaledY = y / this.zoomRate + this.offsetY + this.markerImageSize / 2
 
-        EventBus.$emit('nodule-marker-moved', scaledX, scaledY, this.marker.z)
+        EventBus.$emit('nodule-marker-moved', scaledX, scaledY, this.sliceIndex)
       }
     }
   }
 </script>
 
 <style lang="scss" scoped>
+  @keyframes opacity-pulse {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.9; }
+    100% { opacity: 0.3; }
+  }
+
   .DICOM-container {
     .nodule-marker {
       background-image: url('../../assets/images/nodule-marker.png');
+
+      &.overlapped {
+        animation: opacity-pulse 1s infinite ease-in-out;
+      }
     }
   }
 </style>

@@ -9,7 +9,8 @@ from backend.api.views import (
     candidate_dismiss,
     case_report,
     nodule_update,
-    update_candidate_location
+    update_candidate_location,
+    candidates_info
 )
 from django.conf.urls import (
     include,
@@ -29,6 +30,7 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^images/available$', ImageAvailableApiView.as_view(), name='images-available'),
     url(r'^images/metadata$', ImageMetadataApiView.as_view(), name='images-metadata'),
+    url(r'^candidates-info$', candidates_info, name='candidates-info'),
     url(r'^candidates/(?P<candidate_id>\d+)/dismiss$', candidate_dismiss, name='candidate-dismiss'),
     url(r'^candidates/(?P<candidate_id>\d+)/mark$', candidate_mark, name='candidate-mark'),
     url(r'^candidates/(?P<candidate_id>\d+)/move$', update_candidate_location, name='update-candidate-location'),

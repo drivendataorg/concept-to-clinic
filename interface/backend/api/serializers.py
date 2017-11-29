@@ -48,6 +48,7 @@ class CandidateSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ('created',)
 
     centroid = ImageLocationSerializer()
+    case = CaseSerializer()
 
     def create(self, validated_data):
         case_data = validated_data.pop('case')

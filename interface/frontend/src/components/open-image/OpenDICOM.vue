@@ -1,7 +1,7 @@
 <template>
   <div class="DICOM-container">
     <div class="DICOM-description">{{ display }}</div>
-    <div class="DICOM-toolbar">
+    <div class="DICOM-toolbar" v-if="view.paths.length">
       <input
         class="DICOM-range"
         type="range"
@@ -10,10 +10,10 @@
         v-bind:value="stack.currentImageIdIndex"
         v-on:input="rangeSlice($event)"
       >
-      {{ stack.currentImageIdIndex }}
+      slice index: <b>{{ stack.currentImageIdIndex }} </b>
     </div>
     <div class="DICOM" ref="DICOM"></div>
-    <nodule-marker :marker="marker" :zoomRate="zoomRate" :offsetX="offsetX" :offsetY="offsetY"></nodule-marker>
+    <nodule-marker :marker="marker" :sliceIndex="stack.currentImageIdIndex" :zoomRate="zoomRate" :offsetX="offsetX" :offsetY="offsetY"></nodule-marker>
     <area-select @selection-changed="areaSelectChange" v-if="showAreaSelect"></area-select>
   </div>
 </template>
@@ -40,7 +40,8 @@
           prefixCS: ':/',
           prefixUrl: null,
           paths: [],
-          state: ''
+          state: '',
+          sliceIndex: 0
         }
       },
       // a marker that indicates the nodule centroid location ({ x, y, z })
@@ -49,7 +50,7 @@
     data () {
       return {
         stack: {
-          currentImageIdIndex: 0,
+          currentImageIdIndex: this.sliceIndex,
           imageIds: []
         },
 
@@ -65,11 +66,20 @@
       }
     },
     watch: {
-      'view.paths': function (val) {
+      'view.sliceIndex' (newIndex) {
+        this.stack.currentImageIdIndex = newIndex
+      },
+      'view.paths' (val) {
         const element = this.$refs.DICOM
         this.pool = Array(this.view.paths.length)
-        this.stack.currentImageIdIndex = this.view.paths.indexOf(this.view.state)
-        if (this.stack.currentImageIdIndex < 0) this.stack.currentImageIdIndex = 0
+
+        if (this.view.sliceIndex >= 0) {
+          this.stack.currentImageIdIndex = this.view.sliceIndex
+        } else {
+          this.stack.currentImageIdIndex = this.view.paths.indexOf(this.view.state)
+          if (this.stack.currentImageIdIndex < 0) this.stack.currentImageIdIndex = 0
+        }
+
         this.stack.imageIds = this.view.paths.map((path) => {
           return this.view.type + this.view.prefixCS + path
         }, this)
@@ -131,7 +141,7 @@
         console.log('areaSelectChanged', JSON.stringify(newCoords))
       },
       rangeSlice (e) {
-        this.stack.currentImageIdIndex = e.target.value
+        this.stack.currentImageIdIndex = Number(e.target.value)
       },
       initCS (element) {
         try {
@@ -167,6 +177,7 @@
   .DICOM-toolbar {
     position: relative;
     top: 100%;
+    color: #292b2c;
   }
 
   .DICOM-container {

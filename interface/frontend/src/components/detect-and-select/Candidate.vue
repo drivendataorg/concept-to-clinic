@@ -25,11 +25,15 @@
         </tr>
         <tr>
           <td>X:</td>
-          <td>{{ candidate.centroid.x }}</td>
+          <td><b>{{ candidate.centroid.x }}</b></td>
         </tr>
         <tr>
           <td>Y:</td>
-          <td>{{ candidate.centroid.y }}</td>
+          <td><b>{{ candidate.centroid.y }}</b></td>
+        </tr>
+        <tr>
+          <td class="pr-3">Slice index: </td>
+          <td><b>{{ candidate.centroid.z }}</b></td>
         </tr>
       </tbody>
     </table>

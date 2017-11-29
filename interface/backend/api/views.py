@@ -1,6 +1,7 @@
 import json
 import mimetypes
 import os
+import glob
 
 import dicom
 from backend.api import serializers
@@ -170,6 +171,22 @@ class ImageAvailableApiView(APIView):
         """
         tree = self.walk(settings.DATASOURCE_DIR)
         return Response({'directories': tree})
+
+
+@api_view(['GET'])
+def candidates_info(request):
+    all_candidates = Candidate.objects.prefetch_related('case__series').all()
+    serialized_candidates = serializers.CandidateSerializer(all_candidates, context={'request': None}, many=True).data
+
+    # append DICOM files to response
+    for candidate in serialized_candidates:
+        series = candidate['case']['series']
+
+        if 'files' not in series:
+            # using `glob1` as it returns filenames without a directory path
+            series['files'] = glob.glob1(series['uri'], '*.dcm')
+
+    return Response(serialized_candidates)
 
 
 @api_view(['GET'])
