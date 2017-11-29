@@ -118,3 +118,21 @@ class SmokeTest(TestCase):
         self.client.post(url, json.dumps({'lung_orientation': 'NONE'}), 'application/json')
         nodule.refresh_from_db()
         self.assertEquals(nodule.lung_orientation, enums.LungOrientation.NONE.value)
+
+    def test_candidates_mark(self):
+        candidate = CandidateFactory()
+        url = reverse('review-candidate', kwargs={'candidate_id': candidate.id})
+        self.client.post(url, json.dumps({'review_result': enums.CandidateReviewResult.MARKED}), 'application/json')
+
+        candidate.refresh_from_db()
+
+        self.assertEquals(candidate.review_result, enums.CandidateReviewResult.MARKED)
+
+    def test_candidates_dismiss(self):
+        candidate = CandidateFactory()
+        url = reverse('review-candidate', kwargs={'candidate_id': candidate.id})
+        self.client.post(url, json.dumps({'review_result': enums.CandidateReviewResult.DISMISSED}), 'application/json')
+
+        candidate.refresh_from_db()
+
+        self.assertEquals(candidate.review_result, enums.CandidateReviewResult.DISMISSED)

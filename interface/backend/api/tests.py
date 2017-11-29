@@ -1,7 +1,6 @@
 from backend.api.serializers import NoduleSerializer
 from backend.cases.factories import (
     CaseFactory,
-    CandidateFactory,
     NoduleFactory
 )
 from django.test import TestCase
@@ -40,20 +39,4 @@ class ViewTest(TestCase):
             '1.3.6.1.4.1.14519.5.2.1.6279.6001.490157381160200744295382098329/'
             '1.3.6.1.4.1.14519.5.2.1.6279.6001.619372068417051974713149104919/-80.750000.dcm'
         })
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_candidates_mark(self):
-        candidate = CandidateFactory()
-        url = reverse('candidate-mark', kwargs={'candidate_id': candidate.id})
-        response = self.client.get(url)
-        response_dict = response.json()
-        self.assertEqual(response_dict["response"], "Candidate {} was marked".format(candidate.id))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_candidates_dismiss(self):
-        candidate = CandidateFactory()
-        url = reverse('candidate-dismiss', kwargs={'candidate_id': candidate.id})
-        response = self.client.get(url)
-        response_dict = response.json()
-        self.assertEqual(response_dict["response"], "Candidate {} was dismissed".format(candidate.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)

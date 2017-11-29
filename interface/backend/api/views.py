@@ -179,24 +179,35 @@ def candidates_info(request):
     serialized_candidates = serializers.CandidateSerializer(all_candidates, context={'request': None}, many=True).data
 
     # append DICOM files to response
-    for candidate in serialized_candidates:
-        series = candidate['case']['series']
-
-        if 'files' not in series:
-            # using `glob1` as it returns filenames without a directory path
-            series['files'] = glob.glob1(series['uri'], '*.dcm')
+    [append_files_to_candidate(candidate) for candidate in serialized_candidates]
 
     return Response(serialized_candidates)
 
 
-@api_view(['GET'])
-def candidate_mark(request, candidate_id):
-    return Response({'response': "Candidate {} was marked".format(candidate_id)})
+@api_view(['POST'])
+def review_candidate(request, candidate_id):
+    try:
+        review_result = json.loads(request.body)['review_result']
+    except Exception as e:
+        return Response({'response': "An error occurred: {}".format(e)}, 500)
 
+    if review_result is None:
+        review_result = enums.CandidateReviewResult.NONE
 
-@api_view(['GET'])
-def candidate_dismiss(request, candidate_id):
-    return Response({'response': "Candidate {} was dismissed".format(candidate_id)})
+    review_choices = [result.value for result in enums.CandidateReviewResult]
+
+    if review_result not in review_choices:
+        return Response({'response': "ValueError: review_result must be one of {}".format(review_choices)}, 500)
+
+    candidate = Candidate.objects.get(pk=candidate_id)
+    candidate.review_result = review_result
+
+    candidate.save()
+
+    serialized_candidate = serializers.CandidateSerializer(candidate, context={'request': None}).data
+    append_files_to_candidate(serialized_candidate)
+
+    return Response(serialized_candidate)
 
 
 @api_view(['POST'])
@@ -217,7 +228,10 @@ def update_candidate_location(request, candidate_id):
 
     candidate.centroid.save()
 
-    return Response(serializers.CandidateSerializer(candidate, context={'request': None}).data)
+    serialized_candidate = serializers.CandidateSerializer(candidate, context={'request': None}).data
+    append_files_to_candidate(serialized_candidate)
+
+    return Response(serialized_candidate)
 
 
 @api_view(['GET'])
@@ -244,3 +258,11 @@ def nodule_update(request, nodule_id):
     Nodule.objects.filter(pk=nodule_id).update(lung_orientation=enums.LungOrientation[lung_orientation].value)
     return Response(
         {'response': "Lung orientation of nodule {} has been changed to '{}'".format(nodule_id, lung_orientation)})
+
+
+def append_files_to_candidate(candidate):
+    series = candidate['case']['series']
+
+    if 'files' not in series:
+        # using `glob1` as it returns filenames without a directory path
+        series['files'] = glob.glob1(series['uri'], '*.dcm')
