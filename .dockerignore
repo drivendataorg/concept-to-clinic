@@ -1,4 +1,5 @@
 .*
+!.git/HEAD
 !.env
 !setup.cfg
 interface/frontend/node_modules

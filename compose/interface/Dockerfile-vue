@@ -10,6 +10,7 @@ RUN cd /app && npm install
 
 # get code
 COPY ./interface/frontend /app
+COPY ./.git/HEAD /app/HEAD
 
 # build application
 RUN cd /app && npm run build
