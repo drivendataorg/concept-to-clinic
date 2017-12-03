@@ -24,13 +24,21 @@ def test_segment_predict_load(dicom_path):
     assert predicted['volumes'] == []
 
 
-def test_segment_predict_inference(dicom_path, nodule_locations):
+def test_segment_dicom(dicom_path, nodule_locations):
     predicted = predict(dicom_path, nodule_locations)
     assert isinstance(predicted['binary_mask_path'], str)
     assert predicted['volumes']
     assert predicted['volumes'][0] > 0
 
 
+def test_segment_luna(metaimage_path, luna_nodule):
+    predicted = predict(metaimage_path, [luna_nodule])
+    assert isinstance(predicted['binary_mask_path'], str)
+    assert predicted['volumes']
+    assert predicted['volumes'][0] > 0
+
+
+@pytest.mark.stop_timeout
 def test_nodule_segmentation(dicom_path, nodule_001):
     predict(dicom_path, [nodule_001])
 
