@@ -147,6 +147,9 @@ class MetaData:
         # the default axes order which is used is: (z, y, x)
         return self.meta.GetOrigin()[::-1]
 
+    def extract_origin_dicom(self):
+        return [0] * 3
+
     def non_copy_constructor(self, meta_instance):
         self.meta = meta_instance.meta
         self.spacing = meta_instance.spacing
@@ -167,6 +170,7 @@ class MetaData:
         if dicom_meta:
             # list of methods for DICOM meta
             self.spacing = self.extract_spacing_dcm()
+            self.origin = self.extract_origin_dicom()
         elif mhd_meta:
             # list of methods for MetaImage meta
             self.spacing = self.extract_spacing_mhd()
