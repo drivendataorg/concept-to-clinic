@@ -7,13 +7,14 @@ from backend.cases.factories import (
 )
 from backend.cases.models import Case, Candidate, Nodule
 from backend.images.models import ImageSeries, ImageLocation
-from django.test import TestCase
+from rest_framework import status
+from rest_framework.test import APITestCase
 from django.urls import reverse
 
 from . import enums
 
 
-class SmokeTest(TestCase):
+class SmokeTest(APITestCase):
     def test_create_case(self):
         case = CaseFactory()
         self.assertIsNotNone(case.series)
@@ -56,15 +57,14 @@ class SmokeTest(TestCase):
         nodule2 = Nodule.objects.create(case=case, candidate=candidate2, centroid=centroid2)
 
         url = reverse('case-report', kwargs={'case_id': case.id}) + ".json"
-        response = self.client.get(url)
-        payload = json.loads(response.content)
-        self.assertEqual(payload['id'], case.id)
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.data['id'], case.id)
 
-        self.assertDictContainsSubset(payload['series'],
+        self.assertDictContainsSubset(response.data['series'],
                                       {'id': series.id, 'patient_id': '42', 'series_instance_uid': '13',
                                        'uri': '/images/1.dcm'})
 
-        candidate1_dict = payload['candidates'][0]
+        candidate1_dict = response.data['candidates'][0]
         self.assertEqual(candidate1_dict['id'], candidate1.id)
         self.assertEqual(candidate1_dict['case_id'], case.id)
         self.assertEqual(candidate1_dict['probability_concerning'], 0.8)
@@ -74,7 +74,7 @@ class SmokeTest(TestCase):
         self.assertEqual(candidate1_dict['centroid']['y'], 2)
         self.assertEqual(candidate1_dict['centroid']['z'], 3)
 
-        candidate2_dict = payload['candidates'][1]
+        candidate2_dict = response.data['candidates'][1]
         self.assertEqual(candidate2_dict['id'], candidate2.id)
         self.assertEqual(candidate2_dict['case_id'], case.id)
         self.assertEqual(candidate2_dict['probability_concerning'], 0.98)
@@ -84,7 +84,7 @@ class SmokeTest(TestCase):
         self.assertEqual(candidate2_dict['centroid']['y'], 20)
         self.assertEqual(candidate2_dict['centroid']['z'], 30)
 
-        nodule1_dict = payload['nodules'][0]
+        nodule1_dict = response.data['nodules'][0]
         self.assertEqual(nodule1_dict['id'], nodule1.id)
         self.assertEqual(nodule1_dict['centroid']['id'], centroid1.id)
         self.assertEqual(nodule1_dict['centroid']['series'],
@@ -93,7 +93,7 @@ class SmokeTest(TestCase):
         self.assertEqual(nodule1_dict['centroid']['y'], 2)
         self.assertEqual(nodule1_dict['centroid']['z'], 3)
 
-        nodule2_dict = payload['nodules'][1]
+        nodule2_dict = response.data['nodules'][1]
         self.assertEqual(nodule2_dict['id'], nodule2.id)
         self.assertEqual(nodule2_dict['centroid']['series'],
                          {'id': series.id, 'patient_id': '42', 'series_instance_uid': '13', 'uri': '/images/1.dcm'})
@@ -103,36 +103,37 @@ class SmokeTest(TestCase):
 
     def test_update_nodule_lung_orientation(self):
         nodule = NoduleFactory()
-        url = reverse('nodule-update', kwargs={'nodule_id': nodule.id})
+        url = reverse('nodule-detail', kwargs={'pk': nodule.pk})
 
         self.assertEquals(nodule.lung_orientation, enums.LungOrientation.NONE.value)
 
-        self.client.post(url, json.dumps({'lung_orientation': 'LEFT'}), 'application/json')
+        resp = self.client.patch(url, {'lung_orientation': enums.LungOrientation.LEFT.value})
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
         nodule.refresh_from_db()
         self.assertEquals(nodule.lung_orientation, enums.LungOrientation.LEFT.value)
 
-        self.client.post(url, json.dumps({'lung_orientation': 'RIGHT'}), 'application/json')
+        resp = self.client.patch(url, {'lung_orientation': enums.LungOrientation.RIGHT.value})
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
         nodule.refresh_from_db()
         self.assertEquals(nodule.lung_orientation, enums.LungOrientation.RIGHT.value)
 
-        self.client.post(url, json.dumps({'lung_orientation': 'NONE'}), 'application/json')
+        resp = self.client.patch(url, {'lung_orientation': enums.LungOrientation.NONE.value})
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
         nodule.refresh_from_db()
         self.assertEquals(nodule.lung_orientation, enums.LungOrientation.NONE.value)
 
     def test_candidates_mark(self):
         candidate = CandidateFactory()
-        url = reverse('review-candidate', kwargs={'candidate_id': candidate.id})
-        self.client.post(url, json.dumps({'review_result': enums.CandidateReviewResult.MARKED}), 'application/json')
-
+        url = reverse('candidate-detail', kwargs={'pk': candidate.pk})
+        resp = self.client.patch(url, {'review_result': enums.CandidateReviewResult.MARKED.value})
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
         candidate.refresh_from_db()
-
-        self.assertEquals(candidate.review_result, enums.CandidateReviewResult.MARKED)
+        self.assertEquals(candidate.review_result, enums.CandidateReviewResult.MARKED.value)
 
     def test_candidates_dismiss(self):
         candidate = CandidateFactory()
-        url = reverse('review-candidate', kwargs={'candidate_id': candidate.id})
-        self.client.post(url, json.dumps({'review_result': enums.CandidateReviewResult.DISMISSED}), 'application/json')
-
+        url = reverse('candidate-detail', kwargs={'pk': candidate.pk})
+        resp = self.client.patch(url, {'review_result': enums.CandidateReviewResult.DISMISSED.value})
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
         candidate.refresh_from_db()
-
-        self.assertEquals(candidate.review_result, enums.CandidateReviewResult.DISMISSED)
+        self.assertEquals(candidate.review_result, enums.CandidateReviewResult.DISMISSED.value)

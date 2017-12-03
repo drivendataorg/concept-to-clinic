@@ -5,9 +5,7 @@ from backend.api.views import (
     ImageSeriesViewSet,
     ImageAvailableApiView,
     ImageMetadataApiView,
-    review_candidate,
     case_report,
-    nodule_update,
     update_candidate_location,
     candidates_info
 )
@@ -30,9 +28,7 @@ urlpatterns = [
     url(r'^images/available$', ImageAvailableApiView.as_view(), name='images-available'),
     url(r'^images/metadata$', ImageMetadataApiView.as_view(), name='images-metadata'),
     url(r'^candidates-info$', candidates_info, name='candidates-info'),
-    url(r'^candidates/(?P<candidate_id>\d+)/review$', review_candidate, name='review-candidate'),
     url(r'^candidates/(?P<candidate_id>\d+)/move$', update_candidate_location, name='update-candidate-location'),
-    url(r'^nodules/(?P<nodule_id>\d+)/update$', nodule_update, name='nodule-update'),
 ]
 
 # Support different suffixes

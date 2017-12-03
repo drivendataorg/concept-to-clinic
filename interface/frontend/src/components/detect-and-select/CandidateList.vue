@@ -151,7 +151,7 @@
       markOrDismiss (candidate, result) {
         candidate._saving = true
 
-        this.$axios.post(candidate.url + 'review', {review_result: result})
+        this.$axios.patch(candidate.url, {review_result: result})
             .then((response) => {
               if (response.status === 200) {
                 candidate._saving = false

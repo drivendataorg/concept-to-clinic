@@ -16,7 +16,7 @@ from backend.images.models import ImageSeries
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -43,10 +43,26 @@ class CandidateViewSet(ViewSetBase):
     queryset = Candidate.objects.all()
     serializer_class = serializers.CandidateSerializer
 
+    def partial_update(self, request, pk, *args, **kwargs):
+        instance = get_object_or_404(Candidate, pk=pk)
+        context = self.get_serializer_context()
+        serializer = self.serializer_class(instance, data=request.data, partial=True, context=context)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(append_files_to_candidate(serializer.data))
+
 
 class NoduleViewSet(ViewSetBase):
     queryset = Nodule.objects.all()
     serializer_class = serializers.NoduleSerializer
+
+    def partial_update(self, request, pk, *args, **kwargs):
+        instance = get_object_or_404(Nodule, pk=pk)
+        context = self.get_serializer_context()
+        serializer = self.serializer_class(instance, data=request.data, partial=True, context=context)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 
 class ImageSeriesViewSet(ViewSetBase):
@@ -185,32 +201,6 @@ def candidates_info(request):
 
 
 @api_view(['POST'])
-def review_candidate(request, candidate_id):
-    try:
-        review_result = json.loads(request.body)['review_result']
-    except Exception as e:
-        return Response({'response': "An error occurred: {}".format(e)}, 500)
-
-    if review_result is None:
-        review_result = enums.CandidateReviewResult.NONE
-
-    review_choices = [result.value for result in enums.CandidateReviewResult]
-
-    if review_result not in review_choices:
-        return Response({'response': "ValueError: review_result must be one of {}".format(review_choices)}, 500)
-
-    candidate = Candidate.objects.get(pk=candidate_id)
-    candidate.review_result = review_result
-
-    candidate.save()
-
-    serialized_candidate = serializers.CandidateSerializer(candidate, context={'request': None}).data
-    append_files_to_candidate(serialized_candidate)
-
-    return Response(serialized_candidate)
-
-
-@api_view(['POST'])
 def update_candidate_location(request, candidate_id):
     try:
         request_body = json.loads(request.body)
@@ -238,26 +228,6 @@ def update_candidate_location(request, candidate_id):
 def case_report(request, case_id, format=None):
     case = get_object_or_404(Case, pk=case_id)
     return Response(CaseSerializer(case).data)
-
-
-@api_view(['POST'])
-def nodule_update(request, nodule_id):
-    try:
-        lung_orientation = json.loads(request.body)['lung_orientation']
-    except Exception as e:
-        return Response({'response': "An error occurred: {}".format(e)}, 500)
-
-    if lung_orientation is None:
-        lung_orientation = 'NONE'
-
-    orientation_choices = [orientation.name for orientation in enums.LungOrientation]
-
-    if lung_orientation not in orientation_choices:
-        return Response({'response': "ValueError: lung_orientation must be one of {}".format(orientation_choices)}, 500)
-
-    Nodule.objects.filter(pk=nodule_id).update(lung_orientation=enums.LungOrientation[lung_orientation].value)
-    return Response(
-        {'response': "Lung orientation of nodule {} has been changed to '{}'".format(nodule_id, lung_orientation)})
 
 
 def append_files_to_candidate(candidate):

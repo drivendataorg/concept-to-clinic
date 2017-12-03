@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     update (nodule) {
-      this.$axios.put(nodule.url, {
+      this.$axios.patch(nodule.url, {
         lung_orientation: this.lungOrientation,
         concerning: this.concerning,
         condition: this.condition,
