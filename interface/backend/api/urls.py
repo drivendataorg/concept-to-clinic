@@ -32,4 +32,4 @@ urlpatterns = [
 ]
 
 # Support different suffixes
-urlpatterns += format_suffix_patterns([url(r'^cases/(?P<case_id>\d+)/report$', case_report, name='case-report')])
+urlpatterns += format_suffix_patterns([url(r'^cases/(?P<pk>\d+)/report$', case_report, name='case-report')])

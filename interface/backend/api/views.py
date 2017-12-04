@@ -223,8 +223,8 @@ def update_candidate_location(request, candidate_id):
 
 
 @api_view(['GET'])
-def case_report(request, case_id, format=None):
-    case = get_object_or_404(Case, pk=case_id)
+def case_report(request, pk, format=None):
+    case = get_object_or_404(Case, pk=pk)
     return Response(CaseSerializer(case).data)
 
 
