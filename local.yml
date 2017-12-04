@@ -141,7 +141,6 @@ services:
       - "8001:8001"
 
   compile_docs:
-    restart: always
     depends_on:
       - postgres
       - base
