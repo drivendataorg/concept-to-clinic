@@ -1,5 +1,3 @@
-import json
-
 from backend.cases.factories import (
     CandidateFactory,
     CaseFactory,
