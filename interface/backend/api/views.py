@@ -5,11 +5,11 @@ import glob
 
 import dicom
 from backend.api import serializers
+from backend.cases.serializers import CaseSerializer
 from backend.cases.models import (
     Case,
     Candidate,
-    Nodule,
-    CaseSerializer
+    Nodule
 )
 
 from backend.images.models import ImageSeries

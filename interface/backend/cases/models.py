@@ -1,11 +1,9 @@
-from backend.images.models import ImageSeriesSerializer, ImageLocationSerializer
 from django.core.validators import (
     MaxValueValidator,
     MinValueValidator
 )
 from django.db import models
 from django.utils import timezone
-from rest_framework import serializers
 
 from . import enums
 
@@ -191,30 +189,3 @@ class NoduleFeatures(models.Model):
     appearance_feature = models.IntegerField(choices=enums.format_enum(enums.AppearanceFeature))
     diameter = models.DecimalField(max_digits=5, decimal_places=2)
     density_feature = models.IntegerField(choices=enums.format_enum(enums.DensityFeature))
-
-
-class CandidateSerializer(serializers.ModelSerializer):
-    centroid = ImageLocationSerializer(read_only=True)
-
-    class Meta:
-        model = Candidate
-        fields = ('id', 'created', 'centroid', 'case_id', 'probability_concerning')
-
-
-class NoduleSerializer(serializers.ModelSerializer):
-    candidates = CandidateSerializer(read_only=True, many=True)
-    centroid = ImageLocationSerializer(read_only=True)
-
-    class Meta:
-        model = Case
-        fields = ('id', 'created', 'candidates', 'centroid')
-
-
-class CaseSerializer(serializers.ModelSerializer):
-    series = ImageSeriesSerializer()
-    candidates = CandidateSerializer(read_only=True, many=True)
-    nodules = NoduleSerializer(read_only=True, many=True)
-
-    class Meta:
-        model = Case
-        fields = ('id', 'created', 'series', 'candidates', 'nodules')
