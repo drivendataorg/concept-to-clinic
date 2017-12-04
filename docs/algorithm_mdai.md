@@ -60,7 +60,7 @@ redis-py==2.10.5
 **Additional installation instructions:** 
 
 Install pydicom 1.0.0a1 from source.
-````commandline
+````bash
 git clone https://github.com/pydicom/pydicom.git pydicom-src
 cd pydicom-src
 git reset --hard bbaa74e9d02596afc03b924fe8ffbe7b95b6ff55

@@ -25,14 +25,6 @@ DOCS_DIR = os.getcwd()
 PROJECT_DIR = os.path.abspath(os.path.join(DOCS_DIR, os.pardir))
 sys.path.insert(0, PROJECT_DIR)
 
-INTERFACE_DIR = os.path.join(PROJECT_DIR, 'interface')
-sys.path.insert(0, INTERFACE_DIR)
-
-django.setup()  # Needed to document interface app with sphinx
-
-PREDICTION_DIR = os.path.join(PROJECT_DIR, 'prediction')
-sys.path.insert(0, PREDICTION_DIR)
-
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -42,14 +34,7 @@ sys.path.insert(0, PREDICTION_DIR)
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
-    'sphinx.ext.napoleon',
-]
-
-napoleon_google_docstring = True
-napoleon_numpy_docstring = False
+extensions = []
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

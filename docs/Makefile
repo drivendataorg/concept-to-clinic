@@ -7,9 +7,6 @@ SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = ConcepttoClinic
 SOURCEDIR     = .
 BUILDDIR      = _build
-APIDOCDIR_INTERFACE    = apidoc_interface
-APIDOCDIR_PREDICTION   = apidoc_prediction
-SPHINXAPIDOC  = sphinx-apidoc
 PROJDIR       = ../
 ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
@@ -26,10 +23,6 @@ help:
 
 .PHONY: html
 html:
-	$(SPHINXAPIDOC) -f -o $(APIDOCDIR_INTERFACE)/ $(PROJDIR)/interface/
-	$(SPHINXAPIDOC) -f -o $(APIDOCDIR_PREDICTION)/ $(PROJDIR)/prediction/
-	@echo
-	@echo "apidoc build finished. The api source files are in $(APIDOCDIR)/"
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	@echo "Sphinx build finished. The build files are in $(BUILDDIR)/"
 
