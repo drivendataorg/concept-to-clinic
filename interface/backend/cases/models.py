@@ -179,13 +179,10 @@ class Nodule(models.Model):
     lung_orientation = models.IntegerField(choices=enums.format_enum(enums.LungOrientation),
                                            default=enums.LungOrientation.NONE)
 
+    appearance_feature = models.IntegerField(choices=enums.format_enum(enums.AppearanceFeature),
+                                             null=True)
 
-class NoduleFeatures(models.Model):
-    """
-    Contains additional descriptive features of the nodule.
-    """
-    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+    diameter = models.FloatField(null=True)
 
-    appearance_feature = models.IntegerField(choices=enums.format_enum(enums.AppearanceFeature))
-    diameter = models.DecimalField(max_digits=5, decimal_places=2)
-    density_feature = models.IntegerField(choices=enums.format_enum(enums.DensityFeature))
+    density_feature = models.IntegerField(choices=enums.format_enum(enums.DensityFeature),
+                                          null=True)
