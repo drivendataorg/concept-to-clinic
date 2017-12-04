@@ -9,6 +9,11 @@ import './assets/css/bootstrap.min.css'
 import './assets/css/font-awesome.min.css'
 import './assets/css/project.css'
 import './assets/js/ie10-viewport-bug-workaround.js'
+
+// CSRF protection - see: https://stackoverflow.com/questions/39254562/csrf-with-django-reactredux-using-axios
+axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
+axios.defaults.xsrfCookieName = 'csrftoken'
+
 export const EventBus = new Vue()
 Vue.use(VueResource)
 Vue.use(VueRouter)

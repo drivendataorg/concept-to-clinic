@@ -103,6 +103,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+# CSRF Token
+CSRF_COOKIE_NAME = 'csrftoken'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
