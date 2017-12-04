@@ -38,6 +38,12 @@ Resources:
       IamInstanceProfile: arn:aws:iam::113913174193:instance-profile/concept-to-clinic-ecs-instance-profile
       ImageId: ami-20ff515a
       InstanceType: c5.large
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeType: gp2
+            DeleteOnTermination: true
+            VolumeSize: 150
       UserData:
         Fn::Base64:
           !Sub |
