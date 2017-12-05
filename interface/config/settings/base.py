@@ -16,6 +16,9 @@ APPS_DIR = BASE_DIR.path('backend')
 
 # Datasource from where the images will be loaded initially
 DATASOURCE_DIR = '/images'
+IMAGE_EXTENSIONS = [
+    '.dcm',
+]
 
 env = environ.Env()
 env.read_env(str(BASE_DIR.path('.env')))
