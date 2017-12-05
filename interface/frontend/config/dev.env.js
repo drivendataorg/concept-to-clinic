@@ -7,6 +7,7 @@ var hash = '0000000'
 if (cat.code === 0) {
   var cut = cat.exec('cut -d " " -f2', {silent: true}).stdout
   hash = JSON.stringify(cut.slice(0, 7))
+  shell.echo("Set phony commit: " + hash)
 }
 
 module.exports = merge(prodEnv, {
