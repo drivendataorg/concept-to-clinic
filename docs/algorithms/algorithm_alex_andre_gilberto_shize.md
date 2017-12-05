@@ -98,19 +98,31 @@ Some of the cells' values were restored from the AWSs' setups and CUDA compatibi
 
 **Dependency packages:** Neither the repository nor the authors specified exact versions of the Python packages:
 
-
-Andre         | Shize
---------------|---------------------------------
-Keras 1.2.2   | numpy
-Theano        | pandas
-spyder        | xgboost
-opencv        | scikit-learn
-pydicom       |
-scipy         |
-scikit-image  |
-SimpleITK     |
-numpy         |
-pandas        |
+```eval_rst
++-------------+--------------+
+| Andre       | Shize        |
++=============+==============+
+| Keras 1.2.2 | numpy        |
++-------------+--------------+
+| Theano      | pandas       |
++-------------+--------------+
+| spyder      | xgboost      |
++-------------+--------------+
+| opencv      | scikit-learn |
++-------------+--------------+
+| pydicom     |              |
++-------------+--------------+
+| scipy       |              |
++-------------+--------------+
+| scikit-image|              |
++-------------+--------------+
+| SimpleITK   |              |
++-------------+--------------+
+| numpy       |              |
++-------------+--------------+
+| pandas      |              |
++-------------+--------------+
+```
 
 ## Algorithm design
 
@@ -144,11 +156,17 @@ The authors also have mentioned that the code location of nodules versus the seg
 
 **Test system:**     </br>
 
-| Component | Spec  | Count |
-|-----------|-------|-------|
-| CPU       | C3.8 Intel Xeon |       |
+```eval_rst
++-----------+--------------------+-------+
+| Component | Spec               | Count |
++===========+====================+=======+
+| CPU       | C3.8 Intel Xeon    |       |
++-----------+--------------------+-------+
 | GPU       | P2 NVIDIA K80 12GB |  >1   |
-| RAM       |       |       |
++-----------+--------------------+-------+
+| RAM       |                    |       |
++-----------+--------------------+-------+
+```
 
 **Training time:** days on AWS
 >Training some of the nodule models took days using high end 12GB GPUs.</br>   
@@ -159,9 +177,13 @@ The authors also have mentioned that the code location of nodules versus the seg
 
 **Dataset:** Data Science Bowl evaluation dataset  </br>
 
-| Metric   | Score |
-|----------|-------|
+```eval_rst
++----------+---------+
+| Metric   | Score   |
++==========+=========+
 | Log Loss | 0.43019 |
++----------+---------+
+```
 
 ## Use cases
 

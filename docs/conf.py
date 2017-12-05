@@ -20,6 +20,7 @@
 import os
 import sys
 import django
+from recommonmark.transform import AutoStructify
 
 DOCS_DIR = os.getcwd()
 PROJECT_DIR = os.path.abspath(os.path.join(DOCS_DIR, os.pardir))
@@ -167,3 +168,7 @@ source_parsers = {
 
 def setup(app):
     app.add_stylesheet('c2c_custom.css')
+    app.add_config_value('recommonmark_config', {
+        'enable_eval_rst': True
+    }, True)
+    app.add_transform(AutoStructify)

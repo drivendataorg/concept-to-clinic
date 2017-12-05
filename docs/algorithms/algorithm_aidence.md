@@ -12,20 +12,31 @@ The 3rd place at the Data Science Bowl 2017 on the private leaderboard.
 
 ## Prerequisites
 
-| Dependency |   Name   | Version  |
-|------------|----------|----------|
-| Language   | Python   | 3.4      |
-| ML engine  |          |          |
-| ML backend | Tensorflow | 1.1    |
-| OS         |          |          |
-| Processor  | CPU      | yes      |
-|            | GPU      | Nvidia K80 |
-| GPU driver | CUDA     | 8.0      |
-|            | cuDNN    | 6.0      |
-
+```eval_rst
++------------+------------+------------+
+| Dependency |   Name     | Version    |
++============+============+============+
+| Language   | Python     | 3.4        |
++------------+------------+------------+
+| ML engine  |            |            |
++------------+------------+------------+
+| ML backend | Tensorflow | 1.1        |
++------------+------------+------------+
+| OS         |            |            |
++------------+------------+------------+
+| Processor  | CPU        | yes        |
++------------+------------+------------+
+|            | GPU        | Nvidia K80 |
++------------+------------+------------+
+| GPU driver | CUDA       | 8.0        |
++------------+------------+------------+
+|            | cuDNN      | 6.0        |
++------------+------------+------------+
+```
 
 **Dependency packages:**
-```
+
+```python
 tensorflow==1.1
 opencv>=3.1
 scipy==0.17.0
@@ -63,12 +74,21 @@ There are two `.pkl` models in [localization](https://bitbucket.org/aidence/kagg
 
 **Test system:**     </br>
 
-| Component | Spec  | Count | 
-|-----------|-------|-------|
-| CPU       |       |       |
-| GPU       | Nvidia K80 | 4 for everything but the final model <br/> 8 for the final model  |
-| RAM       |       |       |
-
+```eval_rst
++-----------+------------+------------------+
+| Component | Spec       | Count            |
++===========+============+==================+
+| CPU       |            |                  |
++-----------+------------+------------------+
+| GPU       | Nvidia K80 | 4 for everything |
+|           |            | but the final    |
+|           |            | model <br/> 8    |
+|           |            | for the final    |
+|           |            | model            |
++-----------+------------+------------------+
+| RAM       |            |                  |
++-----------+------------+------------------+
+```
 
 **Training time:** 
 >It takes about 3-5 days to run everything (infer+train) on a decent machine with 8 GPUs. </br>  
@@ -79,9 +99,13 @@ unknown, but must be less than 14 min per CT, since it processes the 506 CTs for
 
 **Dataset:**  Data Science Bowl evaluation dataset </br>
 
-| Metric   | Score |
-|----------|-------|
+```eval_rst
++----------+---------+
+| Metric   | Score   |
++==========+=========+
 | Log Loss | 0.40127 |
++----------+---------+
+```
 
 ## Use cases
 

@@ -28,6 +28,13 @@ Welcome to Concept to Clinic's documentation!
    code-of-conduct-link
    contributor-license-agreement-link
 
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Algorithms Documentation
+
+   algorithms/algorithms_doc
+
 .. toctree::
   :maxdepth: 2
   :caption: Documentation

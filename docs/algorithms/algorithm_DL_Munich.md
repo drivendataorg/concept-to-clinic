@@ -11,20 +11,31 @@ The 7th place at the Data Science Bowl 2017 on the private leaderboard.
 
 ## Prerequisites
 
-| Dependency |   Name   | Version  |
-|------------|----------|----------|
-| Language   | Python   | 3.4.3    | 
-| ML engine  |          |          | 
-| ML backend | Tensorflow | 1.0.1  | 
-| OS         | Ubuntu   | 14.04    | 
-| Processor  | CPU      | Intel(R) Core(TM) i7-4930K CPU |
-|            | GPU      | Nvidia GTX 1080 |
-| GPU driver | CUDA     | 8.0      |
-|            | cuDNN    | 5.1      |
-
+```eval_rst
++------------+------------+--------------------------------+
+| Dependency |   Name     | Version                        |
++============+============+================================+
+| Language   | Python     | 3.4.3                          |
++------------+------------+--------------------------------+
+| ML engine  |            |                                |
++------------+------------+--------------------------------+
+| ML backend | Tensorflow | 1.0.1                          |
++------------+------------+--------------------------------+
+| OS         | Ubuntu     | 14.04                          |
++------------+------------+--------------------------------+
+| Processor  | CPU        | Intel(R) Core(TM) i7-4930K CPU |
++------------+------------+--------------------------------+
+|            | GPU        | Nvidia GTX 1080                |
++------------+------------+--------------------------------+
+| GPU driver | CUDA       | 8.0                            |
++------------+------------+--------------------------------+
+|            | cuDNN      | 5.1                            |
++------------+------------+--------------------------------+
+```
 
 **Dependency packages:**
-```
+
+```python
 opencv-python==3.2.0.6
 Python 3.4.3
 dicom==0.9.9-1
@@ -88,12 +99,19 @@ The resulting cluster centers are used to crop candidates from the original data
 ### Final Ensemble
 For the final solution four different Patient-Classifier-Networks have been employed, the outputs of which were averaged to a single prediction. 
 
-| Network | isotropic scan resolution | architecture | 
-|-------------|-----|---------------------|
-| 05res 3DNet | 0.5 | 3D residual network |
-| 07res 3DNet | 0.7 | 3D residual network |
-| 05res 2DNet | 0.5 | 2D residual network |
-| 07res 2DNet | 0.7 | 2D residual network |
+```eval_rst
++-------------+---------------------------+---------------------+
+| Network     | isotropic scan resolution | architecture        |
++=============+===========================+=====================+
+| 05res 3DNet | 0.5                       | 3D residual network |
++-------------+---------------------------+---------------------+
+| 07res 3DNet | 0.7                       | 3D residual network |
++-------------+---------------------------+---------------------+
+| 05res 2DNet | 0.5                       | 2D residual network |
++-------------+---------------------------+---------------------+
+| 07res 2DNet | 0.7                       | 2D residual network |
++-------------+---------------------------+---------------------+
+```
 
 ## Trained model
 
@@ -107,12 +125,19 @@ For the final solution four different Patient-Classifier-Networks have been empl
 
 **Test system:**     </br>
 
-| Component | Spec  | Count | 
-|-----------|-------|-------|
+```eval_rst
++-----------+--------------------------------+-------+
+| Component | Spec                           | Count |
++===========+================================+=======+
 | CPU       | Intel(R) Core(TM) i7-4930K CPU |       |
-| GPU       | Nvidia GTX 1080 |       |
-| RAM       | 32GB  |       |
-|           | 200GB |       |
++-----------+--------------------------------+-------+
+| GPU       | Nvidia GTX 1080                |       |
++-----------+--------------------------------+-------+
+| RAM       | 32GB                           |       |
++-----------+--------------------------------+-------+
+|           | 200GB                          |       |
++-----------+--------------------------------+-------+
+```
 
 **Training time:**  from the [training log](https://github.com/NDKoehler/DataScienceBowl2017_7th_place/blob/5ff69f779ddbb1a3bf46f04b2312d4418c0ba6d2/dsb3_networks/classification/luna_resnet3D/output_dir/luna3D/all.log) it seems that one 3D resnet model requires 13 epochs with average 750s per epoch. For the 2D resnet from the coresponding [train log](https://raw.githubusercontent.com/NDKoehler/DataScienceBowl2017_7th_place/5ff69f779ddbb1a3bf46f04b2312d4418c0ba6d2/dsb3_networks/classification/luna_resnet2D/output_dir/gold_prio3_plane_mil0/all.log) folloed that the authors train the model over 17 epochs with the average 150s per epoch. Taking into account that there're two classification models of each type the resulting training time of the classification part will consume about 7 hours. </br>
 **Prediction time:** unknown, but must be less than 14 min per CT, since it processes the 506 CTs for the 5 days </br>
@@ -121,9 +146,13 @@ For the final solution four different Patient-Classifier-Networks have been empl
 
 **Dataset:**  Data Science Bowl evaluation dataset </br>
 
-| Metric   | Score |
-|----------|-------|
+```eval_rst
++----------+---------+
+| Metric   | Score   |
++==========+=========+
 | Log Loss | 0.42751 |
++----------+---------+
+```
 
 ## Use cases
 

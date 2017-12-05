@@ -14,29 +14,39 @@ The approach scored 9th place at the Data Science Bowl 2017.
 ## License
 [MIT](http://opensource.org/licenses/MIT) license
 
-
 ## Prerequisites
 
+```eval_rst
++------------+----------+----------+
 | Dependency |   Name   | Version  |
-|------------|----------|----------|
++============+==========+==========+
 | Language   | Python   |   2.7    |
++------------+----------+----------+
 | ML engine  | Lasagne  | 0.2.dev1 |
++------------+----------+----------+
 | ML backend | Theano   | 0.9.0b1  |
++------------+----------+----------+
 | OS         | Ubuntu   |  16.04   |
++------------+----------+----------+
 | Processor  | CPU      | yes      |
++------------+----------+----------+
 |            | GPU      | yes      |
++------------+----------+----------+
 | GPU driver | CUDA     |   8      |
++------------+----------+----------+
 |            | cuDNN    |   5.1    |
-
++------------+----------+----------+
+```
 
 **Dependency packages:**
-```
-theano 0.9.0b1
-lasagne 0.2.dev1
-scikit-image 0.12.3
-scipy 0.18.1
-numpy 1.12.0
-scikit-learn 0.18.1
+
+```python
+theano==0.9.0b1
+lasagne==0.2.dev1
+scikit-image==0.12.3
+scipy==0.18.1
+numpy==1.12.0
+scikit-learn==0.18.1
 ```
 
 
@@ -153,9 +163,13 @@ CPU: mostly 6 cores, 3GHz to 4GHz
 
 **Dataset:**    </br>
 
+```eval_rst
++----------+-------+
 | Metric   | Score |
-|----------|-------|
++==========+=======+
 | Accuracy |       |
++----------+-------+
+```
 
 ## Use cases
 <!-- List strengths and weaknesses of the algorithm. -->

@@ -14,20 +14,31 @@ The repository doesn't mention a license but since the authors had to accept the
 
 ## Prerequisites
 
-| Dependency |   Name   | Version  |
-|------------|----------|----------|
-| Language   | Python   |    2.7   |
-| ML engine  |  Keras   |    2     |
-| ML backend |  Tensorflow | 1     |
-| OS         |          |          | <!-- Include all OS that were tested -->
-| Processor  | CPU      | (yes)      |
-|            | GPU      | yes      |
-| GPU driver | CUDA     |          |
-|            | cuDNN    |          |
-
+```eval_rst
++------------+------------+----------+
+| Dependency |   Name     | Version  |
++============+============+==========+
+| Language   | Python     |    2.7   |
++------------+------------+----------+
+| ML engine  |  Keras     |    2     |
++------------+------------+----------+
+| ML backend | Tensorflow | 1        |
++------------+------------+----------+
+| OS         |            |          |
++------------+------------+----------+
+| Processor  | CPU        | (yes)    |
++------------+------------+----------+
+|            | GPU        | yes      |
++------------+------------+----------+
+| GPU driver | CUDA       |          |
++------------+------------+----------+
+|            | cuDNN      |          |
++------------+------------+----------+
+```
 
 **Dependency packages:**
-````
+
+```python
 tensorflow-gpu
 keras
 SimpleITK
@@ -37,7 +48,7 @@ h5py
 opencv-python
 radiomics
 xgboost
-````
+```
 
 
 ## Algorithm design
@@ -98,25 +109,35 @@ python kaggle_predict.py -p /tmp/patch_model_features_test.csv -u /tmp/unet_feat
 
 ### Training- / prediction time
 
-**Test system:**  Unknown  
+**Test system:**  Unknown
 
+```eval_rst
++-----------+-------+-------+
 | Component | Spec  | Count |
-|-----------|-------|-------|
++===========+=======+=======+
 | CPU       |       |       |
++-----------+-------+-------+
 | GPU       |       |       |
++-----------+-------+-------+
 | RAM       |       |       |
++-----------+-------+-------+
+```
 
 **Training time:**  Unknown  
 **Prediction time:** 3 min per Patient for approach 1
 
 ### Model Evaluation
 
-**Dataset:**  
+**Dataset:**
 Data Science Bowl evaluation dataset
 
-| Metric   | Score |
-|----------|-------|
+```eval_rst
++----------+--------+
+| Metric   | Score  |
++==========+========+
 | Log Loss | 0.44068|
++----------+--------+
+```
 
 ## Use cases
 

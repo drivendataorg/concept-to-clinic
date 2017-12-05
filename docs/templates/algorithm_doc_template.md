@@ -18,17 +18,33 @@ Also mention Placement. -->
 ## Prerequisites
 <!-- summary on dependencies needed to run the algorithm -->
 
-| Dependency |   Name   | Version  |
-|------------|----------|----------|
-| Language   | Python   |          | <!-- If not Python 3.5+ please describe steps to port into Python 3.5+ below -->
-| ML engine  |          |          | <!-- e.g. Keras -->
-| ML backend |          |          | <!-- e.g. Tensorflow -->
-| OS         |          |          | <!-- Include all OS that were tested -->
-| Processor  | CPU      | (yes/no) |
-|            | GPU      | (yes/no) |
-| GPU driver | CUDA     |          |
-|            | cuDNN    |          |
+<!-- NOTE: The tables are created using reST markup syntax inside of a markdown file.
+Ensure that your table data fits correctly so that your table is displayed. You
+can reference this site(https://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html#tables)
+or look at existing algorithm files for cases like long lines and how you can wrap
+them in rows to avoid long text lines. -->
 
+```eval_rst
++------------+----------+----------+
+| Dependency |   Name   | Version  |
++============+==========+==========+
+| Language   | Python   |          | <!-- If not Python 3.5+ please describe steps to port into Python 3.5+ below -->
++------------+----------+----------+
+| ML engine  |          |          | <!-- e.g. Keras -->
++------------+----------+----------+
+| ML backend |          |          | <!-- e.g. Tensorflow -->
++------------+----------+----------+
+| OS         |          |          | <!-- Include all OS that were tested -->
++------------+----------+----------+
+| Processor  | CPU      | (yes/no) |
++------------+----------+----------+
+|            | GPU      | (yes/no) |
++------------+----------+----------+
+| GPU driver | CUDA     |          |
++------------+----------+----------+
+|            | cuDNN    |          |
++------------+----------+----------+
+```
 
 **Dependency packages:**
 <!-- List dependency packages (e.g. numpy) with version. If using python use requirements.txt syntax for pip. That makes
@@ -60,11 +76,17 @@ Also mention Placement. -->
 
 **Test system:**     </br>
 
+```eval_rst
++-----------+-------+-------+
 | Component | Spec  | Count |
-|-----------|-------|-------|
++===========+=======+=======+
 | CPU       |       |       |
++-----------+-------+-------+
 | GPU       |       |       |
++-----------+-------+-------+
 | RAM       |       |       |
++-----------+-------+-------+
+```
 
 **Training time:**  </br>
 **Prediction time:** </br>
@@ -74,9 +96,13 @@ Also mention Placement. -->
 
 **Dataset:**    </br>
 
+```eval_rst
++----------+-------+
 | Metric   | Score |
-|----------|-------|
++==========+=======+
 | Accuracy |       |
++----------+-------+
+```
 
 ## Use cases
 <!-- List strengths and weaknesses of the algorithm. -->

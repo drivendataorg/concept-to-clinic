@@ -14,16 +14,27 @@ Neither mentioned in the repository nor in the technical report, but since the a
 
 ## Prerequisites
 
-| Dependency |   Name   | Version  |
-|------------|----------|----------|
-| Language   | Python   |   2.7    |
-| ML engine  | Keras    |          |
-| ML backend | Theano, scikit-learn |      |
-| OS         |          |          |
-| Processor  | CPU      | yes      |
-|            | GPU      | yes      |
-| GPU driver | CUDA     |          |
-|            | cuDNN    |          |
+```eval_rst
++------------+----------------------+----------+
+| Dependency |   Name               | Version  |
++============+======================+==========+
+| Language   | Python               |   2.7    |
++------------+----------------------+----------+
+| ML engine  | Keras                |          |
++------------+----------------------+----------+
+| ML backend | Theano, scikit-learn |          |
++------------+----------------------+----------+
+| OS         |                      |          |
++------------+----------------------+----------+
+| Processor  | CPU                  | yes      |
++------------+----------------------+----------+
+|            | GPU                  | yes      |
++------------+----------------------+----------+
+| GPU driver | CUDA                 |          |
++------------+----------------------+----------+
+|            | cuDNN                |          |
++------------+----------------------+----------+
+```
 
 
 **Dependency packages:**
@@ -108,11 +119,17 @@ Another interesting fact is that the Z-dimension, so whether the nodule is close
 
 **Test system:**     </br>
 
-| Component | Spec  | Count |
-|-----------|-------|-------|
-| CPU       |       |       |
-| GPU       | Tesla K80 / amazon p2.xlarge  |    1   |
-| RAM       |       |       |
+```eval_rst
++-----------+-------------------------------+-------+
+| Component | Spec                          | Count |
++===========+===============================+=======+
+| CPU       |                               |       |
++-----------+-------------------------------+-------+
+| GPU       | Tesla K80 / amazon p2.xlarge  | 1     |
++-----------+-------------------------------+-------+
+| RAM       |                               |       |
++-----------+-------------------------------+-------+
+```
 
 **Training time:**  8 hours on K80 / 1.5 hours on AWS  
 **Prediction time:**  unknown
@@ -123,9 +140,13 @@ Another interesting fact is that the Z-dimension, so whether the nodule is close
 **Dataset:**
 Data Science Bowl evaluation dataset
 
-| Metric   | Score |
-|----------|-------|
+```eval_rst
++----------+---------+
+| Metric   | Score   |
++==========+=========+
 | Log Loss | 0.401172|
++----------+---------+
+```
 
 ## Use cases
 

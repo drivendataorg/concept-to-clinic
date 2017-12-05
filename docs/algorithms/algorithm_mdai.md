@@ -1,4 +1,3 @@
-<!-- Add the algorithm's name as the title -->
 # MDai Algorithm
 
 ## Summary
@@ -25,23 +24,34 @@ Also mention Placement. -->
 ## Prerequisites
 <!-- summary on dependencies needed to run the algorithm -->
 
-| Dependency |   Name   | Version  |
-|------------|----------|----------|
-| Language   | Python   | 3.5      | <!-- If not Python 3.5+ please describe steps to port into Python 3.5+ below -->
-| ML engine  | Keras    | 1.2.2    | <!-- e.g. Keras -->
-| ML backend | Tensorflow | 1.0.0  | <!-- e.g. Tensorflow -->
-| OS         | Ubuntu   |  16.04   | <!-- Include all OS that were tested -->
-| Processor  | CPU      | (yes/no) |
-|            | GPU      | yes      |
-| GPU driver | CUDA     | 8        |
-|            | cuDNN    | 5.1      |
+```eval_rst
++------------+------------+----------+
+| Dependency |   Name     | Version  |
++============+============+==========+
+| Language   | Python     | 3.5      |
++------------+------------+----------+
+| ML engine  | Keras      | 1.2.2    |
++------------+------------+----------+
+| ML backend | Tensorflow | 1.0.0    |
++------------+------------+----------+
+| OS         | Ubuntu     | 16.04    |
++------------+------------+----------+
+| Processor  | CPU        | (yes/no) |
++------------+------------+----------+
+|            | GPU        | yes      |
++------------+------------+----------+
+| GPU driver | CUDA       | 8        |
++------------+------------+----------+
+|            | cuDNN      | 5.1      |
++------------+------------+----------+
+```
 
 
 **Dependency packages:**
 <!-- List dependency packages (e.g. numpy) with version. If using python use requirements.txt syntax for pip. That makes
  easy for the developers. -->
- 
-````
+
+```python
 numpy==1.12.1
 scipy==0.19.0
 pandas==0.19.2
@@ -55,7 +65,7 @@ tensorflow-gpu==1.0.0
 hyperopt==0.1
 h5py==2.7.0
 redis-py==2.10.5
-````
+```
 
 **Additional installation instructions:** 
 
@@ -149,11 +159,17 @@ A trained model is not publicly available, but was requested.
 
 **Test system:**  AWS p2.16xlarge instance   </br>
 
-| Component | Spec  | Count |
-|-----------|-------|-------|
-| vCPU       | Broadwell 2.7 GHz |  64   |
-| GPU       | NVIDIA GK210 |  16   |
-| RAM       | 732 GB|       |
+```eval_rst
++-----------+-------------------+-------+
+| Component | Spec              | Count |
++===========+===================+=======+
+| vCPU      | Broadwell 2.7 GHz |  64   |
++-----------+-------------------+-------+
+| GPU       | NVIDIA GK210      |  16   |
++-----------+-------------------+-------+
+| RAM       | 732 GB            |       |
++-----------+-------------------+-------+
+```
 
 **Training time:**  Not specified. </br>
 **Prediction time:** Several days for the whole DSB dataset. </br>
@@ -163,9 +179,14 @@ A trained model is not publicly available, but was requested.
 
 **Dataset:**    </br>
 
-| Metric   | Score |
-|----------|-------|
+```eval_rst
++---------+---------+
+| Metric  | Score   |
++=========+=========+
 | LogLoss | 0.41629 |
++---------+---------+
+```
+
 
 ## Use cases
 <!-- List strengths and weaknesses of the algorithm. -->

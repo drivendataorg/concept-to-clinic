@@ -12,17 +12,17 @@ The 4th place at the Data Science Bowl 2017 on the private leaderboard.
 ## Prerequisites
 ```Unknown```
 
-| Dependency |   Name   | Version  |
-|------------|----------|----------|
-| Language   | Python   |   | 
-| ML engine  |  Keras        |          | 
-| ML backend | Tensorflow |   | 
-<!-- | OS         |  |  | 
-| Processor  | CPU      |  |
-|            | GPU      |  |
-| GPU driver | CUDA     |  |
-|            | cuDNN    |  |
--->
+```eval_rst
++------------+------------+----------+
+| Dependency |   Name     | Version  |
++============+============+==========+
+| Language   | Python     |          |
++------------+------------+----------+
+| ML engine  | Keras      |          |
++------------+------------+----------+
+| ML backend | Tensorflow |          |
++------------+------------+----------+
+```
 
 
 **Dependency packages:**
@@ -95,11 +95,19 @@ The competition performance metric (CPM, averaged FROC key-points' magnitude) sc
 
 **Dataset:**  Data Science Bowl evaluation dataset </br>
 
-|  Problem | Score |Metric| Dataset| 
-|----------|-------|--------|--------|
-|Lung Cancer Detection | Log Loss | 0.40183 | Kaggle|
-|False Positive Reduction |CPM | 0.891 | Luna16 |
-|Candidate Detection |Sensitivity </br> Candidates per scan | 0.946 </br> 15.0 | Luna16|
+```eval_rst
++-------------------------+---------------------+---------------+-------------+
+|  Problem                | Score               | Metric        | Dataset     |
++=========================+====================++===============+=============+
+|Lung Cancer Detection    | Log Loss            | 0.40183       | Kaggle      |
++-------------------------+---------------------+---------------+-------------+
+|False Positive Reduction | CPM                 | 0.891         | Luna16      |
++-------------------------+---------------------+---------------+-------------+
+|Candidate Detection      | Sensitivity </br>   | 0.946 </br>   | Luna16      |
++-------------------------+---------------------+---------------+-------------+
+|                         | Candidates per scan | 15.0          |             |
++-------------------------+---------------------+---------------+-------------+
+```
 
 ## Use cases
 

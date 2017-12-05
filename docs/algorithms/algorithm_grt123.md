@@ -6,7 +6,7 @@ The model receives preprocessed 3D lung scans as
 input and outputs both the bounding boxes of suspicious nodules and the probability of getting cancer.
 
 ## Source
-**Author:** Team grt123      
+**Author:** Team grt123
 **Repository:** https://github.com/lfz/DSB2017  
 1st place at the Data Science Bowl 2017
 
@@ -16,22 +16,33 @@ Neither mentioned in the repository nor in the technical report, but since the a
 
 ## Prerequisites
 
-| Dependency |   Name   | Version  |
-|------------|----------|----------|
-| Language   | Python   |   2.7    |
+```eval_rst
++------------+----------+----------------+
+| Dependency |   Name   | Version        |
++============+==========+================+
+| Language   | Python   |   2.7          |
++------------+----------+----------------+
 | ML engine  | pyTorch  | 0.1.10+ac9245a |
-| ML backend |          |          |
-| OS         | Ubuntu   |  14.04   |
-| Processor  | CPU      |  yes     |
-|            | GPU      |  yes     |
-| GPU driver | CUDA     |  8.0     |
-|            | cuDNN    |  5.1     |
-
++------------+----------+----------------+
+| ML backend |          |                |
++------------+----------+----------------+
+| OS         | Ubuntu   |  14.04         |
++------------+----------+----------------+
+| Processor  | CPU      |  yes           |
++------------+----------+----------------+
+|            | GPU      |  yes           |
++------------+----------+----------------+
+| GPU driver | CUDA     |  8.0           |
++------------+----------+----------------+
+|            | cuDNN    |  5.1           |
++------------+----------+----------------+
+```
 
 **Dependency packages:**
-```
-h5py==2.6.0  
-SimpleITK==0.10.0  
+
+```python
+h5py==2.6.0
+SimpleITK==0.10.0
 numpy==1.11.3
 nvidia-ml-py==7.352.0
 matplotlib==2.0.0
@@ -95,12 +106,19 @@ Running [main.py](https://github.com/lfz/DSB2017/blob/master/main.py) should use
 
 **Test system:** </br>
 
-| Component | Spec  | Count |
-|-----------|-------|-------|
-| CPU       |       |       |
-| GPU       | TITAN X|   8   |
-| GPU       |Memory |>= 12GB|
-| RAM       |       |       |
+```eval_rst
++-----------+---------+--------+
+| Component | Spec    | Count  |
++===========+=========+========+
+| CPU       |         |        |
++-----------+---------+--------+
+| GPU       | TITAN X | 8      |
++-----------+---------+--------+
+| GPU       |Memory   | >= 12GB|
++-----------+---------+--------+
+| RAM       |         |        |
++-----------+---------+--------+
+```
 
 **Training time:**  4 days</br>
 **Prediction time:** </br>
@@ -109,9 +127,13 @@ Running [main.py](https://github.com/lfz/DSB2017/blob/master/main.py) should use
 
 **Dataset:** Private Kaggle Test Data
 
-| Metric   | Score |
-|----------|-------|
+```eval_rst
++----------+----------+
+| Metric   | Score    |
++==========+==========+
 | Log-Loss |  0.39975 |
++----------+----------+
+```
 
 ## Use cases
 

@@ -16,22 +16,34 @@ GNU General Public License v3.0
 ## Prerequisites
 This is the recommended / tested environment
 
-| Dependency |   Name   | Version  |
-|------------|----------|----------|
-| Language   | Python   |   3.5    |
-| ML engine  |          |          |
-| ML backend |          |Tensorflow 1.1|
-| OS         | Ubuntu   |16.04 x64 |
-| Processor  | CPU      |2x Intel i7|
-|            | GPU      |4xNVIDIA Titan|
-| Alternative GPU| GPU  |NVIDIA NVIDIA P6000|
-| GPU driver | CUDA     |   8      |
-|            | cuDNN    |   5.1    |
-
+```eval_rst
++----------------+-----------+----------------------+
+| Dependency     |  Name     |  Version             |
++================+===========+======================+
+| Language       | Python    |  3.5                 |
++----------------+-----------+----------------------+
+| ML engine      |           |                      |
++----------------+-----------+----------------------+
+| ML backend     |           |  Tensorflow 1.1      |
++----------------+-----------+----------------------+
+| OS             | Ubuntu    |  16.04 x64           |
++----------------+-----------+----------------------+
+| Processor      | CPU       |  2x Intel i7         |
++----------------+-----------+----------------------+
+|                | GPU       |  4xNVIDIA Titan      |
++----------------+-----------+----------------------+
+| Alternative GPU| GPU       |  NVIDIA NVIDIA P6000 |
++----------------+-----------+----------------------+
+| GPU driver     | CUDA      |  8                   |
++----------------+-----------+----------------------+
+|                | cuDNN     |  5.1                 |
++----------------+-----------+----------------------+
+```
 
 **Dependency packages:**
 All dependencies have been installed using `pip3`.
-````
+
+```python
 https://github.com/pfillard/tensorflow/tree/r1.0_relu1
 xgboost
 numpy
@@ -40,7 +52,7 @@ skimage
 SimpleITK
 h5py
 optparse
-````
+```
 
 
 ## Algorithm design
@@ -90,12 +102,17 @@ Lastly, XGBoost predicts the cancer probability based on these features.
 Unknown  
 **Test system:**     </br>
 
+```eval_rst
++-----------+-------+-------+
 | Component | Spec  | Count |
-|-----------|-------|-------|
++===========+=======+=======+
 | CPU       |       |       |
++-----------+-------+-------+
 | GPU       |       |       |
-| GPU       |       |       |
++-----------+-------+-------+
 | RAM       |       |       |
++-----------+-------+-------+
+```
 
 **Training time:**  </br>
 **Prediction time:** </br>
@@ -104,9 +121,13 @@ Unknown
 
 **Dataset:** Data Science Bowl 2017
 
-| Metric   | Score |
-|----------|-------|
-| Accuracy |0.40409|
+```eval_rst
++----------+--------+
+| Metric   | Score  |
++==========+========+
+| Log Loss | 0.40409|
++----------+--------+
+```
 
 ## Use cases
 

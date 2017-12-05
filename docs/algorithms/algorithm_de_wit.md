@@ -14,19 +14,32 @@ MIT
 
 
 ## Prerequisites
-| Dependency |   Name   | Version  |
-|------------|----------|----------|
-| Language   | Python   | 3.5 |
-| ML engine  | Keras    | 2.0.8 |
-| ML backend | Tensorflow| 1.3.0 |
-| OS         | Windows/Ubuntu |64 Bit|
-| Processor  | CPU      | yes  |
-|            | GPU      | yes |
-| GPU driver | CUDA     | 8.0 |
-|            | cuDNN    | 6.0 |
+
+```eval_rst
++------------+----------------+---------+
+| Dependency |   Name         | Version |
++============+================+=========+
+| Language   | Python         | 3.5     |
++------------+----------------+---------+
+| ML engine  | Keras          | 2.0.8   |
++------------+----------------+---------+
+| ML backend | Tensorflow     | 1.3.0   |
++------------+----------------+---------+
+| OS         | Windows/Ubuntu | 64 Bit  |
++------------+----------------+---------+
+| Processor  | CPU            | yes     |
++------------+----------------+---------+
+|            | GPU            | yes     |
++------------+----------------+---------+
+| GPU driver | CUDA           | 8.0     |
++------------+----------------+---------+
+|            | cuDNN          | 6.0     |
++------------+----------------+---------+
+```
 
 **Dependency packages:**
-````
+
+```python
 beautifulsoup4==4.6.0
 lxml==3.8.0
 numpy==1.13.1
@@ -40,7 +53,7 @@ xgboost==0.6a2
 opencv-python==3.3.0.10
 pydicom==0.9.9
 SimpleITK==1.0.1
-````
+```
 
 ## Algorithm design
 ![](http://juliandewit.github.io/images/plan2017_2.png)
@@ -83,11 +96,17 @@ The masses detector is already run through the step2_train_mass_segmenter.py and
 Unfortunately, neither the blog entry nor the readme mention the system that was used for training and testing.  
 **Test system:**
 
-| Component | Spec  | Count |
-|-----------|-------|-------|
-| CPU       |       |       |
-| GPU       |       |       |
-| RAM       |       |       |
+```eval_rst
++-----------+------+-------+
+| Component | Spec | Count |
++===========+======+=======+
+| CPU       |      |       |
++-----------+------+-------+
+| GPU       |      |       |
++-----------+------+-------+
+| RAM       |      |       |
++-----------+------+-------+
+```
 
 **Training time:**  10 hours per 3D ConvNet  
 **Prediction time:** unknown  
@@ -96,9 +115,13 @@ Unfortunately, neither the blog entry nor the readme mention the system that was
 
 **Dataset:** Data Science Bowl 2017  
 
+```eval_rst
++----------+-------+
 | Metric   | Score |
-|----------|-------|
++==========+=======+
 | Log-Loss |0.40117|
++----------+-------+
+```
 
 ## Use cases
 
