@@ -60,7 +60,7 @@
         viewerData: {
           type: 'DICOM',
           prefixCS: ':/',
-          prefixUrl: '/api/images/metadata?dicom_location=/',
+          prefixUrl: '/api/images/preview?dicom_location=',
           paths: [],
           sliceIndex: 0
         },
@@ -133,10 +133,13 @@
                 // extending result data with technical properties
                 candidate._saving = false
 
-                let series = candidate.case.series
-                candidate._filesPaths = series.files.map((fileName) => {
-                  return series.uri + '/' + fileName
-                })
+                // REMOVED UNITL STORE IS IMPLEMENTED AND WE CAN GET THESE FROM
+                // THE IMAGE SERIES DIRECTLY
+                // let series = response.data.series
+
+                // candidate._filesPaths = series.files.map((fileName) => {
+                //   return series.uri + '/' + fileName
+                // })
               }
 
               this.candidates = response.data
