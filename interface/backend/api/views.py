@@ -1,7 +1,6 @@
 import json
 import mimetypes
 import os
-import glob
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage

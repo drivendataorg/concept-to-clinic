@@ -5,7 +5,6 @@ from django.urls import reverse
 from rest_framework import status
 
 from backend.api.serializers import (
-    CandidateSerializer,
     ImageFileSerializer,
     ImageSeriesSerializer,
     NoduleSerializer,
@@ -17,7 +16,6 @@ from backend.images.models import (
 )
 
 from backend.cases.factories import (
-    CandidateFactory,
     CaseFactory,
     NoduleFactory,
 )
@@ -121,4 +119,3 @@ class SerializerTest(TestCase):
         orig_id = serialized.instance.id
         serialized = ImageSeriesSerializer(image_series, context={'request': None})
         self.assertEqual(orig_id, serialized.instance.id)
-

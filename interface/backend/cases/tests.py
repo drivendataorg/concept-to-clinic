@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from backend.cases.factories import (
     CandidateFactory,
     CaseFactory,

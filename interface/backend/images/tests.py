@@ -1,5 +1,4 @@
 import os
-import warnings
 
 from django.core.exceptions import PermissionDenied
 from django.test import TestCase
@@ -50,7 +49,7 @@ class SmokeTest(TestCase):
 
         # no warnings should be logged
         try:
-            with self.assertLogs(level='WARN') as cm:
+            with self.assertLogs(level='WARN'):
                 image_series, created = ImageSeries.get_or_create(uri)
         except AssertionError as e:
             print(str(e))
