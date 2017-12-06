@@ -15,9 +15,6 @@ class ImageFile(models.Model):
     """ Model for an individual file for an image--that is, a single DICOM slice
         as it is represented on disk.
     """
-    class Meta:
-        ordering = ['slice_location']
-
     # Explicitly map all the dicom properties that we need to parse and their
     # model equivalents; create a lambda that returns a dict for any type conversions
     # or one-to-many relationships
@@ -51,6 +48,9 @@ class ImageFile(models.Model):
                                 allow_files=True,
                                 allow_folders=False,
                                 max_length=512)
+
+    class Meta:
+        ordering = ['slice_location']
 
     def save(self, *args, **kwargs):
         self._populate_dicom_properties()
