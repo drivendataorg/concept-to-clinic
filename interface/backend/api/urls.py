@@ -4,7 +4,7 @@ from backend.api.views import (
     NoduleViewSet,
     ImageSeriesViewSet,
     ImageAvailableApiView,
-    ImageMetadataApiView,
+    ImagePreviewApiView,
     case_report,
     update_candidate_location,
     candidates_info
@@ -26,7 +26,7 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^images/available$', ImageAvailableApiView.as_view(), name='images-available'),
-    url(r'^images/metadata$', ImageMetadataApiView.as_view(), name='images-metadata'),
+    url(r'^images/preview$', ImagePreviewApiView.as_view(), name='images-preview'),
     url(r'^candidates-info$', candidates_info, name='candidates-info'),
     url(r'^candidates/(?P<candidate_id>\d+)/move$', update_candidate_location, name='update-candidate-location'),
 ]

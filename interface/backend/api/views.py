@@ -3,30 +3,35 @@ import mimetypes
 import os
 import glob
 
-import dicom
-from backend.api import serializers
-from backend.cases.serializers import CaseSerializer
-from backend.cases.models import (
-    Case,
-    Candidate,
-    Nodule
-)
-
-from backend.images.models import ImageSeries
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import get_object_or_404
+
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from backend.api import serializers
+from backend.cases.models import (
+    Case,
+    Candidate,
+    Nodule,
+)
+
+from backend.images.models import (
+    ImageSeries,
+    ImageFile,
+)
 
 
 class ViewSetBase(viewsets.ModelViewSet):
     def get_serializer_context(self):
         context = super(ViewSetBase, self).get_serializer_context()
 
-        # getting rid of absulute URLs
+        # by default absolute URLs are constructed with the request; since
+        # we proxy requests, we want relative URLs so we remove the request
         context.update({'request': None})
 
         return context
@@ -47,7 +52,7 @@ class CandidateViewSet(ViewSetBase):
         serializer = self.serializer_class(instance, data=request.data, partial=True, context=context)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(append_files_to_candidate(serializer.data))
+        return Response(serializer.data)
 
 
 class NoduleViewSet(ViewSetBase):
@@ -68,10 +73,11 @@ class ImageSeriesViewSet(ViewSetBase):
     serializer_class = serializers.ImageSeriesSerializer
 
 
-class ImageMetadataApiView(APIView):
+class ImagePreviewApiView(APIView):
     def get(self, request):
         '''
-        Get metadata of a DICOM image including the image in base64 format.
+        Get metadata of a DICOM image that is not yet imported into the database. This can
+        be used to preview the DICOM images before creating the model (e.g., during selection).
         Example: .../api/images/metadata?dicom_location=FULL_PATH_TO_IMAGE
         ---
         parameters:
@@ -82,11 +88,9 @@ class ImageMetadataApiView(APIView):
         '''
         path = request.GET['dicom_location']
         try:
-            ds = dicom.read_file(path, force=True)
+            return Response(ImageFile.load_dicom_data_from_disk(path, encode_image_data=True))
         except IOError as err:
-            print(err)
-            return Response(serializers.DicomMetadataSerializer().data)
-        return Response(serializers.DicomMetadataSerializer(ds).data)
+            raise NotFound(f"DICOM file not found on disk with path '{path}'")
 
 
 class ImageAvailableApiView(APIView):
@@ -190,10 +194,9 @@ class ImageAvailableApiView(APIView):
 @api_view(['GET'])
 def candidates_info(request):
     all_candidates = Candidate.objects.prefetch_related('case__series').all()
-    serialized_candidates = serializers.CandidateSerializer(all_candidates, context={'request': None}, many=True).data
-
-    # append DICOM files to response
-    [append_files_to_candidate(candidate) for candidate in serialized_candidates]
+    serialized_candidates = serializers.CandidateSerializer(all_candidates,
+                                                            context={'request': None},
+                                                            many=True).data
 
     return Response(serialized_candidates)
 
@@ -217,7 +220,6 @@ def update_candidate_location(request, candidate_id):
     candidate.centroid.save()
 
     serialized_candidate = serializers.CandidateSerializer(candidate, context={'request': None}).data
-    append_files_to_candidate(serialized_candidate)
 
     return Response(serialized_candidate)
 
@@ -225,12 +227,4 @@ def update_candidate_location(request, candidate_id):
 @api_view(['GET'])
 def case_report(request, pk, format=None):
     case = get_object_or_404(Case, pk=pk)
-    return Response(CaseSerializer(case).data)
-
-
-def append_files_to_candidate(candidate):
-    series = candidate['case']['series']
-
-    if 'files' not in series:
-        # using `glob1` as it returns filenames without a directory path
-        series['files'] = glob.glob1(series['uri'], '*.dcm')
+    return Response(serializers.CaseSerializer(case, context={'request': None}).data)

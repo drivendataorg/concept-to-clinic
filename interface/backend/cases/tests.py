@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from backend.cases.factories import (
     CandidateFactory,
     CaseFactory,
@@ -13,8 +15,14 @@ from . import enums
 
 
 class SmokeTest(APITestCase):
-    def assertDictIsSubset(self, subset, superset):
-        self.assertTrue(set(subset.items()).issubset(set(superset.items())))
+    def assertDictEqual(self, a, b):
+        # test all items
+        for k, v in a.items():
+            self.assertIn(k, b)
+            self.assertEqual(v, b.pop(k))
+
+        # make sure non left
+        self.assertFalse(len(b))
 
     def test_create_case(self):
         case = CaseFactory()
@@ -56,8 +64,14 @@ class SmokeTest(APITestCase):
 
         url = reverse('case-report', kwargs={'pk': new_case.pk})
         response = self.client.get(url)
-        expected = {'patient_id': '42', 'series_instance_uid': '13', 'uri': '/images/1.dcm'}
-        self.assertDictIsSubset(expected, response.data['series'])
+        expected = {
+            'patient_id': '42',
+            'series_instance_uid': '13',
+            'uri': '/images/1.dcm',
+            'url': '/api/images/7/',
+            'images': [],
+        }
+        self.assertDictEqual(expected, response.data['series'])
 
         candidate1_dict = dict(response.data['candidates'][0])
         self.assertEqual(candidate1_dict['probability_concerning'], 0.8)
@@ -103,7 +117,9 @@ class SmokeTest(APITestCase):
         self.assertEquals(nodule.lung_orientation, enums.LungOrientation.NONE.value)
 
     def test_candidates_mark(self):
-        candidate = CandidateFactory()
+        series = ImageSeries.objects.create(patient_id='42', series_instance_uid='13', uri='/images/1.dcm')
+        new_case = Case.objects.create(series=series)
+        candidate = CandidateFactory(case=new_case)
         url = reverse('candidate-detail', kwargs={'pk': candidate.pk})
         resp = self.client.patch(url, {'review_result': enums.CandidateReviewResult.MARKED.value})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -111,7 +127,9 @@ class SmokeTest(APITestCase):
         self.assertEquals(candidate.review_result, enums.CandidateReviewResult.MARKED.value)
 
     def test_candidates_dismiss(self):
-        candidate = CandidateFactory()
+        series = ImageSeries.objects.create(patient_id='42', series_instance_uid='13', uri='/images/1.dcm')
+        new_case = Case.objects.create(series=series)
+        candidate = CandidateFactory(case=new_case)
         url = reverse('candidate-detail', kwargs={'pk': candidate.pk})
         resp = self.client.patch(url, {'review_result': enums.CandidateReviewResult.DISMISSED.value})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
