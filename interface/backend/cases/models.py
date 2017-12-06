@@ -34,7 +34,7 @@ class CasePleuralSpaces(models.Model):
     """
     Contains left and right pleural spaces.
     """
-    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+    case = models.OneToOneField(Case, primary_key=True)
     left_pleural_space = models.ForeignKey(PleuralSpace,
                                            on_delete=models.CASCADE,
                                            related_name="left_pleural_space",
@@ -49,7 +49,7 @@ class TechnicalParameters(models.Model):
     """
     Contains configuration of CT scanner.
     """
-    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+    case = models.OneToOneField(Case, primary_key=True)
     kVp = models.IntegerField(help_text="Peak kilovoltage, maximum voltage applied across an X-ray tube")
     mA = models.IntegerField(help_text="Milli amper")
     DLP = models.IntegerField(help_text="Dose-length product")
@@ -59,7 +59,7 @@ class ClinicalInformation(models.Model):
     """
     Contains patient's information.
     """
-    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+    case = models.OneToOneField(Case, primary_key=True)
     screening_visit = models.CharField(max_length=2, choices=enums.SCREENING_VISIT_CHOICES)
     clinical_information = models.CharField(max_length=250)
 
@@ -68,7 +68,7 @@ class CaseComparison(models.Model):
     """
     Contains the information of comparison.
     """
-    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+    case = models.OneToOneField(Case, primary_key=True)
     comparison = models.CharField(max_length=250, help_text="Comparison with previous screening")
 
 
@@ -76,7 +76,7 @@ class ExamParameters(models.Model):
     """
     Contains information of the diagnostic quality.
     """
-    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+    case = models.OneToOneField(Case, primary_key=True)
     diagnostic_quality = models.CharField(max_length=2, choices=enums.DIAGNOSTIC_QUALITY_CHOICES)
     exam_parameters_comment = models.CharField(max_length=250, help_text="Comment on the quality of diagnostic")
 
@@ -85,7 +85,8 @@ class LungsFindings(models.Model):
     """
     Contains the information about findings in lungs.
     """
-    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+    case = models.OneToOneField(Case, primary_key=True)
+
     COPD = models.IntegerField(choices=enums.format_enum(enums.ShapeChoices),
                                help_text="Term used to describe progressive lung diseases; "
                                          "describes the degree of COPD progress")
@@ -99,7 +100,7 @@ class HeartFindings(models.Model):
     """
     Contains the information about findings in heart.
     """
-    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+    case = models.OneToOneField(Case, primary_key=True)
     heart_size = models.IntegerField(choices=enums.format_enum(enums.HeartShapeChoices))
     coronary_calcification = models.IntegerField(choices=enums.format_enum(enums.ShapeChoices),
                                                  help_text="Describes the degree of Coronary calcification")
@@ -111,7 +112,7 @@ class OtherFindings(models.Model):
     """
     Contains the information about additional or unrelated findings.
     """
-    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+    case = models.OneToOneField(Case, primary_key=True)
     upper_abdomen = models.CharField(max_length=250, help_text="describes other findings in upper abdomen")
     thorax = models.CharField(max_length=250, help_text="describes other findings in thorax")
     base_of_neck = models.CharField(max_length=250, help_text="describes other findings in the Base of neck")
@@ -121,7 +122,7 @@ class ExtraInformation(models.Model):
     """
     Additional information.
     """
-    case = models.OneToOneField(Case, related_name='%(class)s_case', primary_key=True)
+    case = models.OneToOneField(Case, primary_key=True)
     need_comparison = models.CharField(max_length=250, help_text="Shows if comparison is needed")
     repeat_CT = models.CharField(max_length=2, choices=enums.PERIODS, help_text="The date of next ct")
     see_physician = models.CharField(max_length=2, choices=enums.PHYSICIAN,
