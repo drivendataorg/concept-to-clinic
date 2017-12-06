@@ -115,7 +115,9 @@ class ImageFile(models.Model):
                     try:
                         processed_values = model_attribute(dcm_data.get(dicom_prop, None))
                         _update_once(metadata, processed_values)
-                    except:
+                    except:  # noqa
+                        # bare except is normally unforgivable but we _really_ don't care what went wrong here --
+                        # we will surface the error message and move on
                         logger.warning(f"Property '{dicom_prop}' failed to parse for file '{filepath}'.")
                 else:
                     _update_once(metadata, {model_attribute: dcm_data.get(dicom_prop, None)})
