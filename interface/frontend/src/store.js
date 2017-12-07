@@ -16,8 +16,13 @@ const actions = {
       })
   },
   loadCase ({ commit }, { url }) {
-    console.log(url)
     axios.get(url)
+      .then((response) => {
+        commit('SET_CASE_IN_PROGRESS', response.data)
+      })
+  },
+  startNewCase ({ commit }, { uri }) {
+    axios.post(this.getters.endpoints.cases, {uri: uri})
       .then((response) => {
         commit('SET_CASE_IN_PROGRESS', response.data)
       })
@@ -45,6 +50,13 @@ const store = new Vuex.Store({
     },
     nodules (state) {
       return state.caseInProgress ? state.caseInProgress.nodules : []
+    },
+    imagePaths (state) {
+      if (state.caseInProgress.series) {
+        return state.caseInProgress.series.images.map((x) => x.preview_url)
+      } else {
+        return []
+      }
     }
   },
   mutations: {

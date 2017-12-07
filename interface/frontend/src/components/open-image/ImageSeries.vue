@@ -5,19 +5,18 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            Open imagery
+            Available Cases
           </div>
           <div class="card-block">
-            <template v-if="availableSeries.length">
+            <template v-if="availableCases.length">
               <ul>
-                <li v-for="series in availableSeries" :key="series.series_instance_uid">
-                  <a href="#" @click="selectSeries(series)">{{ series.series_instance_uid }}</a>
-                  <span v-if="series == selected">&larr;</span>
+                <li v-for="case_ in availableCases" :key="case_.url">
+                  <p>Created on: {{ case_.created }} <a href="#" @click="selectCase(case_)">{{ case_.url }}</a></p>
                 </li>
               </ul>
             </template>
             <template v-else>
-              <p class="card-text">No images imported.</p>
+              <p class="card-text">No cases available. Click Import to find images and start a case.</p>
             </template>
             <button class="btn btn-warning float-right"
                     @click="showImport = !showImport"
@@ -30,13 +29,32 @@
     </div><!-- /row1 -->
 
     <div class="row" v-show="showImport">
-      <div class="col-md-12">
+      <div class="col-md-8">
         <div class="card card-outline-warning">
           <div class="card-header">
-            Import image series
+            Select available DICOM images to start case
+            <button class="btn btn-success pull-right"
+                    :disabled="!selectedUri"
+                    @click="startNewCase()">
+              Start New Case
+            </button>
           </div>
-          <div class="card-block left">
-            <tree-view class="item left" :model="directories"></tree-view>
+          <div class="card-block">
+            <tree-view class="item left"
+                       :model="directories"
+                       :parent="directories.name"
+                       :selectedSeries="selectedUri"
+                       v-on:selectSeries="selectSeries">
+              </tree-view>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card card-outline-warning">
+          <div class="card-header">
+            Preview
+          </div>
+          <div class="card-block">
             <open-dicom class="right" :view="preview"></open-dicom>
           </div>
         </div>
@@ -45,12 +63,12 @@
 
     <div class="row">
       <div class="col-md-12">
-        <div class="card" v-if="selected">
+        <div class="card" v-if="selectedCase">
           <div class="card-header">
-            Selected image series
+            Selected Case
           </div>
           <div class="card-block">
-            <h3 class="card-title">{{ selected.patient_id }}</h3>
+            <h3 class="card-title">{{ selectedCase.patient_id }}</h3>
 
             <table class="table table-bordered table-condensed">
               <thead>
@@ -60,7 +78,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="(item, key, index) in selected">
+              <tr v-for="(item, key, index) in selectedCase">
                 <td>{{ key }}</td>
                 <td><small>{{ item }}</small></td>
               </tr>
@@ -79,7 +97,9 @@
 <script>
   import { EventBus } from '../../main.js'
   import TreeView from './TreeView'
-  import OpenDicom from './OpenDICOM'
+  import OpenDicom from '../common/OpenDICOM'
+
+  import { mapGetters } from 'vuex'
 
   export default {
     components: {
@@ -88,7 +108,8 @@
     },
     data () {
       return {
-        availableSeries: [],
+        availableCases: [],
+        selectedCase: null,
         directories: {
           name: 'root',
           children: []
@@ -100,34 +121,53 @@
           paths: [],
           state: ''
         },
-        selected: null,
+        selectedUri: null,
         showImport: false
       }
     },
-    created () {
-      this.fetchData()
-      this.fetchAvailableImages()
+    computed: {
+      ...mapGetters({
+        endpoints: 'endpoints'
+      })
     },
-    mounted: function () {
+    watch: {
+      // when the store gets the endpoints, pull the available cases.
+      endpoints (val, oldVal) {
+        this.$axios.get(this.$store.getters.endpoints.cases)
+          .then((response) => {
+            this.availableCases = response.data
+          })
+          .catch((error) => {
+            console.log(error)
+
+            // TODO: handle error
+          })
+      }
+    },
+    created () {
+      // Try to hit the root API endpoint when this component
+      // is created to get available routes in the store
+      this.$store.dispatch('populateEndpoints')
+    },
+    mounted () {
+      this.fetchAvailableImages()
       EventBus.$on('dicom-selection', (context) => {
         this.preview.paths = context.paths
         this.preview.state = context.state
-        console.log(this.preview)
       })
     },
     methods: {
-      fetchData () {
-        this.$http.get('/api/images/')
-          .then((response) => {
-            this.availableSeries = response.body
-          })
-          .catch(() => {
-            // TODO: handle error
-          })
+      selectCase (case_) {
+        // Get the available data for the case that we have selected
+        this.$store.dispatch('loadCase', {'url': case_.url})
+        this.selectedCase = case_
       },
-      selectSeries (series) {
-        console.log(series.uri)
-        this.selected = series
+      selectSeries (seriesId) {
+        console.log('selecting ', seriesId)
+        this.selectedUri = seriesId
+      },
+      startNewCase () {
+        this.$store.dispatch('startNewCase', {'uri': this.selectedUri})
       },
       fetchAvailableImages () {
         this.$http.get('/api/images/available')

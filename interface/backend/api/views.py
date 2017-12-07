@@ -5,6 +5,7 @@ import os
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import get_object_or_404
+from django.utils._os import safe_join
 
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
@@ -39,6 +40,17 @@ class ViewSetBase(viewsets.ModelViewSet):
 class CaseViewSet(ViewSetBase):
     queryset = Case.objects.all()
     serializer_class = serializers.CaseSerializer
+
+    def create(self, request):
+        # construct full path to file
+        series_uri = request.data['uri'].strip('/')
+        full_uri = safe_join(settings.DATASOURCE_DIR, series_uri)
+
+        # get case if this uri and image series ex
+        series, _ = ImageSeries.get_or_create(full_uri)
+        new_case = Case.objects.create(series=series)
+        serialized = self.serializer_class(new_case, context={'request': None}).data
+        return Response(serialized)
 
 
 class CandidateViewSet(ViewSetBase):
