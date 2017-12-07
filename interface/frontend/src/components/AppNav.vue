@@ -8,14 +8,20 @@
       <router-link to="/" tag="li" class="nav-item" exact>
         <a class="nav-link">Open Image</a>
       </router-link>
-      <router-link v-if="this.$store.getters.candidates" to="/detect-and-select" tag="li" class="nav-item">
-        <a class="nav-link">Detect and Select</a>
+      <router-link to="/detect-and-select" tag="li" class="nav-item">
+        <a class="nav-link" v-bind:class="{disabled: !this.$store.getters.candidatesExist}">
+          Detect and Select
+        </a>
       </router-link>
-      <router-link v-if="this.$store.getters.nodules" to="/annotate-and-segment" tag="li" class="nav-item">
-        <a class="nav-link">Annotate and Segment</a>
+      <router-link to="/annotate-and-segment" tag="li" class="nav-item">
+        <a class="nav-link" v-bind:class="{disabled: !this.$store.getters.nodulesExist}">
+          Annotate and Segment
+        </a>
       </router-link>
       <router-link to="/report-and-export" tag="li" class="nav-item">
-        <a class="nav-link">Report and Export</a>
+        <a class="nav-link" v-bind:class="{disabled: !this.$store.getters.nodulesExist}">
+          Report and Export
+        </a>
       </router-link>
     </ul>
   </div>
