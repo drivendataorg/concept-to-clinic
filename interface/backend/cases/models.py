@@ -3,6 +3,8 @@ from django.core.validators import (
     MinValueValidator
 )
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils import timezone
 
 from . import enums
@@ -146,6 +148,13 @@ class Candidate(models.Model):
                                         default=enums.CandidateReviewResult.NONE)
     added_by_hand = models.BooleanField(default=False)
 
+    def get_or_create_nodule(self):
+        nodule, created = Nodule.objects.get_or_create(candidate=self)
+        return nodule, created
+
+    def remove_associated_nodule(self):
+        return Nodule.objects.filter(candidate=self).delete()
+
 
 class Nodule(models.Model):
     """
@@ -158,3 +167,15 @@ class Nodule(models.Model):
     appearance_feature = models.IntegerField(choices=enums.format_enum(enums.AppearanceFeature), null=True)
     diameter = models.FloatField(null=True)
     density_feature = models.IntegerField(choices=enums.format_enum(enums.DensityFeature), null=True)
+
+
+@receiver(post_save, sender=Candidate)
+def add_or_remove_nodule_once_candidate_reviewed(sender, instance, *args, **kwargs):
+    """
+    Whenever a ``Candidate`` gets saved, make sure a nodule either does or does not exist based upon what the
+    review result was.
+    """
+    if instance.review_result == enums.CandidateReviewResult.DISMISSED:
+        instance.remove_associated_nodule()
+    elif instance.review_result == enums.CandidateReviewResult.MARKED:
+        instance.get_or_create_nodule()
