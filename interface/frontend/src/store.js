@@ -48,8 +48,14 @@ const store = new Vuex.Store({
     candidates (state) {
       return state.caseInProgress ? state.caseInProgress.candidates : []
     },
+    candidatesExist (state, getters) {
+      return getters.candidates && getters.candidates.length > 0
+    },
     nodules (state) {
       return state.caseInProgress ? state.caseInProgress.nodules : []
+    },
+    nodulesExist (state, getters) {
+      return getters.nodules && getters.nodules.length > 0
     },
     imagePaths (state) {
       if (state.caseInProgress.series) {
