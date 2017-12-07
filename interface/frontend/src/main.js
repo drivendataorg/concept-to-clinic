@@ -1,10 +1,13 @@
+import axios from 'axios'
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 import VueRouter from 'vue-router'
+
 import router from './routes'
 import constants from './constants'
 import App from './App'
-import axios from 'axios'
+import store from './store'
+
 import './assets/css/bootstrap.min.css'
 import './assets/css/font-awesome.min.css'
 import './assets/css/project.css'
@@ -30,5 +33,6 @@ Vue.prototype.$axios = axios.create({
 new Vue({
   el: '#app-container',
   components: { App },
-  router
+  router,
+  store
 })
