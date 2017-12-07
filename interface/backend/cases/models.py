@@ -15,6 +15,10 @@ class Case(models.Model):
     created = models.DateTimeField(default=timezone.now)
     series = models.ForeignKey('images.ImageSeries', related_name='cases')
 
+    @property
+    def nodules(self):
+        return Nodule.objects.filter(candidate__case=self)
+
 
 class PleuralSpace(models.Model):
     """
@@ -140,16 +144,15 @@ class Candidate(models.Model):
     probability_concerning = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
     review_result = models.IntegerField(choices=enums.format_enum(enums.CandidateReviewResult),
                                         default=enums.CandidateReviewResult.NONE)
+    added_by_hand = models.BooleanField(default=False)
 
 
 class Nodule(models.Model):
     """
-    Actual nodule, either confirmed as concerning from prediction or manually added.
+    Actual nodule, originating from a candidates which was marked as concerning
     """
     created = models.DateTimeField(default=timezone.now)
-    case = models.ForeignKey(Case, on_delete=models.CASCADE, related_name='nodules')
     candidate = models.OneToOneField(Candidate, on_delete=models.CASCADE, null=True)
-    centroid = models.OneToOneField('images.ImageLocation', on_delete=models.CASCADE)
     lung_orientation = models.IntegerField(choices=enums.format_enum(enums.LungOrientation),
                                            default=enums.LungOrientation.NONE)
     appearance_feature = models.IntegerField(choices=enums.format_enum(enums.AppearanceFeature), null=True)

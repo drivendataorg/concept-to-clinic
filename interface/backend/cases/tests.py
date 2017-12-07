@@ -3,7 +3,10 @@ from backend.cases.factories import (
     CaseFactory,
     NoduleFactory
 )
-from backend.cases.models import Case, Candidate, Nodule
+from backend.cases.models import (
+    Case,
+    Candidate
+)
 from backend.images.models import ImageSeries, ImageLocation
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -42,9 +45,9 @@ class SmokeTest(APITestCase):
         nodule = NoduleFactory()
 
         # check the centroid location
-        self.assertIsInstance(nodule.centroid.x, int)
-        self.assertIsInstance(nodule.centroid.y, int)
-        self.assertIsInstance(nodule.centroid.z, int)
+        self.assertIsInstance(nodule.candidate.centroid.x, int)
+        self.assertIsInstance(nodule.candidate.centroid.y, int)
+        self.assertIsInstance(nodule.candidate.centroid.z, int)
 
     def test_report(self):
         url = reverse('case-report', kwargs={'pk': 0})
@@ -57,10 +60,10 @@ class SmokeTest(APITestCase):
         candidate1 = Candidate.objects.create(case=new_case, centroid=centroid1, probability_concerning=0.8)
         centroid2 = ImageLocation.objects.create(series=series, x=10, y=20, z=30)
         candidate2 = Candidate.objects.create(case=new_case, centroid=centroid2, probability_concerning=0.98)
-        nodule1 = Nodule.objects.create(case=new_case, candidate=candidate1, centroid=centroid1)
-        nodule2 = Nodule.objects.create(case=new_case, candidate=candidate2, centroid=centroid2)
+        nodule1, _ = candidate1.get_or_create_nodule()
+        nodule2, _ = candidate2.get_or_create_nodule()
 
-        url = reverse('case-report', kwargs={'pk': new_case.pk})
+        url = reverse('case-detail', kwargs={'pk': new_case.pk})
         response = self.client.get(url)
         expected = {
             'patient_id': '42',
@@ -73,25 +76,25 @@ class SmokeTest(APITestCase):
 
         candidate1_dict = dict(response.data['candidates'][0])
         self.assertEqual(candidate1_dict['probability_concerning'], 0.8)
-        self.assertEqual(candidate1_dict['centroid']['x'], nodule1.centroid.x)
-        self.assertEqual(candidate1_dict['centroid']['y'], nodule1.centroid.y)
-        self.assertEqual(candidate1_dict['centroid']['z'], nodule1.centroid.z)
+        self.assertEqual(candidate1_dict['centroid']['x'], nodule1.candidate.centroid.x)
+        self.assertEqual(candidate1_dict['centroid']['y'], nodule1.candidate.centroid.y)
+        self.assertEqual(candidate1_dict['centroid']['z'], nodule1.candidate.centroid.z)
 
         candidate2_dict = response.data['candidates'][1]
         self.assertEqual(candidate2_dict['probability_concerning'], 0.98)
-        self.assertEqual(candidate2_dict['centroid']['x'], nodule2.centroid.x)
-        self.assertEqual(candidate2_dict['centroid']['y'], nodule2.centroid.y)
-        self.assertEqual(candidate2_dict['centroid']['z'], nodule2.centroid.z)
+        self.assertEqual(candidate2_dict['centroid']['x'], nodule2.candidate.centroid.x)
+        self.assertEqual(candidate2_dict['centroid']['y'], nodule2.candidate.centroid.y)
+        self.assertEqual(candidate2_dict['centroid']['z'], nodule2.candidate.centroid.z)
 
         nodule1_dict = response.data['nodules'][0]
-        self.assertEqual(nodule1_dict['centroid']['x'], nodule1.centroid.x)
-        self.assertEqual(nodule1_dict['centroid']['y'], nodule1.centroid.y)
-        self.assertEqual(nodule1_dict['centroid']['z'], nodule1.centroid.z)
+        self.assertEqual(nodule1_dict['centroid']['x'], nodule1.candidate.centroid.x)
+        self.assertEqual(nodule1_dict['centroid']['y'], nodule1.candidate.centroid.y)
+        self.assertEqual(nodule1_dict['centroid']['z'], nodule1.candidate.centroid.z)
 
         nodule2_dict = response.data['nodules'][1]
-        self.assertEqual(nodule2_dict['centroid']['x'], nodule2.centroid.x)
-        self.assertEqual(nodule2_dict['centroid']['y'], nodule2.centroid.y)
-        self.assertEqual(nodule2_dict['centroid']['z'], nodule2.centroid.z)
+        self.assertEqual(nodule2_dict['centroid']['x'], nodule2.candidate.centroid.x)
+        self.assertEqual(nodule2_dict['centroid']['y'], nodule2.candidate.centroid.y)
+        self.assertEqual(nodule2_dict['centroid']['z'], nodule2.candidate.centroid.z)
 
     def test_update_nodule_lung_orientation(self):
         nodule = NoduleFactory()

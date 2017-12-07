@@ -17,7 +17,7 @@ from backend.images.models import (
 
 from backend.cases.factories import (
     CaseFactory,
-    NoduleFactory,
+    CandidateFactory
 )
 
 
@@ -31,7 +31,11 @@ class ViewTest(TestCase):
 
         # now create a nodule and figure out what we expect to see in the list
         case = CaseFactory()
-        nodules = NoduleFactory.create_batch(size=3, case=case)
+        candidates = CandidateFactory.create_batch(size=3, case=case)
+        nodules = []
+        for candidate in candidates:
+            nodule, _ = candidate.get_or_create_nodule()
+            nodules.append(nodule)
         serialized = [NoduleSerializer(n, context={'request': None}) for n in nodules]
         expected = [s.data for s in serialized]
 
