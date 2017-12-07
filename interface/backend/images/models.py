@@ -144,7 +144,8 @@ class ImageSeries(models.Model):
     series_instance_uid = models.CharField(max_length=256)
     uri = models.CharField(max_length=512)
 
-    def get_or_create(uri):
+    @classmethod
+    def get_or_create(cls, uri):
         """
         Return the ImageSeries instance with the same PatientID and SeriesInstanceUID as the DICOM images in the
         given directory. If none exists so far, create one.
