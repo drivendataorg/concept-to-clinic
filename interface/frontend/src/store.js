@@ -39,6 +39,12 @@ const store = new Vuex.Store({
     },
     endpoints (state) {
       return state.topLevelEndpoints
+    },
+    candidates (state) {
+      return state.caseInProgress ? state.caseInProgress.candidates : []
+    },
+    nodules (state) {
+      return state.caseInProgress ? state.caseInProgress.nodules : []
     }
   },
   mutations: {
