@@ -1,21 +1,5 @@
 <template>
   <div class="card-block">
-    <table>
-      <tbody>
-        <tr>
-          <td>lidc_max_sensitiv:</td>
-          <td>TBI</td>
-        </tr>
-        <tr>
-          <td>convnet_vgg:</td>
-          <td>TBI</td>
-        </tr>
-        <tr>
-          <td>convnett_vgg_lidc:</td>
-          <td>TBI</td>
-        </tr>
-      </tbody>
-    </table><br>
     Centroid (predicted):<br>
     <table class="ml-3">
       <tbody>
