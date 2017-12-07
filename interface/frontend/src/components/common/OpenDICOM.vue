@@ -1,5 +1,5 @@
 <template>
-  <div class="DICOM-container">
+  <div class="DICOM-container" style="width: 100%">
     <div class="DICOM-description">{{ display }}</div>
     <div class="DICOM-toolbar" v-if="view.paths.length">
       <input
@@ -12,7 +12,7 @@
       >
       slice index: <b>{{ stack.currentImageIdIndex }} </b>
     </div>
-    <div class="DICOM" ref="DICOM"></div>
+    <div class="DICOM" ref="DICOM" style="width: 100%"></div>
     <nodule-marker :marker="marker" :sliceIndex="stack.currentImageIdIndex" :zoomRate="zoomRate" :offsetX="offsetX" :offsetY="offsetY"></nodule-marker>
     <area-select @selection-changed="areaSelectChange" v-if="showAreaSelect"></area-select>
   </div>
@@ -70,27 +70,21 @@
         this.stack.currentImageIdIndex = newIndex
       },
       'view.paths' (val) {
-        const element = this.$refs.DICOM
-        this.pool = Array(this.view.paths.length)
-
-        if (this.view.sliceIndex >= 0) {
-          this.stack.currentImageIdIndex = this.view.sliceIndex
-        } else {
-          this.stack.currentImageIdIndex = this.view.paths.indexOf(this.view.state)
-          if (this.stack.currentImageIdIndex < 0) this.stack.currentImageIdIndex = 0
-        }
-
-        this.stack.imageIds = this.view.paths.map((path) => {
-          return this.view.type + this.view.prefixCS + path
-        }, this)
-        cornerstone.disable(element)
-        this.initCS(element)
+        this.updateViewer()
       }
     },
     computed: {
       async info () {
         if (typeof this.pool[this.stack.currentImageIdIndex] === 'undefined') {
-          const hola = await this.$axios.get(this.view.prefixUrl + this.view.paths[this.stack.currentImageIdIndex])
+          // workaround for now; sometimes we have full url, sometimes filepath
+          // const hola = await this.$axios.get(this.view.prefixUrl + this.view.paths[this.stack.currentImageIdIndex])
+          var hola
+          if (this.view.paths.length > 0 && this.view.paths[this.stack.currentImageIdIndex].indexOf('=') !== -1) {
+            hola = await this.$axios.get(this.view.paths[this.stack.currentImageIdIndex])
+          } else {
+            hola = await this.$axios.get(this.view.prefixUrl + this.view.paths[this.stack.currentImageIdIndex])
+          }
+
           this.pool[this.stack.currentImageIdIndex] = hola
         }
         return this.pool[this.stack.currentImageIdIndex]
@@ -131,10 +125,18 @@
             return new Promise((resolve) => { resolve(dicom) })
           })
           const image = await cornerstone.loadAndCacheImage(dicom.imageId)
+
+          // console.log(element)
+
+          // cornerstone.enable(this.$refs.DICOM)
           cornerstone.displayImage(element, image)
+          cornerstone.resize(element, true)
           return image
         }
       }
+    },
+    mounted: function () {
+      this.updateViewer()
     },
     methods: {
       areaSelectChange (newCoords) {
@@ -153,6 +155,23 @@
           cornerstoneTools.addToolState(element, 'stack', this.stack)
           cornerstoneTools.stackScroll.activate(element, 1)
         }
+      },
+      updateViewer () {
+        const element = this.$refs.DICOM
+        this.pool = Array(this.view.paths.length)
+
+        if (this.view.sliceIndex >= 0) {
+          this.stack.currentImageIdIndex = this.view.sliceIndex
+        } else {
+          this.stack.currentImageIdIndex = this.view.paths.indexOf(this.view.state)
+          if (this.stack.currentImageIdIndex < 0) this.stack.currentImageIdIndex = 0
+        }
+
+        this.stack.imageIds = this.view.paths.map((path) => {
+          return this.view.type + this.view.prefixCS + path
+        }, this)
+        cornerstone.disable(element)
+        this.initCS(element)
       },
       str2pixelData (str) {
         let buf = new ArrayBuffer(str.length * 2) // 2 bytes for each char

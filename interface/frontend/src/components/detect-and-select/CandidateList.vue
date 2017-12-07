@@ -1,7 +1,6 @@
 <template>
   <div class="container">
-    <template v-if="candidates.length">
-
+    <template>
       <div class="row">
         <div class="col-md-3">
           <div id="accordion">
@@ -33,13 +32,10 @@
             </template>
           </div>
         </div>
-        <div class="col-md-9">
-          <open-dicom v-show="selectedCandidate" :view="viewerData" :marker="marker"></open-dicom>
+        <div class="col-md-9" style="min-height: 500px">
+          <open-dicom :view="viewerData" :marker="marker"></open-dicom>
         </div>
       </div>
-    </template>
-    <template v-else>
-      <p class="card-text">No candidates available.</p>
     </template>
   </div>
 </template>
@@ -48,26 +44,30 @@
   import Vue from 'vue'
   import {EventBus} from '../../main.js'
   import Candidate from './Candidate'
-  import OpenDicom from '../open-image/OpenDICOM'
+  import OpenDicom from '../common/OpenDICOM'
 
   export default {
     components: {Candidate, OpenDicom},
     data () {
       return {
         REVIEW_RESULT: this.$constants.CANDIDATE_REVIEW_RESULT,
-        candidates: [],
-        selectedCandidateIndex: -1,
-        viewerData: {
-          type: 'DICOM',
-          prefixCS: ':/',
-          prefixUrl: '/api/images/preview?dicom_location=',
-          paths: [],
-          sliceIndex: 0
-        },
+        selectedCandidateIndex: 0,
         lastViewedSeriesId: null
       }
     },
     computed: {
+      candidates () {
+        return this.$store.getters.candidates
+      },
+      viewerData () {
+        return {
+          type: 'DICOM',
+          prefixCS: ':/',
+          prefixUrl: '/api/images/preview?dicom_location=',
+          paths: this.$store.getters.imagePaths,
+          sliceIndex: 0
+        }
+      },
       marker () {
         if (!this.selectedCandidate) {
           return null
@@ -98,9 +98,6 @@
         return candidate
       }
     },
-    created () {
-      this.fetchCandidates()
-    },
     mounted: function () {
       EventBus.$on('nodule-marker-moved', (x, y, z) => {
         if (!this.selectedCandidate) {
@@ -126,28 +123,6 @@
       })
     },
     methods: {
-      fetchCandidates () {
-        this.$axios.get('/api/candidates-info')
-            .then((response) => {
-              for (let candidate of response.data) {
-                // extending result data with technical properties
-                candidate._saving = false
-
-                // REMOVED UNITL STORE IS IMPLEMENTED AND WE CAN GET THESE FROM
-                // THE IMAGE SERIES DIRECTLY
-                // let series = response.data.series
-
-                // candidate._filesPaths = series.files.map((fileName) => {
-                //   return series.uri + '/' + fileName
-                // })
-              }
-
-              this.candidates = response.data
-            })
-            .catch(() => {
-              // TODO: error callback
-            })
-      },
       toggleShow (index) {
         this.selectedCandidateIndex = this.selectedCandidateIndex === index ? -1 : index
       },

@@ -16,7 +16,9 @@
         <p class="card-text">No nodules available.</p>
       </div>
     </div><!-- left side-->
-    <div class='col-md-8'></div><!-- right side-->
+    <div class='col-md-8'>
+      <open-dicom :view="viewerData"></open-dicom>
+    </div><!-- right side-->
   </div>
 </div>
 </template>
@@ -24,22 +26,23 @@
 <script>
 import Nodule from './Nodule'
 import Annotate from './Annotate'
+import OpenDicom from '../common/OpenDICOM'
 
 export default {
   props: ['annotate'],
-  components: { Nodule, Annotate },
-  data () {
-    return {
-      nodules: []
-    }
-  },
-  created () {
-    this.fetchNodules()
-  },
-  methods: {
-    async fetchNodules () {
-      const response = await this.$axios.get('/api/nodules.json')
-      this.nodules = response.data || []
+  components: { Nodule, Annotate, OpenDicom },
+  computed: {
+    nodules () {
+      return this.$store.getters.nodules
+    },
+    viewerData () {
+      return {
+        type: 'DICOM',
+        prefixCS: ':/',
+        prefixUrl: '/api/images/preview?dicom_location=',
+        paths: this.$store.getters.imagePaths,
+        sliceIndex: 0
+      }
     }
   }
 }
