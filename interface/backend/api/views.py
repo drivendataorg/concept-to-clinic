@@ -223,15 +223,12 @@ def update_candidate_location(request, candidate_id):
         return Response({'response': "An error occurred: {}".format(e)}, 500)
 
     # find the candidate and update the centroid location
-    candidate = Candidate.objects.get(pk=candidate_id)
+    candidate = get_object_or_404(Candidate, pk=candidate_id)
     candidate.centroid.x = x
     candidate.centroid.y = y
     candidate.centroid.z = z
-
     candidate.centroid.save()
-
     serialized_candidate = serializers.CandidateSerializer(candidate, context={'request': None}).data
-
     return Response(serialized_candidate)
 
 
