@@ -57,7 +57,9 @@
     },
     computed: {
       candidates () {
-        return this.$store.getters.candidates
+        return this.$store.getters.candidates.sort((a, b) => {
+          return b.probability_concerning - a.probability_concerning
+        })
       },
       viewerData () {
         return {
