@@ -21,6 +21,9 @@ class Case(models.Model):
     def nodules(self):
         return Nodule.objects.filter(candidate__case=self)
 
+    def __str__(self):
+        return f"{self.pk} <{self.series} - {self.created.isoformat()}>"
+
 
 class PleuralSpace(models.Model):
     """
