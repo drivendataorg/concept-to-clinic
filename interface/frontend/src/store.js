@@ -26,6 +26,9 @@ const actions = {
       .then((response) => {
         commit('SET_CASE_IN_PROGRESS', response.data)
       })
+  },
+  refreshCase ({ dispatch }) {
+    return dispatch('loadCase', store.state.caseInProgress)
   }
 }
 
