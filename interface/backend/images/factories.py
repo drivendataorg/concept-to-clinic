@@ -20,8 +20,8 @@ class ImageLocationFactory(factory.django.DjangoModelFactory):
 
     series = factory.LazyAttribute(lambda f: f.factory_parent.case.series)
 
-    x = factory.fuzzy.FuzzyInteger(0, 511)
+    x = factory.fuzzy.FuzzyInteger(0, 256)
 
-    y = factory.fuzzy.FuzzyInteger(0, 511)
+    y = factory.fuzzy.FuzzyInteger(0, 256)
 
-    z = factory.fuzzy.FuzzyInteger(0, 63)
+    z = factory.fuzzy.FuzzyInteger(0, 16)
