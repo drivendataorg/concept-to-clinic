@@ -10,22 +10,17 @@ const API_ROOT = '/api/'
 
 const actions = {
   populateEndpoints ({ commit }) {
-    axios.get(API_ROOT)
-      .then((response) => {
-        commit('GET_ENDPOINTS', response.data)
-      })
+    axios.get(API_ROOT).then((response) => { commit('GET_ENDPOINTS', response.data) })
   },
   loadCase ({ commit }, { url }) {
-    axios.get(url)
-      .then((response) => {
-        commit('SET_CASE_IN_PROGRESS', response.data)
-      })
+    axios.get(url).then((response) => { commit('SET_CASE_IN_PROGRESS', response.data) })
   },
-  startNewCase ({ commit }, { uri }) {
+  unloadCase ({ commit }) {
+    commit('SET_CASE_IN_PROGRESS', {})
+  },
+  async startNewCase ({ commit }, { uri }) {
     axios.post(this.getters.endpoints.cases, {uri: uri})
-      .then((response) => {
-        commit('SET_CASE_IN_PROGRESS', response.data)
-      })
+      .then((response) => { commit('SET_CASE_IN_PROGRESS', response.data) })
   },
   refreshCase ({ dispatch }) {
     return dispatch('loadCase', store.state.caseInProgress)
@@ -45,6 +40,9 @@ const store = new Vuex.Store({
     caseInProgress (state) {
       return state.caseInProgress
     },
+    caseInProgressIsValid  (state, getters) {
+      return ('url' in getters.caseInProgress)
+    },
     endpoints (state) {
       return state.topLevelEndpoints
     },
@@ -52,12 +50,14 @@ const store = new Vuex.Store({
       return state.caseInProgress ? state.caseInProgress.candidates : []
     },
     candidatesExist (state, getters) {
+      if (!getters.caseInProgressIsValid) return false
       return getters.candidates && getters.candidates.length > 0
     },
     nodules (state) {
       return state.caseInProgress ? state.caseInProgress.nodules : []
     },
     nodulesExist (state, getters) {
+      if (!getters.caseInProgressIsValid) return false
       return getters.nodules && getters.nodules.length > 0
     },
     imagePaths (state) {
