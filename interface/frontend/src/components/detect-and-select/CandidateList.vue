@@ -67,7 +67,7 @@
           prefixCS: ':/',
           prefixUrl: '/api/images/preview?dicom_location=',
           paths: this.$store.getters.imagePaths,
-          sliceIndex: 0
+          sliceIndex: this.selectedCandidateIndex || 0
         }
       },
       marker () {
