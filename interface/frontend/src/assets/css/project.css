@@ -11,6 +11,29 @@ div.container {
   padding-top: 0.5rem;
 }
 
+pre {
+    white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+i.success {
+  color: #5cb85c;
+  text-shadow: 1px 1px 1px #5cb85c;
+}
+
+i.warning {
+  color: #f0ad4e;
+  text-shadow: 1px 1px 1px #f0ad4e;
+}
+
+i.error {
+  color: #d9534f;
+  text-shadow: 1px 1px 1px #d9534f;
+}
+
 input[type=range] {
   width: 100%;
   background: transparent;
