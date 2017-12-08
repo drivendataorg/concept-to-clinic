@@ -1,39 +1,19 @@
 <template>
   <div class="card-block">
-    <table>
-      <tbody>
-        <tr>
-          <td>lidc_max_sensitiv:</td>
-          <td>TBI</td>
-        </tr>
-        <tr>
-          <td>convnet_vgg:</td>
-          <td>TBI</td>
-        </tr>
-        <tr>
-          <td>convnett_vgg_lidc:</td>
-          <td>TBI</td>
-        </tr>
-      </tbody>
-    </table><br>
     Centroid (predicted):<br>
     <table class="ml-3">
       <tbody>
         <tr>
-          <td>Slice:</td>
-          <td>TBI</td>
-        </tr>
-        <tr>
           <td>X:</td>
-          <td><b>{{ candidate.centroid.x }}</b></td>
+          <td><strong>{{ candidate.centroid.x }}</strong></td>
         </tr>
         <tr>
           <td>Y:</td>
-          <td><b>{{ candidate.centroid.y }}</b></td>
+          <td><strong>{{ candidate.centroid.y }}</strong></td>
         </tr>
         <tr>
           <td class="pr-3">Slice index: </td>
-          <td><b>{{ candidate.centroid.z }}</b></td>
+          <td><strong>{{ candidate.centroid.z }}</strong></td>
         </tr>
       </tbody>
     </table>

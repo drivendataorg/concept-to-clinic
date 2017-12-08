@@ -1,7 +1,9 @@
 <template>
-  <canvas ref="canvas" @contextmenu="onRightClick" @mousedown="onMouseDown" @mousemove="onMouseMove"
-          @mouseup="onMouseUp" :width="canvasWidth" :height="canvasHeight" :style="canvasStyle">
-  </canvas>
+  <div>
+    <canvas ref="canvas" @contextmenu="onRightClick" @mousedown="onMouseDown" @mousemove="onMouseMove"
+            @mouseup="onMouseUp" :width="canvasWidth" :height="canvasHeight" :style="canvasStyle">
+    </canvas>
+  </div>
 </template>
 
 <script>
@@ -18,10 +20,9 @@
 
   export default {
     components: {},
-    props: ['width', 'height', 'selectedArea'],
+    props: ['width', 'height', 'areaCoordinates'],
     data () {
       return {
-        areaCoordinates: this.selectedArea || [],
         draggingPointIndex: -1,
         lastMouseLocation: null,
         draggingEntireArea: false,

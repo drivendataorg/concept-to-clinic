@@ -74,14 +74,10 @@ class NoduleSerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
         read_only_fields = ('created',)
 
-    centroid = ImageLocationSerializer()
+    centroid = ImageLocationSerializer(source='candidate.centroid', read_only=True)
 
     def create(self, validated_data):
-        return Nodule.objects.create(
-            case=validated_data['case'],
-            candidate=validated_data['candidate'],
-            centroid=ImageLocation.objects.create(**validated_data['centroid']),
-        )
+        return Nodule.objects.get_or_create(candidate=validated_data['candidate'])
 
 
 class CaseSerializer(serializers.HyperlinkedModelSerializer):
@@ -97,11 +93,9 @@ class CaseSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ('created',)
 
     series = ImageSeriesSerializer()
-    candidates = CandidateSerializer(many=True)
-    nodules = NoduleSerializer(many=True)
+    candidates = CandidateSerializer(many=True, read_only=True)
+    nodules = NoduleSerializer(many=True, read_only=True)
 
     def create(self, validated_data):
-        return Case.objects.create(
-            series=ImageSeries.objects.create(**validated_data['series']),
-            **validated_data
-        )
+        series = ImageSeriesSerializer.create(**validated_data['series'])
+        return Case.objects.create(series=series, **validated_data)

@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from backend.api.views import (
     CaseViewSet,
     CandidateViewSet,
@@ -11,12 +13,43 @@ from backend.api.views import (
 )
 from django.conf.urls import (
     include,
-    url
+    url,
 )
+from django.urls import NoReverseMatch
 from rest_framework import routers
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework.urlpatterns import format_suffix_patterns
 
+
+class RelativeUrlRootView(routers.APIRootView):
+    """ Provides relative URLs for the available endpoints.
+    """
+    def get(self, request, *args, **kwargs):
+        # Return a plain {"name": "hyperlink"} response.
+        ret = OrderedDict()
+        namespace = request.resolver_match.namespace
+        for key, url_name in self.api_root_dict.items():
+            if namespace:
+                url_name = namespace + ':' + url_name
+            try:
+                ret[key] = reverse(
+                    url_name,
+                    args=args,
+                    kwargs=kwargs,
+                    request=None,
+                    format=kwargs.get('format', None)
+                )
+            except NoReverseMatch:
+                # Don't bail out if eg. no list routes exist, only detail routes.
+                continue
+
+        return Response(ret)
+
+
 router = routers.DefaultRouter()
+router.APIRootView = RelativeUrlRootView
+
 router.register(r'cases', CaseViewSet)
 router.register(r'candidates', CandidateViewSet)
 router.register(r'nodules', NoduleViewSet)

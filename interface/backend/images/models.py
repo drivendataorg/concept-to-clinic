@@ -103,16 +103,16 @@ class ImageFile(models.Model):
 
         metadata = dict()
         for dicom_prop, model_attribute in cls.DICOM_PROPERTIES.items():
-                if callable(model_attribute):
-                    try:
-                        processed_values = model_attribute(dcm_data.get(dicom_prop, None))
-                        _update_once(metadata, processed_values)
-                    except:  # noqa
-                        # bare except is normally unforgivable but we _really_ don't care what went wrong here --
-                        # we will surface the error message and move on
-                        logger.warning(f"Property '{dicom_prop}' failed to parse for file '{filepath}'.")
-                else:
-                    _update_once(metadata, {model_attribute: dcm_data.get(dicom_prop, None)})
+            if callable(model_attribute):
+                try:
+                    processed_values = model_attribute(dcm_data.get(dicom_prop, None))
+                    _update_once(metadata, processed_values)
+                except:  # noqa
+                    # bare except is normally unforgivable but we _really_ don't care what went wrong here --
+                    # we will surface the error message and move on
+                    logger.warning(f"Property '{dicom_prop}' failed to parse for file '{filepath}'.")
+            else:
+                _update_once(metadata, {model_attribute: dcm_data.get(dicom_prop, None)})
 
         return metadata
 
@@ -144,7 +144,8 @@ class ImageSeries(models.Model):
     series_instance_uid = models.CharField(max_length=256)
     uri = models.CharField(max_length=512)
 
-    def get_or_create(uri):
+    @classmethod
+    def get_or_create(cls, uri):
         """
         Return the ImageSeries instance with the same PatientID and SeriesInstanceUID as the DICOM images in the
         given directory. If none exists so far, create one.
@@ -175,6 +176,9 @@ class ImageSeries(models.Model):
             image, _ = ImageFile.objects.get_or_create(path=safe_join(uri, f), series=series)
 
         return series, created
+
+    def __str__(self):
+        return f"{self.patient_id}"
 
 
 class ImageLocation(models.Model):

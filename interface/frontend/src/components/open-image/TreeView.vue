@@ -1,8 +1,8 @@
 <template>
   <ul>
     <li>
-      <span @click="toggle" v-if="isOpenable">
-        {{ model.name }} [{{open ? '-' : '+'}}]
+      <span @click="toggle(model)" v-if="isOpenable">
+        [{{open ? '-' : '+'}}] <span :style="selectedStyle">{{ model.name }}</span>
       </span>
       <span v-else>
         {{ model.name }}
@@ -16,14 +16,16 @@
                    v-if="child.children"
                    :key="child.name"
                    :model="child"
+                   :selectedSeries="selectedSeries"
+                   :parent="parent + '/' + model.name"
+                   v-on:childSelected="selectSeries"
+                   v-on:selectSeries="selectSeries"
         ></tree-view>
         <li @click="select(file)" v-for="file in model.files" class="text-muted" :key="file.name">{{ file.name }}</li>
       </ul>
     </li>
   </ul>
 </template>
-
-
 
 <script>
   import TreeView from './TreeView'
@@ -32,6 +34,8 @@
   export default {
     name: 'tree-view',
     props: {
+      parent: '',
+      selectedSeries: null,
       model: {
         type: Object,
         default: {
@@ -70,13 +74,30 @@
       },
       isOpen () {
         return this.open
+      },
+      selectedStyle () {
+        if (this.selectedSeries && this.selectedSeries.indexOf(this.model.name) !== -1) {
+          return { 'text-decoration': 'underline' }
+        }
+        //   return {}
+        // }
+        return {}
+      },
+      fullPath () {
+        return this.parent + '/' + this.model.name
       }
     },
     methods: {
-      toggle: function () {
+      toggle: function (model) {
         this.$set(this, 'open', !this.open)
       },
+      selectSeries: function (seriesId) {
+        this.$emit('selectSeries', seriesId)
+      },
       select: function (file) {
+        // file selected should tell parent series
+        this.$emit('childSelected', this.fullPath)
+
         EventBus.$emit('dicom-selection',
           {
             paths: this.model.files.map((file) => { return file.path }),

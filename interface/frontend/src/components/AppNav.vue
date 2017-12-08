@@ -1,4 +1,5 @@
 <template>
+
 <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
   <img src="../assets/images/c-logo-light.svg"/>
   <a class="navbar-brand" href="#">Concept To Clinic</a>
@@ -8,13 +9,19 @@
         <a class="nav-link">Open Image</a>
       </router-link>
       <router-link to="/detect-and-select" tag="li" class="nav-item">
-        <a class="nav-link">Detect and Select</a>
+        <a class="nav-link" v-bind:class="{disabled: !this.$store.getters.candidatesExist}">
+          Detect and Select
+        </a>
       </router-link>
       <router-link to="/annotate-and-segment" tag="li" class="nav-item">
-        <a class="nav-link">Annotate and Segment</a>
+        <a class="nav-link" v-bind:class="{disabled: !this.$store.getters.nodulesExist}">
+          Annotate and Segment
+        </a>
       </router-link>
       <router-link to="/report-and-export" tag="li" class="nav-item">
-        <a class="nav-link">Report and Export</a>
+        <a class="nav-link" v-bind:class="{disabled: !this.$store.getters.nodulesExist}">
+          Report and Export
+        </a>
       </router-link>
     </ul>
   </div>

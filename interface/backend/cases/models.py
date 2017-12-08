@@ -3,6 +3,8 @@ from django.core.validators import (
     MinValueValidator
 )
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils import timezone
 
 from . import enums
@@ -14,6 +16,13 @@ class Case(models.Model):
     """
     created = models.DateTimeField(default=timezone.now)
     series = models.ForeignKey('images.ImageSeries', related_name='cases')
+
+    @property
+    def nodules(self):
+        return Nodule.objects.filter(candidate__case=self)
+
+    def __str__(self):
+        return f"{self.pk} <{self.series} - {self.created.isoformat()}>"
 
 
 class PleuralSpace(models.Model):
@@ -140,18 +149,36 @@ class Candidate(models.Model):
     probability_concerning = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
     review_result = models.IntegerField(choices=enums.format_enum(enums.CandidateReviewResult),
                                         default=enums.CandidateReviewResult.NONE)
+    added_by_hand = models.BooleanField(default=False)
+
+    def get_or_create_nodule(self):
+        nodule, created = Nodule.objects.get_or_create(candidate=self)
+        return nodule, created
+
+    def remove_associated_nodule(self):
+        return Nodule.objects.filter(candidate=self).delete()
 
 
 class Nodule(models.Model):
     """
-    Actual nodule, either confirmed as concerning from prediction or manually added.
+    Actual nodule, originating from a candidates which was marked as concerning
     """
     created = models.DateTimeField(default=timezone.now)
-    case = models.ForeignKey(Case, on_delete=models.CASCADE, related_name='nodules')
     candidate = models.OneToOneField(Candidate, on_delete=models.CASCADE, null=True)
-    centroid = models.OneToOneField('images.ImageLocation', on_delete=models.CASCADE)
     lung_orientation = models.IntegerField(choices=enums.format_enum(enums.LungOrientation),
                                            default=enums.LungOrientation.NONE)
     appearance_feature = models.IntegerField(choices=enums.format_enum(enums.AppearanceFeature), null=True)
     diameter = models.FloatField(null=True)
     density_feature = models.IntegerField(choices=enums.format_enum(enums.DensityFeature), null=True)
+
+
+@receiver(post_save, sender=Candidate)
+def add_or_remove_nodule_once_candidate_reviewed(sender, instance, *args, **kwargs):
+    """
+    Whenever a ``Candidate`` gets saved, make sure a nodule either does or does not exist based upon what the
+    review result was.
+    """
+    if instance.review_result == enums.CandidateReviewResult.DISMISSED:
+        instance.remove_associated_nodule()
+    elif instance.review_result == enums.CandidateReviewResult.MARKED:
+        instance.get_or_create_nodule()
