@@ -14,7 +14,7 @@
     </div>
     <div class="DICOM" ref="DICOM" style="width: 100%"></div>
     <nodule-marker :marker="marker" :sliceIndex="stack.currentImageIdIndex" :zoomRate="zoomRate" :offsetX="offsetX" :offsetY="offsetY"></nodule-marker>
-    <area-select @selection-changed="areaSelectChange" v-if="showAreaSelect"></area-select>
+    <area-select @selection-changed="areaSelectChange" v-if="showAreaSelect" :areaCoordinates="areaCoordinates"></area-select>
   </div>
 </template>
 
@@ -45,7 +45,10 @@
         }
       },
       // a marker that indicates the nodule centroid location ({ x, y, z })
-      marker: null
+      marker: null,
+      // whether to enable area selection
+      showAreaSelect: false,
+      areaCoordinates: []
     },
     data () {
       return {
@@ -61,8 +64,7 @@
         offsetY: 0,
 
         base64data: null,
-        pool: [],
-        showAreaSelect: false
+        pool: []
       }
     },
     watch: {
@@ -79,21 +81,25 @@
           // workaround for now; sometimes we have full url, sometimes filepath
           // const hola = await this.$axios.get(this.view.prefixUrl + this.view.paths[this.stack.currentImageIdIndex])
           var hola
-          if (this.view.paths.length > 0 && this.view.paths[this.stack.currentImageIdIndex].indexOf('=') !== -1) {
-            hola = await this.$axios.get(this.view.paths[this.stack.currentImageIdIndex])
-          } else {
-            hola = await this.$axios.get(this.view.prefixUrl + this.view.paths[this.stack.currentImageIdIndex])
-          }
 
-          this.pool[this.stack.currentImageIdIndex] = hola
+          if (this.view.paths.length > 0 && this.view.paths.length > this.stack.currentImageIdIndex) {
+            if (this.view.paths[this.stack.currentImageIdIndex].indexOf('=') !== -1) {
+              hola = await this.$axios.get(this.view.paths[this.stack.currentImageIdIndex])
+            } else {
+              hola = await this.$axios.get(this.view.prefixUrl + this.view.paths[this.stack.currentImageIdIndex])
+            }
+            this.pool[this.stack.currentImageIdIndex] = hola
+            return hola
+          } else {
+            console.log('No path in paths for index ', this.stack.currentImageIdIndex)
+          }
         }
-        return this.pool[this.stack.currentImageIdIndex]
       },
       async dicom () {
         let info = await this.info
-        info = info.data
-        if (!info) return {}
+        if (!info || !info.data) return {}
         else {
+          info = info.data
           this.base64data = info.image
           return {
             imageId: this.stack.imageIds[this.stack.currentImageIdIndex],

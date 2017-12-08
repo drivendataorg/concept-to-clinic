@@ -5,7 +5,11 @@
       <div v-if="nodules && nodules.length">
         <div id="accordion" role="tablist" aria-multiselectable="true">
           <template v-for="(nodule, index) in nodules">
-            <nodule :nodule="nodule" :index="index" :key="index">
+            <nodule :nodule="nodule"
+                    :index="index"
+                    :selectedIndex="selectedIndex"
+                    v-on:selected="selected"
+                    :key="index">
               <annotate v-if="annotate" :nodule="nodule" :index="index" slot="add-on-editor">
               </annotate>
             </nodule>
@@ -17,7 +21,7 @@
       </div>
     </div><!-- left side-->
     <div class='col-md-8'>
-      <open-dicom :view="viewerData"></open-dicom>
+      <open-dicom :view="viewerData" :showAreaSelect="true" :areaCoordinates="areaCoordinates"></open-dicom>
     </div><!-- right side-->
   </div>
 </div>
@@ -31,9 +35,29 @@ import OpenDicom from '../common/OpenDICOM'
 export default {
   props: ['annotate'],
   components: { Nodule, Annotate, OpenDicom },
+  data () {
+    return {
+      selectedIndex: 0
+    }
+  },
   computed: {
     nodules () {
       return this.$store.getters.nodules
+    },
+    selectedNodule () {
+      return this.nodules[this.selectedIndex]
+    },
+    areaCoordinates () {
+      // needs to be implemented, for now draw a 40 x 40 square at the centroid
+      var x = this.selectedNodule.centroid.x
+      var y = this.selectedNodule.centroid.y
+
+      return [
+        [x - 10, y - 10],
+        [x - 10, y + 10],
+        [x + 10, y + 10],
+        [x + 10, y - 10]
+      ]
     },
     viewerData () {
       return {
@@ -41,8 +65,13 @@ export default {
         prefixCS: ':/',
         prefixUrl: '/api/images/preview?dicom_location=',
         paths: this.$store.getters.imagePaths,
-        sliceIndex: 0
+        sliceIndex: this.nodules[this.selectedIndex].centroid.z || 0
       }
+    }
+  },
+  methods: {
+    selected (ix) {
+      this.selectedIndex = ix
     }
   }
 }

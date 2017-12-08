@@ -1,6 +1,6 @@
 <template>
 <div class="card">
-  <div class="card-header" @click="toggleShow(nodule)">
+  <div class="card-header" @click="selectNodule(nodule)">
     <h1>Nodule {{ index + 1 }}</h1>
     <span class="fa" :class="{
         'fa-chevron-up' : isOpen,
@@ -8,7 +8,7 @@
       }"></span>
   </div>
 
-  <div class="collapse" :class="{ show: isOpen }">
+  <div class="collapse" :class="{ show: selectedIndex == index }">
     <div class="card-block">
       <!-- L: With the add-on-editor slot, this component can be
               extended with a variety of foreign editor.
@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  props: ['nodule', 'index'],
+  props: ['nodule', 'index', 'selectedIndex'],
   data () {
     return {
       isOpen: false,
@@ -33,8 +33,9 @@ export default {
     if (this.index === 0) { this.isOpen = true }
   },
   methods: {
-    toggleShow (nodule) {
+    selectNodule (nodule) {
       this.isOpen = !this.isOpen
+      this.$emit('selected', this.index)
     },
     update (nodule) {
       this.$axios.put(nodule.url, { lung_orientation: this.selected })
