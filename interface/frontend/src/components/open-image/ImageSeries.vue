@@ -222,7 +222,7 @@
         return false
       },
       toggleSelect (case_) {
-        if (this.selectedCase) {
+        if (this.selectedCase && this.selectedCase.url === case_.url) {
           this.unselectCase()
         } else {
           this.selectCase(case_)
