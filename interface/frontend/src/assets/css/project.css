@@ -29,9 +29,14 @@ i.warning {
   text-shadow: 1px 1px 1px #f0ad4e;
 }
 
-i.error {
+i.danger {
   color: #d9534f;
   text-shadow: 1px 1px 1px #d9534f;
+}
+
+i.default {
+  color: #4b5257;
+  text-shadow: 1px 1px 1px #4b5257;
 }
 
 input[type=range] {
