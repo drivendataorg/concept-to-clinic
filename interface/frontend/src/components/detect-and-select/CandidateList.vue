@@ -49,7 +49,6 @@
 </template>
 
 <script>
-  import Vue from 'vue'
   import {EventBus} from '../../main.js'
   import Candidate from './Candidate'
   import OpenDicom from '../common/OpenDICOM'
@@ -110,47 +109,34 @@
     },
     mounted: function () {
       EventBus.$on('nodule-marker-moved', (x, y, z) => {
-        if (!this.selectedCandidate) {
-          console.error('can\'t save new coordinates - selectedCanidate is not found')
-          return
-        }
-
-        const candidates = this.candidates
-        const selectedCandidate = this.selectedCandidate
-        const selectedCandidateIndex = this.selectedCandidateIndex
-
-        // mark current candidate as saving
-        selectedCandidate._saving = true
-
-        // send data to backend
-        this.$axios
-            .post(selectedCandidate.url + 'move', {x, y, z})
-            .then((response) => {
-              if (response.status === 200) {
-                Vue.set(candidates, selectedCandidateIndex, response.data)
-              }
-            })
+        this.moveSelectedCandidate(x, y, z)
       })
     },
     methods: {
       toggleShow (index) {
         this.selectedCandidateIndex = this.selectedCandidateIndex === index ? -1 : index
       },
-      markOrDismiss (candidate, result) {
+      async markOrDismiss (candidate, result) {
         candidate._saving = true
+        candidate.review_result = result
+        await this.$store.dispatch('updateCandidate', candidate)
+        this.$store.dispatch('refreshCase')
+      },
+      async moveSelectedCandidate (x, y, z) {
+        if (!this.selectedCandidate) {
+          console.error('can\'t save new coordinates - selectedCanidate is not found')
+          return
+        }
 
-        this.$axios.patch(candidate.url, {review_result: result})
-            .then((response) => {
-              if (response.status === 200) {
-                candidate._saving = false
-                candidate.review_result = result
-              } else {
-                console.log('saving review result failed with response: ', response)
-              }
-            })
-            .catch(() => {
-              // TODO: error callback
-            })
+        // mark current candidate as saving
+        this.selectedCandidate._saving = true
+        this.selectedCandidate.centroid.x = x
+        this.selectedCandidate.centroid.y = y
+        this.selectedCandidate.centroid.z = z
+
+        // send data to backend
+        await this.$store.dispatch('updateCandidate', this.selectedCandidate)
+        this.$store.dispatch('refreshCase')
       }
     }
   }
