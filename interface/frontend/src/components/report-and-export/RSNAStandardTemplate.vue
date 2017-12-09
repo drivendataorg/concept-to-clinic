@@ -5,12 +5,6 @@
       RSNA Standard Template
     </h1>
 
-    <label class="custom-control custom-checkbox">
-      <input v-model="showFancyTemplate" type="checkbox" class="custom-control-input">
-      <span class="custom-control-indicator"></span>
-      <span class="custom-control-description">Eye Candy</span>
-    </label>
-
     <button class="btn btn-lg btn-warning"
       @click='exportRSNA()'
       >
@@ -18,29 +12,24 @@
     </button>
   </header>
 
-  <rsna-standard-fancy v-if="showFancyTemplate" :rsna="rsna"></rsna-standard-fancy>
-  <div v-else>
-    <section id="technical-parameters">
-      <h2>Technical parameters</h2>
-      <article>
-        <!-- {{technical}} -->
-        <olp label='kVp' :value='technical.kVp.value'></olp>
-        <olp label='mA' :value='technical.mA.value'></olp>
-        <olp label='DLP' :value='technical.DLP.value + " " + technical.DLP.unit'></olp>
-      </article>
-    </section>
+  <section id="technical-parameters">
+    <h2>Technical parameters</h2>
+    <article>
+      <olp label='kVp' :value='technical.kVp.value'></olp>
+      <olp label='mA' :value='technical.mA.value'></olp>
+      <olp label='DLP' :value='technical.DLP.value + " " + technical.DLP.unit'></olp>
+    </article>
+  </section>
 
-    <section id="clinical-information">
-      <h2>Clinical information</h2>
-      <article>
-        <!-- {{clinical}} -->
-        <olp label='Screening visit' :value='clinical.visit'></olp>
-        <p>
-          {{ clinical.reason }}
-        </p>
-      </article>
-    </section>
-  </div>
+  <section id="clinical-information">
+    <h2>Clinical information</h2>
+    <article>
+      <olp label='Screening visit' :value='clinical.visit'></olp>
+      <p>
+        {{ clinical.reason }}
+      </p>
+    </article>
+  </section>
 
   <section id="findings">
     <h2>Findings</h2>
@@ -192,8 +181,6 @@
 </template>
 
 <script>
-import RSNAStandardTemplateFancy from './RSNAStandardTemplateFancy'
-
 import OneLineParagraph from './OneLineParagraph'
 
 import Nodule from '../annotate-and-segment/Nodule'
@@ -202,13 +189,11 @@ import JSPDF from 'jspdf'
 
 export default {
   components: {
-    'rsna-standard-fancy': RSNAStandardTemplateFancy,
     'olp': OneLineParagraph,
     Nodule
   },
   data () {
     return {
-      showFancyTemplate: false,
       ...this.rsna
     }
   },
