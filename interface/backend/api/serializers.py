@@ -67,6 +67,15 @@ class CandidateSerializer(serializers.HyperlinkedModelSerializer):
         candidate = Candidate.objects.create(case=case_data, centroid=image_location, **validated_data)
         return candidate
 
+    def update(self, instance, validated_data):
+        centroid_data = validated_data.pop('centroid', None)
+        if centroid_data is not None:
+            instance.centroid.x = centroid_data.get('x', instance.centroid.x)
+            instance.centroid.y = centroid_data.get('y', instance.centroid.y)
+            instance.centroid.z = centroid_data.get('z', instance.centroid.z)
+            instance.centroid.save()
+        return super().update(instance, validated_data)
+
 
 class NoduleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
