@@ -12,7 +12,15 @@
                     <span class="candidate-title">
                       Candidate {{ index + 1 }}
                     </span> (p={{ candidate.probability_concerning.toFixed(3) }})
-                    <i class="pull-right" v-if="candidate._saving">Saving...</i>
+
+                    <span class="float-right" v-if="candidate._saving">
+                      <i class="fa fa-spinner fa-spin"></i>
+                    </span>
+                    <span class="float-right" v-else>
+                      <i class="fa fa-times danger" v-if="candidate.review_result === REVIEW_RESULT.DISMISSED"></i>
+                      <i class="fa fa-check success" v-if="candidate.review_result === REVIEW_RESULT.MARKED"></i>
+                      <i class="fa fa-question default" v-if="candidate.review_result === REVIEW_RESULT.NONE"></i>
+                    </span>
                   </p>
                 </div>
 
