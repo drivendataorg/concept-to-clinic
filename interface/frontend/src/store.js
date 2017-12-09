@@ -24,6 +24,9 @@ const actions = {
   },
   refreshCase ({ dispatch }) {
     return dispatch('loadCase', store.state.caseInProgress)
+  },
+  async updateCandidate ({ commit }, candidate) {
+    await axios.patch(candidate.url, candidate)
   }
 }
 
