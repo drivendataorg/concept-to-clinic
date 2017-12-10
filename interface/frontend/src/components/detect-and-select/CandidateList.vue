@@ -37,11 +37,15 @@
                       <button type="button" class="btn btn-sm btn-secondary"
                         @click="markOrDismiss(candidate, REVIEW_RESULT.DISMISSED)"
                         :disabled="candidate._saving || candidate.review_result === REVIEW_RESULT.DISMISSED"
-                      >Dismiss</button>
-                      <button type="button" class="btn btn-sm btn-danger"
+                      >
+                        <i class="fa fa-times danger"></i> Dismiss
+                      </button>
+                      <button type="button" class="btn btn-sm btn-secondary"
                         @click="markOrDismiss(candidate, REVIEW_RESULT.MARKED)"
                         :disabled="candidate._saving || candidate.review_result === REVIEW_RESULT.MARKED"
-                      >Mark concerning</button>
+                      >
+                        <i class="fa fa-check success"></i> Mark concerning
+                      </button>
                     </div>
                     <div class="clearfix"></div>
                   </div>
