@@ -30,9 +30,11 @@ const actions = {
   async updateCandidate ({ commit, dispatch }, candidate) {
     await axios.patch(candidate.url, candidate)
   },
-  addCandidateToCaseInProgress ({dispatch, commit}, candidate) {
-    axios.post(this.getters.endpoints.candidates, candidate)
-      .then((response) => { if (response.status === 201) commit('ADD_CANDIDATE_TO_CASE_IN_PROGRESS', response.data) })
+  async addCandidateToCaseInProgress ({commit}, candidate) {
+    await axios.post(this.getters.endpoints.candidates, candidate)
+      .then((response) => {
+        if (response.status === 201) commit('ADD_CANDIDATE_TO_CASE_IN_PROGRESS', response.data)
+      })
   }
 }
 

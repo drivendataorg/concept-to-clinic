@@ -147,7 +147,7 @@
         await this.$store.dispatch('updateCandidate', this.selectedCandidate)
         this.$store.dispatch('refreshCase')
       },
-      addCandidate () {
+      async addCandidate () {
         var newCandidate = {
           centroid: {x: 5, y: 5, z: 5},
           probability_concerning: null,
@@ -155,7 +155,10 @@
           added_by_hand: true,
           review_result: this.REVIEW_RESULT.MARKED
         }
-        this.$store.dispatch('addCandidateToCaseInProgress', newCandidate)
+        await this.$store.dispatch('addCandidateToCaseInProgress', newCandidate)
+        var newestTimestamp = this.candidates.map(d => d.created).sort()[this.candidates.length - 1]
+        var newestCandidateIndex = this.candidates.findIndex(d => d.created === newestTimestamp)
+        this.selectedCandidateIndex = newestCandidateIndex
       }
     }
   }
