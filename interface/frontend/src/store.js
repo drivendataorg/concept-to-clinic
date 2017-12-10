@@ -10,10 +10,12 @@ const API_ROOT = '/api/'
 
 const actions = {
   populateEndpoints ({ commit }) {
-    axios.get(API_ROOT).then((response) => { commit('GET_ENDPOINTS', response.data) })
+    axios.get(API_ROOT)
+      .then((response) => { commit('GET_ENDPOINTS', response.data) })
   },
   loadCase ({ commit }, { url }) {
-    axios.get(url).then((response) => { commit('SET_CASE_IN_PROGRESS', response.data) })
+    axios.get(url)
+      .then((response) => { commit('SET_CASE_IN_PROGRESS', response.data) })
   },
   unloadCase ({ commit }) {
     commit('SET_CASE_IN_PROGRESS', {})
@@ -23,10 +25,15 @@ const actions = {
       .then((response) => { commit('SET_CASE_IN_PROGRESS', response.data) })
   },
   refreshCase ({ dispatch }) {
-    return dispatch('loadCase', store.state.caseInProgress)
+    dispatch('loadCase', store.state.caseInProgress)
   },
-  async updateCandidate ({ commit }, candidate) {
+  async updateCandidate ({ commit, dispatch }, candidate) {
     await axios.patch(candidate.url, candidate)
+      .catch(() => { dispatch('refreshCase') })
+  },
+  addCandidateToCaseInProgress ({dispatch, commit}, candidate) {
+    axios.post(this.getters.endpoints.candidates, candidate)
+      .then((response) => { if (response.status === 201) commit('ADD_CANDIDATE_TO_CASE_IN_PROGRESS', response.data) })
   }
 }
 
@@ -77,6 +84,9 @@ const store = new Vuex.Store({
     },
     SET_CASE_IN_PROGRESS (state, _case) {
       state.caseInProgress = _case
+    },
+    ADD_CANDIDATE_TO_CASE_IN_PROGRESS (state, candidate) {
+      state.caseInProgress.candidates.push(candidate)
     }
   },
   actions
