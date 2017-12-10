@@ -59,7 +59,6 @@
       return {
         REVIEW_RESULT: this.$constants.CANDIDATE_REVIEW_RESULT,
         selectedCandidateIndex: 0,
-        lastViewedSeriesId: null
       }
     },
     computed: {
