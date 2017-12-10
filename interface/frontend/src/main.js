@@ -36,3 +36,8 @@ new Vue({
   router,
   store
 })
+
+Vue.filter('round3', function (value) {
+  if (!value) return ''
+  return value.toFixed(3)
+})
