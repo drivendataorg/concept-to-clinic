@@ -11,7 +11,13 @@
                       'candidate-marked': candidate.review_result === REVIEW_RESULT.MARKED}">
                     <span class="candidate-title">
                       Candidate {{ index + 1 }}
-                    </span> (p={{ candidate.probability_concerning.toFixed(3) }})
+                    </span>
+                    <span v-if="candidate.probability_concerning">
+                      (p={{ candidate.probability_concerning | round3 }})
+                    </span>
+                    <span v-else-if="candidate.added_by_hand">
+                      (added manually)
+                    </span>
 
                     <span class="float-right" v-if="candidate._saving">
                       <i class="fa fa-spinner fa-spin"></i>
