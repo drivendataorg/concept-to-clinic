@@ -49,7 +49,7 @@ class ImageSeriesSerializer(serializers.HyperlinkedModelSerializer):
 class ImageLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageLocation
-        fields = '__all__'
+        fields = ('x', 'y', 'z')
 
 
 class CandidateSerializer(serializers.HyperlinkedModelSerializer):
