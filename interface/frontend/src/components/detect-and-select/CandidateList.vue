@@ -47,8 +47,15 @@
                   </div>
                 </div>
               </div>
-
             </template>
+            <div class="mt-2">
+              <span class="float-right">
+                <a href="#">
+                  <button @click="addCandidate()" class="btn btn-default">Manually add location</button>
+                </a>
+              </span>
+              <div class="clearfix"></div>
+            </div>
           </div>
         </div>
         <div class="col-md-9" style="min-height: 500px">
@@ -139,6 +146,16 @@
         // send data to backend
         await this.$store.dispatch('updateCandidate', this.selectedCandidate)
         this.$store.dispatch('refreshCase')
+      },
+      addCandidate () {
+        var newCandidate = {
+          centroid: {x: 5, y: 5, z: 5},
+          probability_concerning: null,
+          case: this.$store.getters.caseInProgress.url,
+          added_by_hand: true,
+          review_result: this.REVIEW_RESULT.MARKED
+        }
+        this.$store.dispatch('addCandidateToCaseInProgress', newCandidate)
       }
     }
   }
