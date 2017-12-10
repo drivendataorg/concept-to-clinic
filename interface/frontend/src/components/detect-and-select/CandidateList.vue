@@ -33,12 +33,17 @@
                 <div class="collapse" :class="{ show: selectedCandidateIndex == index }">
                   <div class="card-block">
                     <candidate :candidate="candidate" :index="index"></candidate>
-                    <a @click="markOrDismiss(candidate, REVIEW_RESULT.DISMISSED)">
-                      <button type="button" class="btn btn-sm btn-secondary">Dismiss</button>
-                    </a>
-                    <a @click="markOrDismiss(candidate, REVIEW_RESULT.MARKED)">
-                      <button type="button" class="btn btn-sm btn-danger">Mark concerning</button>
-                    </a>
+                    <div class="float-right">
+                      <button type="button" class="btn btn-sm btn-secondary"
+                        @click="markOrDismiss(candidate, REVIEW_RESULT.DISMISSED)"
+                        :disabled="candidate._saving || candidate.review_result === REVIEW_RESULT.DISMISSED"
+                      >Dismiss</button>
+                      <button type="button" class="btn btn-sm btn-danger"
+                        @click="markOrDismiss(candidate, REVIEW_RESULT.MARKED)"
+                        :disabled="candidate._saving || candidate.review_result === REVIEW_RESULT.MARKED"
+                      >Mark concerning</button>
+                    </div>
+                    <div class="clearfix"></div>
                   </div>
                 </div>
               </div>
@@ -122,10 +127,12 @@
         this.selectedCandidateIndex = this.selectedCandidateIndex === index ? -1 : index
       },
       async markOrDismiss (candidate, result) {
-        candidate._saving = true
-        candidate.review_result = result
-        await this.$store.dispatch('updateCandidate', candidate)
-        this.$store.dispatch('refreshCase')
+        if (!candidate._saving && result !== candidate.review_result) {
+          candidate._saving = true
+          candidate.review_result = result
+          await this.$store.dispatch('updateCandidate', candidate)
+          this.$store.dispatch('refreshCase')
+        }
       },
       async moveSelectedCandidate (x, y, z) {
         if (!this.selectedCandidate) {
