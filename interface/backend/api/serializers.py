@@ -101,6 +101,7 @@ class CaseSerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
         read_only_fields = ('created',)
 
+    pk = serializers.ReadOnlyField()
     series = ImageSeriesSerializer()
     candidates = CandidateSerializer(many=True, read_only=True)
     nodules = NoduleSerializer(many=True, read_only=True)
