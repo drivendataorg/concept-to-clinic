@@ -1,6 +1,9 @@
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from rest_framework import serializers
+from rest_framework.exceptions import NotFound
 
+from backend.cases.enums import CandidateReviewResult
 from backend.cases.models import (
     Case,
     Candidate,
@@ -61,10 +64,17 @@ class CandidateSerializer(serializers.HyperlinkedModelSerializer):
     centroid = ImageLocationSerializer()
 
     def create(self, validated_data):
-        case_data = validated_data.pop('case')
-        centroid_data = validated_data.pop('centroid')
-        image_location = ImageLocation.objects.create(**centroid_data)
-        candidate = Candidate.objects.create(case=case_data, centroid=image_location, **validated_data)
+        case = validated_data.pop('case', None)
+        print(case)
+        centroid_data = validated_data.pop('centroid', None)
+        image_location_serializer = ImageLocationSerializer(data=centroid_data)
+        image_location_serializer.is_valid(raise_exception=True)
+        image_location = image_location_serializer.save()
+        candidate = Candidate.objects.create(
+            case=case,
+            centroid=image_location,
+            **validated_data,
+        )
         return candidate
 
     def update(self, instance, validated_data):
