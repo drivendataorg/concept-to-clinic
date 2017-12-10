@@ -69,7 +69,7 @@
     data () {
       return {
         REVIEW_RESULT: this.$constants.CANDIDATE_REVIEW_RESULT,
-        selectedCandidateIndex: 0,
+        selectedCandidateIndex: 0
       }
     },
     computed: {
@@ -103,17 +103,7 @@
 
         if (candidate) {
           this.viewerData.sliceIndex = candidate.centroid.z
-
-          // to avoid screen refreshes - reinit viewer only when new candidate comes from other case
-          if (this.lastViewedCaseUrl !== candidate.case.url) {
-            this.viewerData.paths = candidate._filesPaths
-          }
-
-          this.lastViewedCaseUrl = candidate.case.url
-        } else {
-          this.lastViewedCaseUrl = null
         }
-
         return candidate
       }
     },
