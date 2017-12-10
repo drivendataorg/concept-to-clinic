@@ -29,7 +29,6 @@ const actions = {
   },
   async updateCandidate ({ commit, dispatch }, candidate) {
     await axios.patch(candidate.url, candidate)
-      .catch(() => { dispatch('refreshCase') })
   },
   addCandidateToCaseInProgress ({dispatch, commit}, candidate) {
     axios.post(this.getters.endpoints.candidates, candidate)
