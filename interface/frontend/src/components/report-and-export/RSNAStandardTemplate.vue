@@ -1,16 +1,12 @@
 <template>
-<div class="rsna-standard-template-container">
-  <header class="bg-inverse">
-    <h1>
-      RSNA Standard Template
-    </h1>
-
-    <button class="btn btn-lg btn-warning"
-      @click='exportRSNA()'
-      >
-      Export
-    </button>
-  </header>
+  <div class="rsna-standard-template-container">
+  <div class="float-right">
+    <button class="btn btn-lg btn-warning" @click='exportRSNA()'>Export</button>
+  </div>
+  <h1>
+    RSNA Standard Template
+  </h1>
+  <hr>
 
   <section id="technical-parameters">
     <h2>Technical parameters</h2>
@@ -52,8 +48,12 @@
       </p>
 
       <div class="nodule-list" v-else>
-        <nodule v-for="(nodule, index) in findings.lungNodules" :nodule="nodule" :index="index" :key="index">
-          <div class="nodule-info-container" slot="add-on-editor">
+
+        <div class="card" v-for="(nodule, index) in findings.lungNodules" :nodule="nodule" :index="index" :key="index">
+          <div class="card-header">
+            <h3>Nodule {{ index + 1}}</h3>
+          </div>
+          <div class="nodule-info-container">
             <!-- {{ nodule }} -->
             <div class="nodule-info">
               <olp label='Position'
@@ -68,11 +68,12 @@
                 constant-key="CONDITION_STRINGS"
                  :value='nodule.condition'></olp>
             </div>
-            <div class="nodule-image">
+            <div class="nodule-image m-2">
               <img :src="nodule.image" alt="Nodule Image">
             </div>
           </div>
-        </nodule>
+        </div>
+
       </div>
 
     </article>
@@ -228,34 +229,8 @@ export default {
 
 <style lang="scss" scoped>
 .rsna-standard-template-container {
-
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    padding-left: 2em;
-    font-weight: normal;
-    letter-spacing: 2px;
-		margin-bottom: 10px;
-
-    padding-right: 10%;
-
-    h1 {
-      font-size: 2.5em;
-
-      line-height: 2em;
-      margin: 0;
-    }
-  }
-
   .custom-control {
     margin: 0;
-  }
-
-  h2 {
-    padding-top: 0.5em;
-    margin-bottom: 1em;
   }
 
   section {
