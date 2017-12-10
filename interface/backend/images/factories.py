@@ -18,8 +18,6 @@ class ImageLocationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.ImageLocation
 
-    series = factory.LazyAttribute(lambda f: f.factory_parent.case.series)
-
     x = factory.fuzzy.FuzzyInteger(0, 256)
 
     y = factory.fuzzy.FuzzyInteger(0, 256)
