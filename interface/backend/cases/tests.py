@@ -86,14 +86,14 @@ class SmokeTest(APITestCase):
         self.assertEqual(candidate2_dict['centroid']['z'], nodule2.candidate.centroid.z)
 
         nodule1_dict = response.data['nodules'][0]
-        self.assertEqual(nodule1_dict['centroid']['x'], nodule1.candidate.centroid.x)
-        self.assertEqual(nodule1_dict['centroid']['y'], nodule1.candidate.centroid.y)
-        self.assertEqual(nodule1_dict['centroid']['z'], nodule1.candidate.centroid.z)
+        self.assertEqual(nodule1_dict['candidate']['centroid']['x'], nodule1.candidate.centroid.x)
+        self.assertEqual(nodule1_dict['candidate']['centroid']['y'], nodule1.candidate.centroid.y)
+        self.assertEqual(nodule1_dict['candidate']['centroid']['z'], nodule1.candidate.centroid.z)
 
         nodule2_dict = response.data['nodules'][1]
-        self.assertEqual(nodule2_dict['centroid']['x'], nodule2.candidate.centroid.x)
-        self.assertEqual(nodule2_dict['centroid']['y'], nodule2.candidate.centroid.y)
-        self.assertEqual(nodule2_dict['centroid']['z'], nodule2.candidate.centroid.z)
+        self.assertEqual(nodule2_dict['candidate']['centroid']['x'], nodule2.candidate.centroid.x)
+        self.assertEqual(nodule2_dict['candidate']['centroid']['y'], nodule2.candidate.centroid.y)
+        self.assertEqual(nodule2_dict['candidate']['centroid']['z'], nodule2.candidate.centroid.z)
 
     def test_update_nodule_lung_orientation(self):
         nodule = NoduleFactory()
