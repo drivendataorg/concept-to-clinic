@@ -7,8 +7,9 @@
             <template v-for="(candidate, index) in candidates">
               <div class="card">
                 <div class="card-header cursor-pointer" @click="toggleShow(index)">
-                  <p class="mb-0" :class="{ 'candidate-dismissed': candidate.review_result === REVIEW_RESULT.DISMISSED,
-                      'candidate-marked': candidate.review_result === REVIEW_RESULT.MARKED}">
+                  <p class="mb-0" :class="{ 'candidate-active': candidate.url === selectedCandidate.url,
+                     'candidate-inactive': candidate.url !== selectedCandidate.url}"
+                  >
                     <span class="candidate-title">
                       Candidate {{ index + 1 }}
                     </span>
@@ -167,11 +168,11 @@
 </script>
 
 <style lang="scss" scoped>
-  .candidate-dismissed {
+  .candidate-inactive {
     opacity: 0.5;
   }
 
-  .candidate-marked .candidate-title {
+  .candidate-active .candidate-title {
     font-weight: bold;
   }
 </style>
