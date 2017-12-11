@@ -92,7 +92,7 @@ class NoduleSerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
         read_only_fields = ('created',)
 
-    centroid = ImageLocationSerializer(source='candidate.centroid', read_only=True)
+    candidate = CandidateSerializer(read_only=True)
 
     def create(self, validated_data):
         return Nodule.objects.get_or_create(candidate=validated_data['candidate'])
