@@ -132,7 +132,6 @@
           candidate._saving = true
           candidate.review_result = result
           await this.$store.dispatch('updateCandidate', candidate)
-          this.$store.dispatch('refreshCase')
         }
       },
       async moveSelectedCandidate (x, y, z) {
@@ -149,7 +148,6 @@
 
         // send data to backend
         await this.$store.dispatch('updateCandidate', this.selectedCandidate)
-        this.$store.dispatch('refreshCase')
       },
       async addCandidate () {
         var newCandidate = {

@@ -24,11 +24,13 @@ const actions = {
     axios.post(this.getters.endpoints.cases, {uri: uri})
       .then((response) => { commit('SET_CASE_IN_PROGRESS', response.data) })
   },
-  refreshCase ({ dispatch }) {
+  refreshCaseInProgress ({ dispatch }) {
     dispatch('loadCase', store.state.caseInProgress)
   },
-  async updateCandidate ({ commit, dispatch }, candidate) {
-    await axios.patch(candidate.url, candidate)
+  updateCandidate ({ commit }, candidate) {
+    axios.patch(candidate.url, candidate).then((response) => {
+      if (response.status === 200) commit('UPDATE_SPECIFIC_CANDIDATE', response.data)
+    })
   },
   async addCandidateToCaseInProgress ({commit}, candidate) {
     await axios.post(this.getters.endpoints.candidates, candidate)
@@ -88,6 +90,12 @@ const store = new Vuex.Store({
     },
     ADD_CANDIDATE_TO_CASE_IN_PROGRESS (state, candidate) {
       state.caseInProgress.candidates.push(candidate)
+    },
+    UPDATE_SPECIFIC_CANDIDATE (state, updated) {
+      var candidates = state.caseInProgress.candidates
+      var index = candidates.findIndex(c => c.url === updated.url)
+      candidates.splice(index, 1, updated)
+      state.caseInProgress.candidates = candidates
     }
   },
   actions
