@@ -3,12 +3,10 @@ from backend.cases.factories import (
     CaseFactory,
     NoduleFactory
 )
-from backend.cases.models import (
-    Case,
-    Candidate
+from backend.images.factories import (
+    ImageLocationFactory,
+    ImageSeriesFactory
 )
-from backend.images.factories import ImageLocationFactory, ImageSeriesFactory
-from backend.images.models import ImageSeries, ImageLocation
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.urls import reverse
@@ -119,8 +117,8 @@ class SmokeTest(APITestCase):
         self.assertEquals(nodule.lung_orientation, enums.LungOrientation.NONE.value)
 
     def test_candidates_mark(self):
-        series = ImageSeries.objects.create(patient_id='42', series_instance_uid='13', uri='/images/1.dcm')
-        new_case = Case.objects.create(series=series)
+        series = ImageSeriesFactory(patient_id='42', series_instance_uid='13', uri='/images/1.dcm')
+        new_case = CaseFactory(series=series)
         candidate = CandidateFactory(case=new_case)
         url = reverse('candidate-detail', kwargs={'pk': candidate.pk})
         resp = self.client.patch(url, {'review_result': enums.CandidateReviewResult.MARKED.value})
@@ -129,8 +127,8 @@ class SmokeTest(APITestCase):
         self.assertEquals(candidate.review_result, enums.CandidateReviewResult.MARKED.value)
 
     def test_candidates_dismiss(self):
-        series = ImageSeries.objects.create(patient_id='42', series_instance_uid='13', uri='/images/1.dcm')
-        new_case = Case.objects.create(series=series)
+        series = ImageSeriesFactory(patient_id='42', series_instance_uid='13', uri='/images/1.dcm')
+        new_case = CaseFactory(series=series)
         candidate = CandidateFactory(case=new_case)
         url = reverse('candidate-detail', kwargs={'pk': candidate.pk})
         resp = self.client.patch(url, {'review_result': enums.CandidateReviewResult.DISMISSED.value})

@@ -1,9 +1,7 @@
-from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from rest_framework import serializers
-from rest_framework.exceptions import NotFound
 
-from backend.cases.enums import CandidateReviewResult
+from rest_framework import serializers
+
 from backend.cases.models import (
     Case,
     Candidate,
