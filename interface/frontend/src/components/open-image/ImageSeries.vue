@@ -4,7 +4,7 @@
     <template v-if="!readyToProceed">
       <div class="row">
         <div class="col-md-12" v-if="!caseInProgressIsValid">
-          <div class="alert alert-info" >
+          <div class="alert alert-info">
             <strong>Note:</strong> select an existing case or import imagery and create a new case to begin.
           </div>
         </div>
@@ -102,22 +102,21 @@
             <!-- navigation and preview -->
             <div class="row">
               <div class="col-md-8">
-              <tree-view class="item left"
-                 :model="directories"
-                 :parent="directories.name"
-                 :selectedSeries="selectedUri"
-                 v-on:selectSeries="selectSeries">
-              </tree-view>
+                <div class="float-right">
+                  <button class="btn btn-success" :disabled="!selectedUri" @click="startNewCase()">
+                    Start New Case
+                  </button>
+                </div>
+                <tree-view class="item left"
+                           :model="directories"
+                           :parent="directories.name"
+                           :selectedSeries="selectedUri"
+                           v-on:selectSeries="selectSeries">
+                </tree-view>
               </div>
               <div class="col-md-4">
                 <open-dicom class="right" :view="preview"></open-dicom>
               </div>
-            </div>
-
-            <div class="float-right">
-              <button class="btn btn-success" :disabled="!selectedUri" @click="startNewCase()">
-                Start New Case
-              </button>
             </div>
           </div>
         </div>
@@ -173,14 +172,7 @@
       // when the store gets the endpoints, pull the available cases.
       endpoints (val, oldVal) {
         this.$axios.get(this.$store.getters.endpoints.cases)
-          .then((response) => {
-            this.availableCases = response.data
-          })
-          .catch((error) => {
-            console.log(error)
-
-            // TODO: handle error
-          })
+          .then((response) => { this.availableCases = response.data })
       }
     },
     created () {
@@ -197,14 +189,17 @@
       })
     },
     filters: {
-      json (value) { return JSON.stringify(value, null, 2) }
+      json (value) {
+        return JSON.stringify(value, null, 2)
+      }
     },
     methods: {
       refreshAvailableCases () {
         console.log('refresh called')
         this.$axios.get(this.$store.getters.endpoints.cases)
-          .then((response) => { this.availableCases = response.data })
-          .catch((error) => { console.log(error) })
+          .then((response) => {
+            this.availableCases = response.data
+          })
       },
       selectCase (case_) {
         // Get the available data for the case that we have selected
@@ -244,9 +239,6 @@
       fetchAvailableImages () {
         this.$http.get('/api/images/available')
           .then((response) => { this.directories = response.body.directories })
-          .catch(() => {
-            // TODO: handle error
-          })
       }
     }
   }
@@ -256,6 +248,7 @@
   .left {
     float: left;
   }
+
   .right {
     float: right;
   }
