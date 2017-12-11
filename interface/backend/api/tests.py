@@ -3,6 +3,7 @@ import os
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
+from rest_framework.test import APITestCase
 
 from backend.api.serializers import (
     ImageFileSerializer,
@@ -20,8 +21,10 @@ from backend.cases.factories import (
     CandidateFactory
 )
 
+from backend.cases import enums
 
-class ViewTest(TestCase):
+
+class ViewTest(APITestCase):
     def test_nodule_list_viewset(self):
         # first try an endpoint without a nodule
         url = reverse('nodule-list')
@@ -89,6 +92,22 @@ class ViewTest(TestCase):
             'dicom_location': '/images/does_not_exist'
         })
         self.assertEqual(response.status_code, 404)
+
+    def test_candidates_mark(self):
+        candidate = CandidateFactory()
+
+        url = reverse('candidate-detail', kwargs={'pk': candidate.id})
+        response = self.client.patch(url, {'review_result': enums.CandidateReviewResult.MARKED.value})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_candidates_dismiss(self):
+        candidate = CandidateFactory()
+
+        url = reverse('candidate-detail', kwargs={'pk': candidate.id})
+        response = self.client.patch(url, {'review_result': enums.CandidateReviewResult.DISMISSED.value})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 class SerializerTest(TestCase):

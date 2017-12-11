@@ -69,7 +69,7 @@ class SmokeTest(APITestCase):
             'patient_id': '42',
             'series_instance_uid': '13',
             'uri': '/images/1.dcm',
-            'url': '/api/images/7/',
+            'url': '/api/images/9/',
             'images': [],
         }
         self.assertDictEqual(expected, response.data['series'])
