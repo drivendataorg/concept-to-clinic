@@ -1,11 +1,11 @@
 from backend.cases.factories import (
     CandidateFactory,
     CaseFactory,
-    NoduleFactory
+    NoduleFactory,
 )
 from backend.images.factories import (
     ImageLocationFactory,
-    ImageSeriesFactory
+    ImageSeriesFactory,
 )
 from rest_framework import status
 from rest_framework.test import APITestCase
