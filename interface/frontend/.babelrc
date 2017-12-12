@@ -12,7 +12,12 @@
   "env": {
     "test": {
       "presets": ["env", "stage-2"],
-      "sourceMaps": "inline"
+      "sourceMaps": "inline",
+      "ignore": [
+        "*.png",
+        "*.jpg",
+        "*.jpeg"
+      ]
     }
   }
 }
