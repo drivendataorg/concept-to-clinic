@@ -38,6 +38,7 @@
       "src/**/*.{js,vue}"
     ],
     "require": [
+      "babel-register",
       "./test/unit/index.js"
     ],
     "babel": "inherit"

@@ -13,11 +13,7 @@
     "test": {
       "presets": ["env", "stage-2"],
       "sourceMaps": "inline",
-      "ignore": [
-        "*.png",
-        "*.jpg",
-        "*.jpeg"
-      ]
+      "ignore": ["src/assets/**/*.*"]
     }
   }
 }
