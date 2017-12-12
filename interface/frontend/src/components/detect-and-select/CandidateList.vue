@@ -152,7 +152,7 @@
       },
       async addCandidate () {
         var newCandidate = {
-          centroid: {x: 5, y: 5, z: 5},
+          centroid: {x: 5, y: 5, z: 0},
           probability_concerning: null,
           case: this.$store.getters.caseInProgress.url,
           added_by_hand: true,
