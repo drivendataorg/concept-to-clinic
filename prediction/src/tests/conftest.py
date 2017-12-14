@@ -13,7 +13,29 @@ def dicom_path(scope='session'):
     dir1 = path.join(Config.SMALL_DICOM_PATHS, 'LIDC-IDRI-0001')
     dir2 = '1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178'
     dir3 = '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192'
-    yield '{}/{}/{}'.format(dir1, dir2, dir3)
+    yield path.join(dir1, dir2, dir3)
+
+
+@pytest.fixture
+def mhd_path(scope='session'):
+    dir1 = path.join(Config.SMALL_DICOM_PATHS, 'LUNA-0001')
+    dir2 = '1.3.6.1.4.1.14519.5.2.1.6279.6001.102133688497886810253331438797'
+    yield path.join(dir1, dir2)
+
+
+@pytest.fixture
+def full_dicom_path(scope='session'):
+    dir1 = path.join(Config.FULL_DICOM_PATHS, 'LIDC-IDRI-0001')
+    dir2 = '1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178'
+    dir3 = '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192'
+    yield path.join(dir1, dir2, dir3)
+
+
+@pytest.fixture
+def full_mhd_path(scope='session'):
+    dir1 = path.join(Config.FULL_DICOM_PATHS, 'LUNA-0001')
+    dir2 = '1.3.6.1.4.1.14519.5.2.1.6279.6001.102133688497886810253331438797'
+    yield path.join(dir1, dir2)
 
 
 @pytest.fixture

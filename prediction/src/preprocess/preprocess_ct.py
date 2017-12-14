@@ -35,7 +35,7 @@ class Params:
     """
 
     def __init__(self, clip_lower=None, clip_upper=None, spacing=None, order=0,  # noqa: C901
-                 ndim=3, min_max_normalize=False, scale=None, dtype=None):
+                 ndim=3, min_max_normalize=False, scale=None, dtype=None, to_hu=False):
         if not isinstance(clip_lower, (int, float)) and (clip_lower is not None):
             raise TypeError('The clip_lower should be int or float')
         if not isinstance(clip_upper, (int, float)) and (clip_upper is not None):
@@ -72,6 +72,10 @@ class Params:
             raise ValueError('The dtype should be a valid key from `np.typeDict`')
         self.dtype = dtype
 
+        if not isinstance(to_hu, (bool, int)) and (to_hu is not None):
+            raise TypeError('The to_hu should be bool or int')
+        self.to_hu = to_hu
+
 
 class PreprocessCT(Params):
     """Pre-process the CT data.
@@ -105,9 +109,18 @@ class PreprocessCT(Params):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def __call__(self, voxel_data, meta):
+    def __call__(self, voxel_data, meta):  # noqa: C901
         if not isinstance(meta, load_ct.MetaData):
             meta = load_ct.MetaData(meta)
+
+        if self.to_hu:
+            voxel_data[voxel_data == voxel_data[0, 0, 0]] = 0
+
+            if meta.slope != 1:
+                voxel_data = meta.slope * voxel_data.astype(np.float64)
+                voxel_data = voxel_data.astype(np.int16)
+
+            voxel_data += np.int16(meta.intercept)
 
         # Instead of np.clip usage in order to avoid np.max | np.min calculation in case of None
         if self.clip_lower is not None:
