@@ -69,7 +69,7 @@
                  :value='nodule.condition'></olp>
             </div>
             <div class="nodule-image m-2">
-              <img :src="nodule.image" alt="Nodule Image">
+              <img src="../assets/images/sample-nodule.png" alt="Nodule Image">
             </div>
           </div>
         </div>

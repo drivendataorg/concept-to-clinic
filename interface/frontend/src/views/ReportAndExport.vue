@@ -33,8 +33,6 @@ import RSNAStandardTemplate from '../components/report-and-export/RSNAStandardTe
 import ACRLungRADFindings from '../components/report-and-export/ACRLungRADFindings'
 import Export3DImagery from '../components/report-and-export/Export3DImagery'
 
-import SampleRightNoduleImage from '../assets/images/sample-nodule.png'
-
 export default {
   components: {
     OutlineNav,
@@ -91,7 +89,7 @@ export default {
             solidity: this.$constants.SOLIDITY.SOLID,
             lung_orientation: this.$constants.LUNG_ORIENTATION.LEFT,
             condition: this.$constants.CONDITION.INCREASED,
-            image: SampleRightNoduleImage
+            image: null
           }],
           lungs: {
             copd: this.$constants.SEVERITY.SEVERE,
