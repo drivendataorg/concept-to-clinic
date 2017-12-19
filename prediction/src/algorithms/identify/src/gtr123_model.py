@@ -484,8 +484,10 @@ def predict(ct_path, model_path=None):
         INDENTIFY_DIR = path.join(Config.ALGOS_DIR, 'identify')
         model_path = path.join(INDENTIFY_DIR, 'assets', 'dsb2017_detector.ckpt')
 
-    ct_array, meta = load_ct.load_ct(ct_path)
+    filenames, filedata = load_ct.load_ct(ct_path)
+    ct_array, meta = filedata
     meta = load_ct.MetaData(meta)
+    meta.spacing = np.roll(meta.spacing, 1)
     spacing = np.array(meta.spacing)
     masked_image, mask = filter_lungs(ct_array)
 
@@ -495,7 +497,7 @@ def predict(ct_path, model_path=None):
 
     if torch.cuda.is_available():
         net = torch.nn.DataParallel(net).cuda()
-
+    
     split_comber = SplitComb(side_len=int(144), margin=32, max_stride=16, stride=4, pad_value=170)
 
     # We have to use small batches until the next release of PyTorch, as bigger ones will segfault for CPU
@@ -522,12 +524,18 @@ def predict(ct_path, model_path=None):
 
     results = np.concatenate(results, 0)
     results = split_comber.combine(results, nzhw=nzhw)
-    pbb = GetPBB()
+    
     # First index of proposals is the propabillity. Then x, y z, and radius
+    # import scipy
+    # unzoom_fctr = np.concatenate((1 / spacing, [1, 1]))
+    # results = scipy.ndimage.interpolation.zoom(results, unzoom_fctr, order=1)
+    pbb = GetPBB()
     proposals, _ = pbb(results, ismask=True)
-
+    
     # proposals = proposals[proposals[:,4] < 40]
     proposals = nms(proposals)
+
+    
     # Filter out proposals outside the actual lung
     # prop_int = proposals[:, 1:4].astype(np.int32)
     # wrong = [imgs[0, x[0], x[1], x[2]] > 180 for x in prop_int]
@@ -539,5 +547,8 @@ def predict(ct_path, model_path=None):
     # proposals = proposals[proposals[:,0] > 0.5]
 
     # Rescale back to image space coordinates
+    proposals[:, 1:4] = proposals[:, 1:4].astype(int)
     proposals[:, 1:4] /= spacing[np.newaxis]
-    return [{"x": int(p[3]), "y": int(p[2]), "z": int(p[1]), "p_nodule": float(p[0])} for p in proposals]
+    
+#    return [{"x": int(p[3]), "y": int(p[2]), "z": int(p[1]), "p_nodule": float(p[0]), 'filename': filenames[int(p[1])]} for p in proposals]
+    return mask, meta, filenames, [{"x": int(p[3]), "y": int(p[2]), "z": int(p[1]), "r": int(p[4]), "p_nodule": float(p[0])} for p in proposals]

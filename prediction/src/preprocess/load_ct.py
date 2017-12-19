@@ -1,3 +1,4 @@
+from collections import Iterable
 import os
 from glob import glob
 
@@ -10,7 +11,7 @@ from .errors import EmptyDicomSeriesException
 
 def read_dicom_files(file_pattern):
     try:
-        files = [dicom.read_file(fn) for fn in glob(file_pattern)]
+        files = [(fn, dicom.read_file(fn)) for fn in glob(file_pattern)]
 
         if len(files) == 0:
             raise EmptyDicomSeriesException
@@ -18,7 +19,7 @@ def read_dicom_files(file_pattern):
         print('Exception reading *.dcm-files: ', e)
         raise e
 
-    return sorted(files, key=lambda x: float(x.SliceLocation))
+    return sorted(files, key=lambda x: float(x[1].SliceLocation))
 
 
 def _extract_voxel_data(datasets):
@@ -31,6 +32,8 @@ def _extract_voxel_data(datasets):
         print('Exception extracting voxel data: ', e)
         raise dicom_numpy.DicomImportException('Invalid dicom.dataset.Dataset among datasets! ', e)
 
+    print(f'before: {voxel_ndarray.shape}')
+    print(f'after: {voxel_ndarray.T.shape}')
     return voxel_ndarray.T
 
 
@@ -47,13 +50,13 @@ def load_dicom(path, voxel=True):
     """
 
     file_pattern = os.path.join(path, '*.dcm')
-    meta = read_dicom_files(file_pattern)
+    filenames, meta = zip(*read_dicom_files(file_pattern))
 
     if voxel:
         voxel_data = _extract_voxel_data(meta)
         meta = [voxel_data, meta]
 
-    return meta
+    return filenames, meta
 
 
 def load_metaimage(path, voxel=True):
@@ -100,14 +103,14 @@ def load_ct(path, voxel=True):
     mhd_pattern = next(filter(lambda x: x[-4:].lower() == '.mhd', mhd_pattern), None)
 
     if dicom_pattern:
-        meta = load_dicom(path, voxel=voxel)
+        filenames, meta = load_dicom(path, voxel=voxel)
     elif mhd_pattern:
         meta = load_metaimage(mhd_pattern, voxel=voxel)
     else:
         message = "Neither path {} nor {} contain any .mhd or .dcm files"
         raise ValueError(message.format(dicom_pattern, mhd_pattern))
 
-    return meta
+    return filenames, meta
 
 
 class MetaData:
@@ -162,7 +165,7 @@ class MetaData:
 
         dicom_meta = False
 
-        if isinstance(self.meta, list) and self.meta:
+        if isinstance(self.meta, Iterable) and self.meta:
             dicom_meta = all(isinstance(_slice, dicom.dataset.FileDataset) for _slice in meta)
 
         mhd_meta = isinstance(self.meta, SimpleITK.SimpleITK.Image)
