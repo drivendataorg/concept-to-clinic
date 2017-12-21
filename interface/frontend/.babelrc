@@ -12,8 +12,7 @@
   "env": {
     "test": {
       "presets": ["env", "stage-2"],
-      "sourceMaps": "inline",
-      "ignore": ["src/assets/**/*.*"]
+      "sourceMaps": "inline"
     }
   }
 }
