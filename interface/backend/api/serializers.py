@@ -1,4 +1,5 @@
 from django.urls import reverse
+
 from rest_framework import serializers
 
 from backend.cases.models import (
@@ -49,7 +50,7 @@ class ImageSeriesSerializer(serializers.HyperlinkedModelSerializer):
 class ImageLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageLocation
-        fields = '__all__'
+        fields = ('x', 'y', 'z')
 
 
 class CandidateSerializer(serializers.HyperlinkedModelSerializer):
@@ -61,11 +62,26 @@ class CandidateSerializer(serializers.HyperlinkedModelSerializer):
     centroid = ImageLocationSerializer()
 
     def create(self, validated_data):
-        case_data = validated_data.pop('case')
-        centroid_data = validated_data.pop('centroid')
-        image_location = ImageLocation.objects.create(**centroid_data)
-        candidate = Candidate.objects.create(case=case_data, centroid=image_location, **validated_data)
+        case = validated_data.pop('case', None)
+        centroid_data = validated_data.pop('centroid', None)
+        image_location_serializer = ImageLocationSerializer(data=centroid_data)
+        image_location_serializer.is_valid(raise_exception=True)
+        image_location = image_location_serializer.save()
+        candidate = Candidate.objects.create(
+            case=case,
+            centroid=image_location,
+            **validated_data,
+        )
         return candidate
+
+    def update(self, instance, validated_data):
+        centroid_data = validated_data.pop('centroid', None)
+        if centroid_data is not None:
+            instance.centroid.x = centroid_data.get('x', instance.centroid.x)
+            instance.centroid.y = centroid_data.get('y', instance.centroid.y)
+            instance.centroid.z = centroid_data.get('z', instance.centroid.z)
+            instance.centroid.save()
+        return super().update(instance, validated_data)
 
 
 class NoduleSerializer(serializers.HyperlinkedModelSerializer):
@@ -74,7 +90,7 @@ class NoduleSerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
         read_only_fields = ('created',)
 
-    centroid = ImageLocationSerializer(source='candidate.centroid', read_only=True)
+    candidate = CandidateSerializer(read_only=True)
 
     def create(self, validated_data):
         return Nodule.objects.get_or_create(candidate=validated_data['candidate'])
@@ -92,6 +108,7 @@ class CaseSerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
         read_only_fields = ('created',)
 
+    pk = serializers.ReadOnlyField()
     series = ImageSeriesSerializer()
     candidates = CandidateSerializer(many=True, read_only=True)
     nodules = NoduleSerializer(many=True, read_only=True)

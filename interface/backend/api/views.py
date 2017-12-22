@@ -1,4 +1,3 @@
-import json
 import mimetypes
 import os
 
@@ -200,36 +199,6 @@ class ImageAvailableApiView(APIView):
         """
         tree = self.walk(settings.DATASOURCE_DIR)
         return Response({'directories': tree})
-
-
-@api_view(['GET'])
-def candidates_info(request):
-    all_candidates = Candidate.objects.prefetch_related('case__series').all()
-    serialized_candidates = serializers.CandidateSerializer(all_candidates,
-                                                            context={'request': None},
-                                                            many=True).data
-
-    return Response(serialized_candidates)
-
-
-@api_view(['POST'])
-def update_candidate_location(request, candidate_id):
-    try:
-        request_body = json.loads(request.body)
-        x = request_body['x']
-        y = request_body['y']
-        z = request_body['z']
-    except Exception as e:
-        return Response({'response': "An error occurred: {}".format(e)}, 500)
-
-    # find the candidate and update the centroid location
-    candidate = get_object_or_404(Candidate, pk=candidate_id)
-    candidate.centroid.x = x
-    candidate.centroid.y = y
-    candidate.centroid.z = z
-    candidate.centroid.save()
-    serialized_candidate = serializers.CandidateSerializer(candidate, context={'request': None}).data
-    return Response(serialized_candidate)
 
 
 @api_view(['GET'])

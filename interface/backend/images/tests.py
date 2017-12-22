@@ -52,7 +52,6 @@ class SmokeTest(TestCase):
             with self.assertLogs(level='WARN'):
                 image_series, created = ImageSeries.get_or_create(uri)
         except AssertionError as e:
-            print(str(e))
             self.assertEqual(str(e), "no logs of level WARNING or higher triggered on root")
 
         image = image_series.images.all()[0]
@@ -159,7 +158,6 @@ class SmokeTest(TestCase):
                 img_file = ImageFile(path=path, series=image_series)
                 img_file.save()
         except AssertionError as e:
-            print(str(e))
             self.assertEqual(str(e), "no logs of level WARNING or higher triggered on root")
 
         self.assertIsNone(img_file.rows)

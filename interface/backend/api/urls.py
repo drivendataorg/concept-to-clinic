@@ -8,8 +8,6 @@ from backend.api.views import (
     ImageAvailableApiView,
     ImagePreviewApiView,
     case_report,
-    update_candidate_location,
-    candidates_info
 )
 from django.conf.urls import (
     include,
@@ -60,8 +58,6 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^images/available$', ImageAvailableApiView.as_view(), name='images-available'),
     url(r'^images/preview$', ImagePreviewApiView.as_view(), name='images-preview'),
-    url(r'^candidates-info$', candidates_info, name='candidates-info'),
-    url(r'^candidates/(?P<candidate_id>\d+)/move$', update_candidate_location, name='update-candidate-location'),
 ]
 
 # Support different suffixes

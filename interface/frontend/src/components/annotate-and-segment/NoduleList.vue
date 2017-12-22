@@ -49,8 +49,8 @@ export default {
     },
     areaCoordinates () {
       // needs to be implemented, for now draw a 40 x 40 square at the centroid
-      var x = this.selectedNodule.centroid.x
-      var y = this.selectedNodule.centroid.y
+      var x = this.selectedNodule.candidate.centroid.x
+      var y = this.selectedNodule.candidate.centroid.y
 
       return [
         [x - 10, y - 10],
@@ -65,7 +65,7 @@ export default {
         prefixCS: ':/',
         prefixUrl: '/api/images/preview?dicom_location=',
         paths: this.$store.getters.imagePaths,
-        sliceIndex: this.nodules[this.selectedIndex].centroid.z || 0
+        sliceIndex: this.nodules[this.selectedIndex].candidate.centroid.z || 0
       }
     }
   },

@@ -5,7 +5,7 @@
     </a>
     <hr/>
 
-    <concern-slider v-model="concerning" :predictedValue="nodule.predicted_concerning"></concern-slider>
+    <concern-slider v-model="concerning" :predictedValue="(nodule.candidate.probability_concerning * 100).toFixed(1)"></concern-slider>
 
     <hr/>
 

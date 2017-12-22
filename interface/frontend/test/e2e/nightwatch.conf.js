@@ -7,6 +7,7 @@ module.exports = {
   output_folder: 'test/e2e/reports',
   custom_assertions_path: ['test/e2e/custom-assertions'],
 
+
   test_settings: {
     default: {
       launch_url: 'http://vue',
@@ -27,7 +28,8 @@ module.exports = {
       desiredCapabilities: {
         browserName: 'chrome',
         javascriptEnabled: true,
-        acceptSslCerts: true
+        acceptSslCerts: true,
+        chromeOptions: { args: [ '--headless', '--no-sandbox'] }
       }
     },
 

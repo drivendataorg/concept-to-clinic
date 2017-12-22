@@ -146,7 +146,8 @@ class Candidate(models.Model):
     created = models.DateTimeField(default=timezone.now)
     case = models.ForeignKey(Case, on_delete=models.CASCADE, related_name='candidates')
     centroid = models.OneToOneField('images.ImageLocation', on_delete=models.CASCADE)
-    probability_concerning = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
+    probability_concerning = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(1.0)],
+                                               null=True)
     review_result = models.IntegerField(choices=enums.format_enum(enums.CandidateReviewResult),
                                         default=enums.CandidateReviewResult.NONE)
     added_by_hand = models.BooleanField(default=False)

@@ -1,13 +1,12 @@
 from backend.cases.factories import (
     CandidateFactory,
     CaseFactory,
-    NoduleFactory
+    NoduleFactory,
 )
-from backend.cases.models import (
-    Case,
-    Candidate
+from backend.images.factories import (
+    ImageLocationFactory,
+    ImageSeriesFactory,
 )
-from backend.images.models import ImageSeries, ImageLocation
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.urls import reverse
@@ -54,12 +53,12 @@ class SmokeTest(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-        series = ImageSeries.objects.create(patient_id='42', series_instance_uid='13', uri='/images/1.dcm')
-        new_case = Case.objects.create(series=series)
-        centroid1 = ImageLocation.objects.create(series=series, x=1, y=2, z=3)
-        candidate1 = Candidate.objects.create(case=new_case, centroid=centroid1, probability_concerning=0.8)
-        centroid2 = ImageLocation.objects.create(series=series, x=10, y=20, z=30)
-        candidate2 = Candidate.objects.create(case=new_case, centroid=centroid2, probability_concerning=0.98)
+        series = ImageSeriesFactory(patient_id='42', series_instance_uid='13', uri='/images/1.dcm')
+        new_case = CaseFactory(series=series)
+        centroid1 = ImageLocationFactory(x=1, y=2, z=3)
+        candidate1 = CandidateFactory(case=new_case, centroid=centroid1, probability_concerning=0.8)
+        centroid2 = ImageLocationFactory(x=10, y=20, z=30)
+        candidate2 = CandidateFactory(case=new_case, centroid=centroid2, probability_concerning=0.98)
         nodule1, _ = candidate1.get_or_create_nodule()
         nodule2, _ = candidate2.get_or_create_nodule()
 
@@ -87,14 +86,14 @@ class SmokeTest(APITestCase):
         self.assertEqual(candidate2_dict['centroid']['z'], nodule2.candidate.centroid.z)
 
         nodule1_dict = response.data['nodules'][0]
-        self.assertEqual(nodule1_dict['centroid']['x'], nodule1.candidate.centroid.x)
-        self.assertEqual(nodule1_dict['centroid']['y'], nodule1.candidate.centroid.y)
-        self.assertEqual(nodule1_dict['centroid']['z'], nodule1.candidate.centroid.z)
+        self.assertEqual(nodule1_dict['candidate']['centroid']['x'], nodule1.candidate.centroid.x)
+        self.assertEqual(nodule1_dict['candidate']['centroid']['y'], nodule1.candidate.centroid.y)
+        self.assertEqual(nodule1_dict['candidate']['centroid']['z'], nodule1.candidate.centroid.z)
 
         nodule2_dict = response.data['nodules'][1]
-        self.assertEqual(nodule2_dict['centroid']['x'], nodule2.candidate.centroid.x)
-        self.assertEqual(nodule2_dict['centroid']['y'], nodule2.candidate.centroid.y)
-        self.assertEqual(nodule2_dict['centroid']['z'], nodule2.candidate.centroid.z)
+        self.assertEqual(nodule2_dict['candidate']['centroid']['x'], nodule2.candidate.centroid.x)
+        self.assertEqual(nodule2_dict['candidate']['centroid']['y'], nodule2.candidate.centroid.y)
+        self.assertEqual(nodule2_dict['candidate']['centroid']['z'], nodule2.candidate.centroid.z)
 
     def test_update_nodule_lung_orientation(self):
         nodule = NoduleFactory()
@@ -118,8 +117,8 @@ class SmokeTest(APITestCase):
         self.assertEquals(nodule.lung_orientation, enums.LungOrientation.NONE.value)
 
     def test_candidates_mark(self):
-        series = ImageSeries.objects.create(patient_id='42', series_instance_uid='13', uri='/images/1.dcm')
-        new_case = Case.objects.create(series=series)
+        series = ImageSeriesFactory(patient_id='42', series_instance_uid='13', uri='/images/1.dcm')
+        new_case = CaseFactory(series=series)
         candidate = CandidateFactory(case=new_case)
         url = reverse('candidate-detail', kwargs={'pk': candidate.pk})
         resp = self.client.patch(url, {'review_result': enums.CandidateReviewResult.MARKED.value})
@@ -128,8 +127,8 @@ class SmokeTest(APITestCase):
         self.assertEquals(candidate.review_result, enums.CandidateReviewResult.MARKED.value)
 
     def test_candidates_dismiss(self):
-        series = ImageSeries.objects.create(patient_id='42', series_instance_uid='13', uri='/images/1.dcm')
-        new_case = Case.objects.create(series=series)
+        series = ImageSeriesFactory(patient_id='42', series_instance_uid='13', uri='/images/1.dcm')
+        new_case = CaseFactory(series=series)
         candidate = CandidateFactory(case=new_case)
         url = reverse('candidate-detail', kwargs={'pk': candidate.pk})
         resp = self.client.patch(url, {'review_result': enums.CandidateReviewResult.DISMISSED.value})

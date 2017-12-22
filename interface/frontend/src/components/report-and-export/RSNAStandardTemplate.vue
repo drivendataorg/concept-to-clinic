@@ -1,46 +1,31 @@
 <template>
-<div class="rsna-standard-template-container">
-  <header class="bg-inverse">
-    <h1>
-      RSNA Standard Template
-    </h1>
-
-    <label class="custom-control custom-checkbox">
-      <input v-model="showFancyTemplate" type="checkbox" class="custom-control-input">
-      <span class="custom-control-indicator"></span>
-      <span class="custom-control-description">Eye Candy</span>
-    </label>
-
-    <button class="btn btn-lg btn-warning"
-      @click='exportRSNA()'
-      >
-      Export
-    </button>
-  </header>
-
-  <rsna-standard-fancy v-if="showFancyTemplate" :rsna="rsna"></rsna-standard-fancy>
-  <div v-else>
-    <section id="technical-parameters">
-      <h2>Technical parameters</h2>
-      <article>
-        <!-- {{technical}} -->
-        <olp label='kVp' :value='technical.kVp.value'></olp>
-        <olp label='mA' :value='technical.mA.value'></olp>
-        <olp label='DLP' :value='technical.DLP.value + " " + technical.DLP.unit'></olp>
-      </article>
-    </section>
-
-    <section id="clinical-information">
-      <h2>Clinical information</h2>
-      <article>
-        <!-- {{clinical}} -->
-        <olp label='Screening visit' :value='clinical.visit'></olp>
-        <p>
-          {{ clinical.reason }}
-        </p>
-      </article>
-    </section>
+  <div class="rsna-standard-template-container">
+  <div class="float-right">
+    <button class="btn btn-lg btn-warning" @click='exportRSNA()'>Export</button>
   </div>
+  <h1>
+    RSNA Standard Template
+  </h1>
+  <hr>
+
+  <section id="technical-parameters">
+    <h2>Technical parameters</h2>
+    <article>
+      <olp label='kVp' :value='technical.kVp.value'></olp>
+      <olp label='mA' :value='technical.mA.value'></olp>
+      <olp label='DLP' :value='technical.DLP.value + " " + technical.DLP.unit'></olp>
+    </article>
+  </section>
+
+  <section id="clinical-information">
+    <h2>Clinical information</h2>
+    <article>
+      <olp label='Screening visit' :value='clinical.visit'></olp>
+      <p>
+        {{ clinical.reason }}
+      </p>
+    </article>
+  </section>
 
   <section id="findings">
     <h2>Findings</h2>
@@ -63,8 +48,12 @@
       </p>
 
       <div class="nodule-list" v-else>
-        <nodule v-for="(nodule, index) in findings.lungNodules" :nodule="nodule" :index="index" :key="index">
-          <div class="nodule-info-container" slot="add-on-editor">
+
+        <div class="card" v-for="(nodule, index) in findings.lungNodules" :nodule="nodule" :index="index" :key="index">
+          <div class="card-header">
+            <h3>Nodule {{ index + 1}}</h3>
+          </div>
+          <div class="nodule-info-container">
             <!-- {{ nodule }} -->
             <div class="nodule-info">
               <olp label='Position'
@@ -79,11 +68,12 @@
                 constant-key="CONDITION_STRINGS"
                  :value='nodule.condition'></olp>
             </div>
-            <div class="nodule-image">
-              <img :src="nodule.image" alt="Nodule Image">
+            <div class="nodule-image m-2">
+              <img src="../../assets/images/sample-nodule.png" alt="Nodule Image">
             </div>
           </div>
-        </nodule>
+        </div>
+
       </div>
 
     </article>
@@ -192,8 +182,6 @@
 </template>
 
 <script>
-import RSNAStandardTemplateFancy from './RSNAStandardTemplateFancy'
-
 import OneLineParagraph from './OneLineParagraph'
 
 import Nodule from '../annotate-and-segment/Nodule'
@@ -202,13 +190,11 @@ import JSPDF from 'jspdf'
 
 export default {
   components: {
-    'rsna-standard-fancy': RSNAStandardTemplateFancy,
     'olp': OneLineParagraph,
     Nodule
   },
   data () {
     return {
-      showFancyTemplate: false,
       ...this.rsna
     }
   },
@@ -243,34 +229,8 @@ export default {
 
 <style lang="scss" scoped>
 .rsna-standard-template-container {
-
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    padding-left: 2em;
-    font-weight: normal;
-    letter-spacing: 2px;
-		margin-bottom: 10px;
-
-    padding-right: 10%;
-
-    h1 {
-      font-size: 2.5em;
-
-      line-height: 2em;
-      margin: 0;
-    }
-  }
-
   .custom-control {
     margin: 0;
-  }
-
-  h2 {
-    padding-top: 0.5em;
-    margin-bottom: 1em;
   }
 
   section {
