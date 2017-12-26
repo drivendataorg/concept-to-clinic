@@ -24,10 +24,11 @@
 
   const cornerstone = require('cornerstone-core')
   const cornerstoneTools = require('cornerstone-tools')
-  const jquery = require('jquery-slim')
+  const cornerstoneMath = require('cornerstone-math')
   const _ = require('lodash')
+
   cornerstoneTools.external.cornerstone = cornerstone
-  cornerstoneTools.external.$ = jquery
+  cornerstoneTools.external.cornerstoneMath = cornerstoneMath
 
   export default {
     components: {AreaSelect, NoduleMarker},
@@ -128,7 +129,7 @@
         if (_.isEmpty(dicom)) return ''
         else {
           cornerstone.registerImageLoader(this.view.type, () => {
-            return new Promise((resolve) => { resolve(dicom) })
+            return {promise: new Promise((resolve) => { resolve(dicom) })}
           })
           const image = await cornerstone.loadAndCacheImage(dicom.imageId)
 
