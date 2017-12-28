@@ -25,7 +25,6 @@
   const cornerstone = require('cornerstone-core')
   const cornerstoneTools = require('cornerstone-tools')
   const cornerstoneMath = require('cornerstone-math')
-  const _ = require('lodash')
 
   cornerstoneTools.external.cornerstone = cornerstone
   cornerstoneTools.external.cornerstoneMath = cornerstoneMath
@@ -98,7 +97,7 @@
       },
       async dicom () {
         let info = await this.info
-        if (!info || !info.data) return {}
+        if (!info || !info.data) return null
         else {
           info = info.data
           this.base64data = info.image
@@ -126,7 +125,7 @@
       async display () {
         const element = this.$refs.DICOM
         const dicom = await this.dicom
-        if (_.isEmpty(dicom)) return ''
+        if (!dicom) return ''
         else {
           cornerstone.registerImageLoader(this.view.type, () => {
             return {promise: new Promise((resolve) => { resolve(dicom) })}
