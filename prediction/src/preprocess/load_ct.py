@@ -139,6 +139,12 @@ class MetaData:
         # Taking into account zyx order
         return [slice_thickness, spacing[0], spacing[1]]
 
+    def extract_slope_dcm(self):
+        return float(self.meta[0].RescaleSlope)
+
+    def extract_intercept_dcm(self):
+        return float(self.meta[0].RescaleIntercept)
+
     def extract_spacing_mhd(self):
         # the default axes order which is used is: (z, y, x)
         return self.meta.GetSpacing()[::-1]
@@ -171,10 +177,16 @@ class MetaData:
             # list of methods for DICOM meta
             self.spacing = self.extract_spacing_dcm()
             self.origin = self.extract_origin_dicom()
+            self.slope = self.extract_slope_dcm()
+            self.intercept = self.extract_intercept_dcm()
         elif mhd_meta:
             # list of methods for MetaImage meta
             self.spacing = self.extract_spacing_mhd()
             self.origin = self.extract_origin_mhd()
+            # MetaImage files are read and written directly as float values
+            self.slope = 1.
+            self.intercept = 0.
+
         elif isinstance(self.meta, MetaData):
             self.non_copy_constructor(meta)
         else:
