@@ -88,12 +88,14 @@
             } else {
               hola = await this.$axios.get(this.view.prefixUrl + this.view.paths[this.stack.currentImageIdIndex])
             }
+
             this.pool[this.stack.currentImageIdIndex] = hola
-            return hola
           } else {
             console.log('No path in paths for index ', this.stack.currentImageIdIndex)
           }
         }
+
+        return this.pool[this.stack.currentImageIdIndex]
       },
       async dicom () {
         let info = await this.info
