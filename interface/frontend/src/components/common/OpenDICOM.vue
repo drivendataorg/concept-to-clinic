@@ -6,7 +6,7 @@
         class="DICOM-range"
         type="range"
         min="0"
-        v-bind:max="view.paths.length"
+        v-bind:max="view.paths.length - 1"
         v-bind:value="stack.currentImageIdIndex"
         v-on:input="rangeSlice($event)"
       >
