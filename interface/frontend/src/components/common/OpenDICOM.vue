@@ -12,9 +12,11 @@
       >
       slice index: <b>{{ stack.currentImageIdIndex }} </b>
     </div>
-    <div class="DICOM" ref="DICOM"></div>
-    <nodule-marker :marker="marker" :sliceIndex="stack.currentImageIdIndex" :zoomRate="zoomRate" :offsetX="offsetX" :offsetY="offsetY"></nodule-marker>
-    <area-select @selection-changed="areaSelectChange" v-if="showAreaSelect" :areaCoordinates="areaCoordinates"></area-select>
+    <div class="DICOM" oncontextmenu="return false" ref="DICOM"></div>
+    <nodule-marker :marker="marker" :sliceIndex="stack.currentImageIdIndex"
+                   :translation="translation"></nodule-marker>
+    <area-select @selection-changed="areaSelectChange" v-if="showAreaSelect"
+                 :areaCoordinates="areaCoordinates"></area-select>
   </div>
 </template>
 
@@ -64,7 +66,9 @@
         offsetY: 0,
 
         base64data: null,
-        pool: []
+        pool: [],
+        translation: null,
+        csViewport: null
       }
     },
     watch: {
@@ -133,12 +137,15 @@
             return {promise: new Promise((resolve) => { resolve(dicom) })}
           })
           const image = await cornerstone.loadAndCacheImage(dicom.imageId)
+          cornerstone.displayImage(element, image, this.csViewport)
 
-          // console.log(element)
+          // default resize only when there is no custom zoom\pan
+          if (!this.csViewport) {
+            cornerstone.resize(element, true)
+          }
 
-          // cornerstone.enable(this.$refs.DICOM)
-          cornerstone.displayImage(element, image)
-          cornerstone.resize(element, true)
+          element.addEventListener('cornerstoneimagerendered', this.onImageRendered)
+
           return image
         }
       }
@@ -147,6 +154,25 @@
       this.updateViewer()
     },
     methods: {
+      onImageRendered (e) {
+        const img = cornerstone.getImage(e.target)
+        const imgWidth = img.width
+        const imgHeight = img.height
+        const csViewport = cornerstone.getViewport(e.target)
+
+        // cornerstone tool gives us the offset of the center of DICOM image
+        // this is pretty useless for us, so we have to convert it to the offset of the top-left corner
+        // top-left corner offset caused by zoom equals = - deltaWidth / 2
+        // translation.x, .y gives us unscaled panning offset
+        this.translation = {
+          scale: csViewport.scale,
+          offsetX: csViewport.translation.x * csViewport.scale - (imgWidth * csViewport.scale - imgWidth) / 2,
+          offsetY: csViewport.translation.y * csViewport.scale - (imgHeight * csViewport.scale - imgHeight) / 2
+        }
+
+        // saving viewport to preserve it when navigating through slices
+        this.csViewport = csViewport
+      },
       areaSelectChange (newCoords) {
         console.log('areaSelectChanged', JSON.stringify(newCoords))
       },
@@ -159,9 +185,14 @@
         } catch (e) {
           cornerstone.enable(element)
           cornerstoneTools.mouseInput.enable(element)
+          cornerstoneTools.mouseWheelInput.enable(element)
+
           cornerstoneTools.addStackStateManager(element, ['stack'])
           cornerstoneTools.addToolState(element, 'stack', this.stack)
-          cornerstoneTools.stackScroll.activate(element, 1)
+
+          cornerstoneTools.zoomWheel.activate(element) // zoom assigned to mouse wheel
+          cornerstoneTools.wwwc.activate(element, 4) // ww\wc assigned to right mouse button
+          cornerstoneTools.pan.activate(element, 1) // pan assigned to left mouse button
         }
       },
       updateViewer () {
