@@ -1,5 +1,5 @@
 <template>
-  <div class="DICOM-container" style="width: 100%">
+  <div class="DICOM-container">
     <div class="DICOM-description">{{ display }}</div>
     <div class="DICOM-toolbar" v-if="view.paths.length">
       <input
@@ -12,7 +12,7 @@
       >
       slice index: <b>{{ stack.currentImageIdIndex }} </b>
     </div>
-    <div class="DICOM" ref="DICOM" style="width: 100%"></div>
+    <div class="DICOM" ref="DICOM"></div>
     <nodule-marker :marker="marker" :sliceIndex="stack.currentImageIdIndex" :zoomRate="zoomRate" :offsetX="offsetX" :offsetY="offsetY"></nodule-marker>
     <area-select @selection-changed="areaSelectChange" v-if="showAreaSelect" :areaCoordinates="areaCoordinates"></area-select>
   </div>
