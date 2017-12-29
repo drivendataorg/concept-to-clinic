@@ -1,6 +1,6 @@
 <template>
   <vue-draggable-resizable class="nodule-marker" :class="{ overlapped: markerOverlappedBySlice }"
-                           v-if="scaledMarker" :x="scaledMarker.x" :y="scaledMarker.y"
+                           v-if="dynamicMarker" :x="dynamicMarker.x" :y="dynamicMarker.y"
                            :w="markerImageSize" :h="markerImageSize"
                            :minw="markerImageSize" :minh="markerImageSize"
                            :resizable="false" v-on:dragstop="onDragFinished">
@@ -16,9 +16,7 @@
     components: {VueDraggableResizable},
     name: 'open-dicom',
     props: {
-      zoomRate: null,
-      offsetX: null,
-      offsetY: null,
+      translation: null,
       marker: null,
       sliceIndex: {
         type: Number
@@ -38,44 +36,58 @@
         // if both new and old marker defined we've got a problem:
         // component will not detect coordinates update, so let's destroy and reinit it
         if (newMarker && oldMarker) {
-          // destroy
-          this.dynamicMarker = null
-
-          // reinit
-          var self = this
-          Vue.nextTick(function () {
-            self.dynamicMarker = newMarker
-          })
+          this.resetDynamicMarker(newMarker)
         } else {
-          this.dynamicMarker = newMarker
+          this.dynamicMarker = this.scaleMarker(newMarker)
         }
+      },
+      translation () {
+        this.resetDynamicMarker(this.marker)
       }
     },
     computed: {
-      scaledMarker () {
-        if (!this.dynamicMarker) {
-          return null
-        }
-
-        var scaledInfo = {x: this.dynamicMarker.x, y: this.dynamicMarker.y, z: this.dynamicMarker.z}
-
-        // converting from true DICOM pixels to display pixels
-        scaledInfo.x = scaledInfo.x * this.zoomRate - this.offsetX - this.markerImageSize / 2
-        scaledInfo.y = scaledInfo.y * this.zoomRate - this.offsetY - this.markerImageSize / 2
-
-        return scaledInfo
-      },
       markerOverlappedBySlice () {
-        const val = this.scaledMarker.z !== this.sliceIndex
+        const val = this.dynamicMarker.z !== this.sliceIndex
         return val
       }
     },
     methods: {
-      onDragFinished (x, y) {
-        var scaledX = x / this.zoomRate + this.offsetX + this.markerImageSize / 2
-        var scaledY = y / this.zoomRate + this.offsetY + this.markerImageSize / 2
+      resetDynamicMarker (marker) {
+        // destroy
+        this.dynamicMarker = null
 
-        EventBus.$emit('nodule-marker-moved', scaledX, scaledY, this.sliceIndex)
+        // reinit
+        var self = this
+        Vue.nextTick(function () {
+          self.dynamicMarker = self.scaleMarker(marker)
+        })
+      },
+      scaleMarker (marker) {
+        if (!marker) {
+          return null
+        }
+
+        let scaledInfo = { ...marker }
+
+        if (this.translation) {
+          // scale the position and add the offset
+          // the size of marker is subtracted to move the image center to target position
+          scaledInfo.x = marker.x * this.translation.scale + this.translation.offsetX - this.markerImageSize / 2
+          scaledInfo.y = marker.y * this.translation.scale + this.translation.offsetY - this.markerImageSize / 2
+        }
+
+        return scaledInfo
+      },
+      onDragFinished (x, y) {
+        // reverting the transformation
+        const scaled = this.translation
+            ? {
+              x: Math.round((x + this.markerImageSize / 2 - this.translation.offsetX) / this.translation.scale),
+              y: Math.round((y + this.markerImageSize / 2 - this.translation.offsetY) / this.translation.scale)
+            }
+            : { x, y }
+
+        EventBus.$emit('nodule-marker-moved', scaled.x, scaled.y, this.sliceIndex)
       }
     }
   }
