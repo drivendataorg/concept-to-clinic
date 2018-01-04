@@ -12,13 +12,7 @@ from skimage.filters import roberts
 from skimage.measure import label, regionprops
 from skimage.morphology import disk, binary_erosion, binary_closing
 from skimage.segmentation import clear_border
-
-try:
-    from ...config import Config
-except ValueError:
-    from config import Config
-
-DATA_SHAPE = (512, 512, 1024, 1)
+from src.algorithms.identify.helpers import rescale_patient_images
 
 
 def get_z_range(dicom_path):
@@ -50,16 +44,20 @@ def save_lung_segments(dicom_path, patient_id):
         patient_id: SeriesInstanceUID of the patient
 
     Returns:
-        Original patient images (z, x, y),
-        Rescaled mask images (z, x, y)
+        shape of the original patient images (z, x, y),
+        shape of the rescaled mask images (z, x, y)
     """
-    EXTRACTED_IMAGE_DIR = Config.EXTRACTED_IMAGE_DIR
+    # directories for extraction
+    EXTRACTED_IMAGE_DIR = os.path.join('data', 'extracted', patient_id)
     TARGET_VOXEL_MM = 1.00
-    target_dir = os.path.join(os.getcwd(), EXTRACTED_IMAGE_DIR, patient_id)
+    #target_dir = os.path.join(os.getcwd(), EXTRACTED_IMAGE_DIR, patient_id)
+    target_dir = EXTRACTED_IMAGE_DIR
     os.makedirs(target_dir, exist_ok=True)
-
+    
+    # load scan
     slices = load_patient(dicom_path)
-
+    
+    # get some scan metadata
     cos_value = (slices[0].ImageOrientationPatient[0])
     cos_degree = round(math.degrees(math.acos(cos_value)), 2)
 
@@ -68,6 +66,8 @@ def save_lung_segments(dicom_path, patient_id):
 
     pixel_spacing = slices[0].PixelSpacing
     pixel_spacing.append(slices[0].SliceThickness)
+    
+    # rescale image
     image = rescale_patient_images(original_image, pixel_spacing, TARGET_VOXEL_MM)
     if not invert_order:
         image = numpy.flipud(image)
@@ -75,21 +75,26 @@ def save_lung_segments(dicom_path, patient_id):
     for index, org_img in enumerate(image):
         patient_dir = target_dir
         os.makedirs(patient_dir, exist_ok=True)
-        img_path = patient_dir + "img_" + str(index).rjust(4, '0') + "_i.png"
+        img_path = patient_id + "img_" + str(index).rjust(4, '0') + "_i.png"
+        img_path = os.path.join(patient_dir, img_path)
         # if there exists slope,rotation image with corresponding degree
         if cos_degree > 0.0:
             org_img = cv_flip(org_img, org_img.shape[1], org_img.shape[0], cos_degree)
+        
+        # create mask
         img, mask = get_segmented_lungs(org_img.copy())
         org_img = normalize_hu(org_img)
+        
+        # save img and mask as pngs
         cv2.imwrite(img_path, org_img * 255)
         cv2.imwrite(img_path.replace("_i.png", "_m.png"), mask * 255)
-
-    return original_image, image
+    
+    # return scaling info
+    return original_image.shape, image.shape
 
 
 def load_patient(src_dir):
     slices = []
-
     for s in os.listdir(src_dir):
         try:
             dicom_slice = dicom.read_file(os.path.join(src_dir, s))
@@ -98,7 +103,6 @@ def load_patient(src_dir):
         else:
             slices.append(dicom_slice)
     slices.sort(key=lambda x: int(x.InstanceNumber))
-
     try:
         slice_thickness = numpy.abs(slices[0].ImagePositionPatient[2] - slices[1].ImagePositionPatient[2])
     except IndexError as e:
@@ -106,7 +110,6 @@ def load_patient(src_dir):
 
     for s in slices:
         s.SliceThickness = slice_thickness
-
     return slices
 
 
@@ -114,15 +117,12 @@ def get_pixels_hu(slices):
     image = numpy.stack([s.pixel_array for s in slices])
     image = image.astype(numpy.int16)
     image[image == -2000] = 0
-
     for slice_number in range(len(slices)):
         intercept = slices[slice_number].RescaleIntercept
         slope = slices[slice_number].RescaleSlope
-
         if slope != 1:
             image[slice_number] = slope * image[slice_number].astype(numpy.float64)
             image[slice_number] = image[slice_number].astype(numpy.int16)
-
         image[slice_number] += numpy.int16(intercept)
 
     return numpy.array(image, dtype=numpy.int16)
@@ -147,13 +147,11 @@ def get_segmented_lungs(im):
     # Step 4: Keep the labels with 2 largest areas.
     areas = [r.area for r in regionprops(label_image)]
     areas.sort()
-
     if len(areas) > 2:
         for region in regionprops(label_image):
             if region.area < areas[-2]:
                 for coordinates in region.coords:
                     label_image[coordinates[0], coordinates[1]] = 0
-
     binary = label_image > 0
     # Step 5: Erosion operation with a disk of radius 2.
     # This operation is seperate the lung nodules attached to the blood vessels.
@@ -176,37 +174,3 @@ def cv_flip(img, cols, rows, degree):
     M = cv2.getRotationMatrix2D((cols / 2, rows / 2), degree, 1.0)
     dst = cv2.warpAffine(img, M, (cols, rows))
     return dst
-
-
-def rescale_patient_images(images_zyx, org_spacing_xyz, target_voxel_mm, is_mask_image=False):
-    resize_x = 1.0
-    resize_y = org_spacing_xyz[2] / target_voxel_mm
-    interpolation = cv2.INTER_NEAREST if is_mask_image else cv2.INTER_LINEAR
-    res = cv2.resize(images_zyx, dsize=None, fx=resize_x, fy=resize_y,
-                     interpolation=interpolation)  # opencv assumes y, x, channels umpy array, so y = z pfff
-
-    res = res.swapaxes(0, 2)
-    res = res.swapaxes(0, 1)
-
-    resize_x = org_spacing_xyz[0] / target_voxel_mm
-    resize_y = org_spacing_xyz[1] / target_voxel_mm
-
-    # cv2 can handle max 512 channels..
-    if res.shape[2] > 512:
-        res = res.swapaxes(0, 2)
-        res1 = res[:256]
-        res2 = res[256:]
-        res1 = res1.swapaxes(0, 2)
-        res2 = res2.swapaxes(0, 2)
-        res1 = cv2.resize(res1, dsize=None, fx=resize_x, fy=resize_y, interpolation=interpolation)
-        res2 = cv2.resize(res2, dsize=None, fx=resize_x, fy=resize_y, interpolation=interpolation)
-        res1 = res1.swapaxes(0, 2)
-        res2 = res2.swapaxes(0, 2)
-        res = numpy.vstack([res1, res2])
-        res = res.swapaxes(0, 2)
-    else:
-        res = cv2.resize(res, dsize=None, fx=resize_x, fy=resize_y, interpolation=interpolation)
-
-    res = res.swapaxes(0, 2)
-    res = res.swapaxes(2, 1)
-    return res

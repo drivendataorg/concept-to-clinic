@@ -6,15 +6,15 @@
     An API for a trained identification model to make predictions
     for where the centroids of nodules are in the DICOM image.
 """
+
+import glob
 from os import path
 
-import SimpleITK as sitk
+import dicom
+from src.preprocess.errors import EmptyDicomSeriesException
+from src.preprocess.lung_segmentation import save_lung_segments
 
-from config import Config
 from . import prediction
-from .src import gtr123_model
-
-MODELS_DIR = path.join(Config.CURRENT_DIR, 'identify_models')
 
 
 def predict(dicom_path):
@@ -41,20 +41,53 @@ def predict(dicom_path):
              'z': int,
              'p_nodule': float}
     """
-    reader = sitk.ImageSeriesReader()
-    if dicom_path.endswith('.mhd'):
-        if not path.isfile(dicom_path):
-            message = "The path {} does not exist"
-            raise ValueError(message.format(dicom_path))
-    else:
-        filenames = reader.GetGDCMSeriesFileNames(dicom_path)
-        if not filenames:
-            message = "The path {} doesn't contain any .mhd or .dcm files"
-            raise ValueError(message.format(dicom_path))
-
-    # all required preprocssing and prediction is implemented in gtr123_model
-    result = gtr123_model.predict(dicom_path)
-    return result
+    if dicom_path[-1] != '/':
+        dicom_path += '/'
+    dicom_files = glob.glob(dicom_path + "*.dcm")
+    if not dicom_files:
+        raise EmptyDicomSeriesException
+    
+    patient_id = dicom.read_file(dicom_files[0]).SeriesInstanceUID
+    #z, x, y = save_lung_segments(dicom_path, patient_id)
+    orig_patient_img, rescaled_img_masks = save_lung_segments(dicom_path, patient_id)
+    z, x, y = rescaled_img_masks
+    z2, x2,y2 = orig_patient_img
+    
+    print("output from save_lung_segments:")
+    print(f"rescaled mask shape: z: {z}, x: {x}, y: {y}")
+    print(f"orig img shape: z: {z2}, x: {x2}, y: {y2}")
+    
+    results_df, batch_data = run_prediction(patient_id)
+    
+    # diff copies of output preds for debug
+    raw_preds = results_df.copy()
+    not_rescaled = results_df.copy()
+    results_df_2 = results_df.copy()
+    
+    # not rescaled or snapped
+    not_rescaled_df = not_rescaled[['coord_x', 'coord_y', 'coord_z', 'nodule_chance']].copy()
+    not_rescaled_df.columns = ['x', 'y', 'z', 'p_nodule']
+    not_rescaled = not_rescaled_df.to_dict(orient='record')
+    
+    ## rescaled and snapped using rescaled mask
+    results_df['coord_x'] *= x
+    results_df['coord_y'] *= y
+    results_df['coord_z'] *= z
+    rescaled_results_df = results_df[['coord_x', 'coord_y', 'coord_z', 'nodule_chance']].copy()
+    rescaled_results_df.columns = ['x', 'y', 'z', 'p_nodule']
+    rescaled_results_df[['x', 'y', 'z']] = rescaled_results_df[['x', 'y', 'z']].astype(int)
+    rescaled_dict = rescaled_results_df.to_dict(orient='record')
+    
+    # rescaled and snapped using orig mask 
+    results_df_2['coord_x'] *= x2
+    results_df_2['coord_y'] *= y2
+    results_df_2['coord_z'] *= z2
+    rescaled_results_df_2 = results_df_2[['coord_x', 'coord_y', 'coord_z', 'nodule_chance']].copy()
+    rescaled_results_df_2.columns = ['x', 'y', 'z', 'p_nodule']
+    rescaled_results_df_2[['x', 'y', 'z']] = rescaled_results_df_2[['x', 'y', 'z']].astype(int)
+    rescaled_dict_2 = rescaled_results_df_2.to_dict(orient='record')
+    
+    return rescaled_dict, rescaled_dict_2, not_rescaled, raw_preds, batch_data
 
 
 def run_prediction(patient_id, magnification=1, ext_name="luna_posnegndsb_v", version=1, holdout=1):
@@ -74,33 +107,30 @@ def run_prediction(patient_id, magnification=1, ext_name="luna_posnegndsb_v", ve
              'z': int,
              'p_nodule': float}
     """
+
     magnification_choices = [1, 1.5, 2]
     ext_name_choices = ["luna16_fs", "luna_posnegndsb_v"]
     version_choices = [1, 2]
     holdout_choices = [0, 1]
 
     if magnification not in magnification_choices:
-        message = 'magnification must be one of {} but was {}'
-        raise ValueError(message.format(magnification_choices, magnification))
-
+        raise ValueError("magnification must be one of {} but was {}".format(magnification_choices, magnification))
     if ext_name not in ext_name_choices:
-        raise ValueError('ext_name must be one of {} but was {}'.format(ext_name_choices, ext_name))
-
+        raise ValueError("ext_name must be one of {} but was {}".format(ext_name_choices, ext_name))
     if ext_name == 'luna_posnegndsb_v':
         if version not in version_choices:
-            raise ValueError('version must be one of {} but was {}'.format(version_choices, version))
-
+            raise ValueError("version must be one of {} but was {}".format(version_choices, version))
         if holdout not in holdout_choices:
-            raise ValueError('holdout must be one of {} but was {}'.format(holdout_choices, holdout))
-
+            raise ValueError("holdout must be one of {} but was {}".format(holdout_choices, holdout))
+    
+    path_to_saved_models = path.join('src', 'algorithms', 'identify', 'assets')
     if ext_name == 'luna16_fs':
-        model_path = path.join(MODELS_DIR, 'model_luna16_full__fs_best.hd5')
-        ext = 'luna16_fs'
-        results_df = prediction.predict_cubes(model_path, patient_id, magnification=magnification, ext_name=ext)
+        model_path = path.join(path_to_saved_models, 'model_luna16_full__fs_best.hd5')
+        results_df, batch_data = prediction.predict_cubes(model_path, patient_id,
+                                              magnification=magnification, ext_name="luna16_fs")
     else:
-        model = 'model_luna_posnegndsb_v{}__fs_h{}_end.hd5'
-        model_path = path.join(MODELS_DIR, model.format(version, holdout))
-        ext = 'luna_posnegndsb_v{}'.format(version)
-        results_df = prediction.predict_cubes(model_path, patient_id, magnification=magnification, ext_name=ext)
-
-    return results_df
+        model_path = path.join(path_to_saved_models,
+                               "model_luna_posnegndsb_v" + str(version) + "__fs_h" + str(holdout) + "_end.hd5")
+        results_df, batch_data = prediction.predict_cubes(model_path,
+            patient_id, magnification=magnification, ext_name="luna_posnegndsb_v" + str(version))
+    return results_df, batch_data
