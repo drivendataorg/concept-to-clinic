@@ -81,8 +81,8 @@ def crop_patch(ct_array, meta, patch_shape=None, centroids=None, stride=None, pa
                                      indexing='ij')
             coord = np.concatenate([xx[np.newaxis, ...], yy[np.newaxis, ...], zz[np.newaxis, :]], 0).astype('float32')
             yield patch, coord
-
-        yield patch
+        else:
+            yield patch
 
 
 def patches_from_ct(ct_array, meta, patch_shape=None, centroids=None, stride=None, pad_value=0):
