@@ -69,6 +69,16 @@ class SegmentationModel(object):
 
     @classmethod
     def dice_coef(cls, y_true, y_pred, smooth=1.):
+        """Calculates the Dice coefficient which equals 2TP/(2TP + FP + FN) between two tensors.
+
+        Args:
+            y_true: True labels. TensorFlow tensor.
+            y_pred: Predictions. TensorFlow tensor of the same shape as y_true.
+            smooth: Smoothing value that prevents division by zero
+
+        Returns: single tensor value
+
+        """
         y_true_f = K.flatten(y_true)
         y_pred_f = K.flatten(y_pred)
         intersection = K.sum(y_true_f * y_pred_f)
@@ -76,4 +86,13 @@ class SegmentationModel(object):
 
     @classmethod
     def dice_coef_loss(cls, y_true, y_pred):
+        """ Calculates the negated dice coefficient (since losses should be minimized)
+
+        Args:
+            y_true: True labels. TensorFlow tensor.
+            y_pred: Predictions. TensorFlow tensor of the same shape as y_true.
+
+        Returns: single tensor value
+
+        """
         return -SegmentationModel.dice_coef(y_true, y_pred)

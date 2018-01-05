@@ -88,6 +88,14 @@ def save_lung_segments(dicom_path, patient_id):
 
 
 def load_patient(src_dir):
+    """Load the DICOM slices of a patient sorted by their instance numbers
+
+    Args:
+        src_dir: a path to a DICOM directory
+
+    Returns:
+        Array of dicom.dataset.FileDataset
+    """
     slices = []
 
     for s in os.listdir(src_dir):
@@ -129,8 +137,17 @@ def get_pixels_hu(slices):
 
 
 def normalize_hu(image):
-    MIN_BOUND = -1000.0
-    MAX_BOUND = 400.0
+    """Rescale an image such that tissue with Houndsfield units between air and bone is scaled to between 0 and 1.
+    Tissue that is not that dense is clipped accordingly.
+
+    Args:
+        image: numpy.array
+
+    Returns: numpy.array
+
+    """
+    MIN_BOUND = -1000.0  # Air
+    MAX_BOUND = 400.0  # Bone
     image = (image - MIN_BOUND) / (MAX_BOUND - MIN_BOUND)
     image[image > 1] = 1.
     image[image < 0] = 0.
