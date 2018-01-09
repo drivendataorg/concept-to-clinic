@@ -501,7 +501,7 @@ def predict(ct_path, model_path=None):
     # We have to use small batches until the next release of PyTorch, as bigger ones will segfault for CPU
     # split_comber = SplitComb(side_len=int(32), margin=16, max_stride=16, stride=4, pad_value=170)
     # Transform image to the 0-255 range and resample to 1x1x1mm
-    preprocess = preprocess_ct.PreprocessCT(clip_lower=-1200., clip_upper=600., spacing=1., order=1,
+    preprocess = preprocess_ct.PreprocessCT(clip_lower=-1200., clip_upper=600., spacing=True, order=1,
                                             min_max_normalize=True, scale=255, dtype='uint8')
 
     ct_array, meta = preprocess(ct_array, meta)

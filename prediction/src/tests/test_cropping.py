@@ -6,6 +6,7 @@ import numpy as np
 from ..preprocess.crop_dicom import crop_dicom
 from ..preprocess.load_ct import load_ct
 from ..preprocess.crop_patches import patches_from_ct
+from ..preprocess.preprocess_ct import PreprocessCT
 
 
 def test_crop_dicom(dicom_path):
@@ -32,7 +33,13 @@ def test_crop_dicom(dicom_path):
 
 
 def test_patches_from_ct(ct_path, luna_nodules):
-    patches = patches_from_ct(*load_ct(ct_path), patch_shape=12, centroids=luna_nodules)
+    preprocess = PreprocessCT(spacing=True)
+
+    # convert the image to voxels(apply the real spacing between pixels)
+    # convert the meta to load_ct.MetaData
+    ct_array, meta = preprocess(*load_ct(ct_path))
+
+    patches = patches_from_ct(ct_array, meta, patch_shape=12, centroids=luna_nodules)
     assert isinstance(patches, list)
     assert len(patches) == 3
     assert all(patch.shape == (12, 12, 12) for patch in patches)

@@ -258,10 +258,12 @@ def predict(ct_path, nodule_list, model_path=None):
     # else:
     #     casenet = torch.nn.parallel.DistributedDataParallel(casenet)
 
-    preprocess = PreprocessCT(clip_lower=-1200., clip_upper=600., spacing=1., order=1,
+    preprocess = PreprocessCT(clip_lower=-1200., clip_upper=600., spacing=True, order=1,
                               min_max_normalize=True, scale=255, dtype='uint8')
 
+    # convert the image to voxels(apply the real spacing between pixels)
     ct_array, meta = preprocess(*load_ct(ct_path))
+
     patches = patches_from_ct(ct_array, meta, config['crop_size'], nodule_list,
                               stride=config['stride'], pad_value=config['filling_value'])
 

@@ -56,6 +56,9 @@ package-lock.json
 prediction/data/*
 !prediction/data/.gitkeep
 
+# temporary data
+prediction/extracted/*
+
 # ignore redis database dumps
 *.rdb
 
@@ -67,3 +70,6 @@ prediction/data/*
 data/
 docs/apidoc_*/**/*.rst
 !docs/apidoc_*/*_doc.rst
+
+# jupyter notebook files
+**/.ipynb_checkpoints/*

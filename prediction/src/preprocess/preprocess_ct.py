@@ -16,10 +16,7 @@ class Params:
             If None is set (default), then no lower bound will applied.
         clip_upper (int | float): clip the voxels' value to be less or equal to clip_upper.
             If None is set (default), then no upper bound will applied.
-        spacing (float | sequence[float]): resample CT array to satisfy the desired spacing (voxel size along the axes).
-            If a float, `voxel_shape` is the same for each axis.
-            If a sequence, `voxel_shape` should contain one value for each axis.
-            If None is set (default), then no re-sampling will applied.
+        spacing (boolean): If True, resample CT array according to the meta.spacing.
         order ({0, 1, 2, 3, 4}): the order of the spline interpolation used by re-sampling.
             The default value is 0.
         ndim (int): the dimension of CT array, should be greater than 1. The default value is 3.
@@ -34,7 +31,7 @@ class Params:
         preprocess.preprocess_dicom.Params
     """
 
-    def __init__(self, clip_lower=None, clip_upper=None, spacing=None, order=0,  # noqa: C901
+    def __init__(self, clip_lower=None, clip_upper=None, spacing=False, order=0,  # noqa: C901
                  ndim=3, min_max_normalize=False, scale=None, dtype=None, to_hu=False):
         if not isinstance(clip_lower, (int, float)) and (clip_lower is not None):
             raise TypeError('The clip_lower should be int or float')
@@ -52,9 +49,7 @@ class Params:
             raise ValueError('The ndim should be greater than 0')
         self.ndim = ndim
 
-        self.spacing = None
-        if spacing is not None:
-            self.spacing = scipy.ndimage._ni_support._normalize_sequence(spacing, self.ndim)
+        self.spacing = spacing
 
         if not isinstance(min_max_normalize, (bool, int)) and (min_max_normalize is not None):
             raise TypeError('The min_max_normalize should be bool or int')
@@ -137,17 +132,38 @@ class PreprocessCT(Params):
                 data_min = voxel_data.min()
             voxel_data = (voxel_data - data_min) / float(data_max - data_min)
 
-        if self.spacing is not None:
+        if self.scale is not None:
+            voxel_data *= self.scale
+
+        if self.spacing:
             zoom_fctr = meta.spacing / np.asarray(self.spacing)
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
                 voxel_data = scipy.ndimage.interpolation.zoom(voxel_data, zoom_fctr, order=self.order)
-            meta.spacing = [axis for axis in self.spacing]
-
-        if self.scale is not None:
-            voxel_data *= self.scale
 
         if self.dtype:
             voxel_data = voxel_data.astype(dtype=self.dtype, copy=False)
 
         return voxel_data, meta
+
+
+def mm_coordinates_to_voxel(coord, meta):
+    """ Transfer coordinates in mm into voxel's location
+
+    Args:
+        coord (scalar | list[scalar]): coordinates in mm.
+        meta (src.preprocess.load_ct.MetaData): meta information of the CT scan.
+
+    Returns:
+        list[int]: the voxel location related to the coord.
+    """
+
+    if np.isscalar(coord):
+        coord = [coord]
+
+    coord = np.array(coord)
+    origin = scipy.ndimage._ni_support._normalize_sequence(meta.origin, len(coord))
+    spacing = scipy.ndimage._ni_support._normalize_sequence(meta.spacing, len(coord))
+    coord = np.rint((coord - np.array(origin)) * np.array(spacing))
+
+    return coord.astype(np.int)

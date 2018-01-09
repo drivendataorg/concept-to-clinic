@@ -40,7 +40,7 @@ def full_mhd_path(scope='session'):
 
 @pytest.fixture
 def dicom_paths(scope='session'):
-    yield glob(path.join(Config.FULL_DICOM_PATHS_WILDCARD))
+    yield sorted(glob(path.join(Config.FULL_DICOM_PATHS_WILDCARD)))
 
 
 @pytest.fixture

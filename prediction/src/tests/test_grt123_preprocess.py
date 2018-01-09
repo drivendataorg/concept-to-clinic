@@ -23,28 +23,21 @@ class SimpleCrop(object):
 
     def __call__(self, imgs, target):
         crop_size = np.array(self.crop_size).astype('int')
+        padding_size = np.ceil(np.array(self.crop_size) / 2.).astype(np.int)
 
-        start = (target[:3] - crop_size / 2).astype('int')
-        pad = [[0, 0]]
+        # array with left and right padding for each dimension
+        pad = np.stack([padding_size, padding_size], axis=1)
 
-        for i in range(3):
-            if start[i] < 0:
-                leftpad = -start[i]
-                start[i] = 0
-            else:
-                leftpad = 0
-            if start[i] + crop_size[i] > imgs.shape[i + 1]:
-                rightpad = start[i] + crop_size[i] - imgs.shape[i + 1]
-            else:
-                rightpad = 0
-
-            pad.append([leftpad, rightpad])
+        start = np.rint(target).astype(np.int)
 
         imgs = np.pad(imgs, pad, 'constant', constant_values=self.filling_value)
-        crop = imgs[:, start[0]:start[0] + crop_size[0], start[1]:start[1] + crop_size[1],
+        crop = imgs[start[0]:start[0] + crop_size[0],
+                    start[1]:start[1] + crop_size[1],
                     start[2]:start[2] + crop_size[2]]
-        normstart = np.array(start).astype('float32') / np.array(imgs.shape[1:]) - 0.5
-        normsize = np.array(crop_size).astype('float32') / np.array(imgs.shape[1:])
+
+        normstart = np.array(start).astype('float32') / np.array(imgs.shape) - 0.5
+        normsize = np.array(crop_size).astype('float32') / np.array(imgs.shape)
+
         xx, yy, zz = np.meshgrid(np.linspace(normstart[0],
                                              normstart[0] + normsize[0],
                                              self.crop_size[0] // self.stride),
@@ -69,11 +62,16 @@ def lum_trans(img):
     Returns: Image windowed to [-1200; 600] and scaled to 0-255
 
     """
-    lungwin = np.array([-1200., 600.])
-    newimg = (img - lungwin[0]) / (lungwin[1] - lungwin[0])
-    newimg[newimg < 0] = 0
-    newimg[newimg > 1] = 1
-    return (newimg * 255).astype('uint8')
+    clip_lower = -1200.
+    clip_upper = 600.
+
+    newimg = np.copy(img)
+    newimg[newimg < clip_lower] = clip_lower
+    newimg[newimg > clip_upper] = clip_upper
+
+    newimg = (newimg - clip_lower) / float(clip_upper - clip_lower)
+
+    return newimg * 255
 
 
 def resample(imgs, spacing, new_spacing, order=2):
@@ -115,7 +113,7 @@ def resample(imgs, spacing, new_spacing, order=2):
 
 def test_lum_trans(metaimage_path):
     ct_array, meta = load_ct.load_ct(metaimage_path)
-    lumed = lum_trans(ct_array)
+    lumed = lum_trans(ct_array).astype('uint8')
     functional = preprocess_ct.PreprocessCT(clip_lower=-1200., clip_upper=600.,
                                             min_max_normalize=True, scale=255, dtype='uint8')
 
@@ -126,7 +124,7 @@ def test_lum_trans(metaimage_path):
 def test_resample(metaimage_path):
     ct_array, meta = load_ct.load_ct(metaimage_path)
     resampled, _ = resample(ct_array, np.array(load_ct.MetaData(meta).spacing), np.array([1, 1, 1]), order=1)
-    preprocess = preprocess_ct.PreprocessCT(spacing=1., order=1)
+    preprocess = preprocess_ct.PreprocessCT(spacing=True, order=1)
     processed, _ = preprocess(ct_array, meta)
     assert np.abs(resampled - processed).sum() == 0
 
@@ -140,22 +138,19 @@ def test_preprocess(metaimage_path):
     origin = np.array(image_itk.GetOrigin())[::-1]
     image = lum_trans(image)
     image = resample(image, spacing, np.array([1, 1, 1]), order=1)[0]
+    image = image.astype('uint8')
 
     crop = SimpleCrop()
 
     for nodule in nodule_list:
         nod_location = np.array([np.float32(nodule[s]) for s in ["z", "y", "x"]])
-        nod_location = np.ceil((nod_location - origin) / 1.)
-        cropped_image, coords = crop(image[np.newaxis], nod_location)
+        nod_location = (nod_location - origin) * spacing
+        cropped_image, coords = crop(image, nod_location)
 
-    # New style
+    preprocess = preprocess_ct.PreprocessCT(clip_lower=-1200., clip_upper=600., min_max_normalize=True, scale=255,
+                                            spacing=True, order=1, dtype='uint8')
+
     ct_array, meta = load_ct.load_ct(metaimage_path)
-
-    preprocess = preprocess_ct.PreprocessCT(clip_lower=-1200., clip_upper=600.,
-                                            min_max_normalize=True, scale=255, dtype='uint8')
-
-    ct_array, meta = preprocess(ct_array, meta)
-    preprocess = preprocess_ct.PreprocessCT(spacing=1., order=1)
     ct_array, meta = preprocess(ct_array, meta)
 
     cropped_image_new, coords_new = crop_patches.patches_from_ct(ct_array, meta, 96, nodule_list,
