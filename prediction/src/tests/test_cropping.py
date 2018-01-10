@@ -43,3 +43,23 @@ def test_patches_from_ct(ct_path, luna_nodules):
     assert isinstance(patches, list)
     assert len(patches) == 3
     assert all(patch.shape == (12, 12, 12) for patch in patches)
+
+
+def test_patches_on_multiple_centroids(dicom_paths):
+    ct_path = dicom_paths[2]
+    few_centroids = [{'x': 50, 'y': 50, 'z': 21}, {'x': 367, 'y': 349, 'z': 75}]
+
+    preprocess = PreprocessCT(clip_lower=-1200., clip_upper=600., spacing=True, order=1,
+                              min_max_normalize=True, scale=255, dtype='uint8')
+
+    # convert the image to voxels(apply the real spacing between pixels)
+    ct_array, meta = preprocess(*load_ct(ct_path))
+
+    patches = patches_from_ct(ct_array, meta, 96, few_centroids,
+                              stride=4, pad_value=160)
+
+    assert len(patches) == 2
+
+    for patch in patches:
+        assert len(patch) == 2
+        assert patch[0].shape == (96, 96, 96)
