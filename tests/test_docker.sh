@@ -7,10 +7,14 @@
 set -ex
 
 # run the model service's tests
-docker-compose -f local.yml run prediction pytest -rsx
+# Coverage should ignore pip packets, files including tests and pytest
+docker-compose -f local.yml run prediction coverage run --branch --omit=/**/dist-packages/*,src/tests/*,/usr/local/bin/pytest /usr/local/bin/pytest -rsx
+docker-compose -f local.yml run prediction coverage report
 
 # run the backend API tests
-docker-compose -f local.yml run interface python manage.py test
+# Coverage should ignore pip packets, files including migrations and tests
+docker-compose -f local.yml run interface coverage run --branch --omit=/**/dist-packages/*,**/migrations/*.py,**/test*.py manage.py test
+docker-compose -f local.yml run interface coverage report
 
 # return non-zero status code if there are migrations that have not been created
 docker-compose -f local.yml run interface python manage.py makemigrations --dry-run --check || { echo "ERROR: there were changes in the models, but migration listed above have not been created and are not saved in version control"; exit 1; }
