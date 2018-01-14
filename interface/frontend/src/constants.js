@@ -15,12 +15,12 @@ export default {
     'Limited, but interpretable',
     'Satisfactory'
   ],
-  SOLIDITY: {
+  DENSITY: {
     SOLID: 0,
     SEMI_SOLID: 1,
     GROUND_GLASS: 2
   },
-  SOLIDITY_STRINGS: [
+  DENSITY_STRINGS: [
     'Solid',
     'Semi-solid',
     'Ground glass'

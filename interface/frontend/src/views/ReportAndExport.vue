@@ -86,7 +86,7 @@ export default {
           },
           lungNodules: [{
             size: 3,
-            solidity: this.$constants.SOLIDITY.SOLID,
+            density: this.$constants.DENSITY.SOLID,
             lung_orientation: this.$constants.LUNG_ORIENTATION.LEFT,
             condition: this.$constants.CONDITION.INCREASED,
             image: null

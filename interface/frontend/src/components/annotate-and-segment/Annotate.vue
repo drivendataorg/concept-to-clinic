@@ -18,11 +18,11 @@
 
     <hr>
 
-    <div class="solidity-radio-container">
+    <div class="density-radio-container">
       <form>
-        <radio-input v-model="solidity" name="solidity" value="solid" label="Solid"></radio-input>
-        <radio-input v-model="solidity" name="solidity" value="semi-solid" label="Semi-solid"></radio-input>
-        <radio-input v-model="solidity" name="solidity" value="ground-glass" label="Ground glass"></radio-input>
+        <radio-input v-model="density" name="density" :value="densityEnum.SOLID" label="Solid"></radio-input>
+        <radio-input v-model="density" name="density" :value="densityEnum.SEMI_SOLID" label="Semi-solid"></radio-input>
+        <radio-input v-model="density" name="density" :value="densityEnum.GROUND_GLASS" label="Ground glass"></radio-input>
       </form>
     </div>
 
@@ -58,7 +58,8 @@ export default {
   data () {
     return {
       LUNG_ORIENTATION: this.$constants.LUNG_ORIENTATION,
-      solidity: 'solid',
+      densityEnum: this.$constants.DENSITY,
+      density: this.nodule.density_feature,
       condition: 'unchanged',
       lungOrientation: this.nodule.lung_orientation,
       concerning: 50,
@@ -74,7 +75,7 @@ export default {
         lung_orientation: this.lungOrientation,
         concerning: this.concerning,
         condition: this.condition,
-        solidity: this.solidity,
+        density_feature: this.density,
         note: this.note
       })
       .then((response) => {

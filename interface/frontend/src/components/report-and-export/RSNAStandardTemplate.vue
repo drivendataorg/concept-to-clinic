@@ -61,9 +61,9 @@
                :value='nodule.lung_orientation'></olp>
               <olp label='Size'
                 :value='nodule.size + "mm"'></olp>
-              <olp label='Solidity'
-              constant-key="SOLIDITY_STRINGS"
-              :value='nodule.solidity'></olp>
+              <olp label='Density'
+              constant-key="DENSITY_STRINGS"
+              :value='nodule.density_feature'></olp>
               <olp label='Condition'
                 constant-key="CONDITION_STRINGS"
                  :value='nodule.condition'></olp>
