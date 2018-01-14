@@ -11,8 +11,8 @@
 
     <div class="lung-select-container">
       <form>
-        <radio-input v-model="lungOrientation" name="lung" :value="LUNG_ORIENTATION.LEFT" label="Left lung"></radio-input>
-        <radio-input v-model="lungOrientation" name="lung" :value="LUNG_ORIENTATION.RIGHT" label="Right lung"></radio-input>
+        <radio-input v-model="lungOrientation" name="lung" :value="lungOrientationEnum.LEFT" label="Left lung"></radio-input>
+        <radio-input v-model="lungOrientation" name="lung" :value="lungOrientationEnum.RIGHT" label="Right lung"></radio-input>
       </form>
     </div>
 
@@ -57,7 +57,7 @@ export default {
   props: ['nodule', 'index'],
   data () {
     return {
-      LUNG_ORIENTATION: this.$constants.LUNG_ORIENTATION,
+      lungOrientationEnum: this.$constants.LUNG_ORIENTATION,
       densityEnum: this.$constants.DENSITY,
       sizeChangeEnum: this.$constants.SIZE_CHANGE,
       density: this.nodule.density_feature,
