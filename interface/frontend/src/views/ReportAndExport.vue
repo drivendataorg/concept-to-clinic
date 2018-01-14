@@ -88,7 +88,7 @@ export default {
             size: 3,
             density: this.$constants.DENSITY.SOLID,
             lung_orientation: this.$constants.LUNG_ORIENTATION.LEFT,
-            condition: this.$constants.CONDITION.INCREASED,
+            condition: this.$constants.SIZE_CHANGE.INCREASED,
             image: null
           }],
           lungs: {

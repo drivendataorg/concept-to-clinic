@@ -65,7 +65,7 @@
               constant-key="DENSITY_STRINGS"
               :value='nodule.density_feature'></olp>
               <olp label='Condition'
-                constant-key="CONDITION_STRINGS"
+                constant-key="SIZE_CHANGE_STRINGS"
                  :value='nodule.condition'></olp>
             </div>
             <div class="nodule-image m-2">

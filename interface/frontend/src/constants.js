@@ -25,13 +25,13 @@ export default {
     'Semi-solid',
     'Ground glass'
   ],
-  CONDITION: {
+  SIZE_CHANGE: {
     UNCHANGED: 0,
     INCREASED: 1,
     DECREASED: 2,
     NEW: 3
   },
-  CONDITION_STRINGS: [
+  SIZE_CHANGE_STRINGS: [
     'Unchanged',
     'Increased',
     'Decreased',

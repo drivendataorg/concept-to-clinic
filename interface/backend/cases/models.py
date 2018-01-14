@@ -168,7 +168,9 @@ class Nodule(models.Model):
     candidate = models.OneToOneField(Candidate, on_delete=models.CASCADE, null=True)
     lung_orientation = models.IntegerField(choices=enums.format_enum(enums.LungOrientation),
                                            default=enums.LungOrientation.NONE)
-    appearance_feature = models.IntegerField(choices=enums.format_enum(enums.AppearanceFeature), null=True)
+
+    # size change - unchanged, increased, decreased, new
+    size_change = models.IntegerField(choices=enums.format_enum(enums.SizeChange), null=True)
     diameter = models.FloatField(null=True)
     density_feature = models.IntegerField(choices=enums.format_enum(enums.DensityFeature), null=True)
 

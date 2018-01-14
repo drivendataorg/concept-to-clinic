@@ -81,7 +81,7 @@ class LungOrientation(IntEnum):
 
 @unique  # ensures all variables are unique
 @django_enum
-class AppearanceFeature(IntEnum):
+class SizeChange(IntEnum):
     NONE = 0
     UNCHANGED = 1
     INCREASED = 2

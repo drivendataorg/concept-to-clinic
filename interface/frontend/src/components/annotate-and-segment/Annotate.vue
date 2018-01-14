@@ -30,10 +30,10 @@
 
     <div class="severity-radio-container">
       <form>
-        <radio-input v-model="condition" name="condition" value="unchanged" label="Unchanged"></radio-input>
-        <radio-input v-model="condition" name="condition" value="increased" label="Increased"></radio-input>
-        <radio-input v-model="condition" name="condition" value="decreased" label="Decreased"></radio-input>
-        <radio-input v-model="condition" name="condition" value="new" label="New"></radio-input>
+        <radio-input v-model="sizeChange" name="sizeChange" :value="sizeChangeEnum.UNCHANGED" label="Unchanged"></radio-input>
+        <radio-input v-model="sizeChange" name="sizeChange" :value="sizeChangeEnum.INCREASED" label="Increased"></radio-input>
+        <radio-input v-model="sizeChange" name="sizeChange" :value="sizeChangeEnum.DECREASED" label="Decreased"></radio-input>
+        <radio-input v-model="sizeChange" name="sizeChange" :value="sizeChangeEnum.NEW" label="New"></radio-input>
       </form>
     </div>
 
@@ -59,8 +59,9 @@ export default {
     return {
       LUNG_ORIENTATION: this.$constants.LUNG_ORIENTATION,
       densityEnum: this.$constants.DENSITY,
+      sizeChangeEnum: this.$constants.SIZE_CHANGE,
       density: this.nodule.density_feature,
-      condition: 'unchanged',
+      sizeChange: this.nodule.size_change,
       lungOrientation: this.nodule.lung_orientation,
       concerning: 50,
       note: ''
@@ -75,7 +76,7 @@ export default {
         url: nodule.url,
         lung_orientation: this.lungOrientation,
         concerning: this.concerning,
-        condition: this.condition,
+        size_change: this.sizeChange,
         density_feature: this.density,
         note: this.note
       })
