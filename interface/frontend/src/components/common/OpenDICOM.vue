@@ -50,7 +50,10 @@
       marker: null,
       // whether to enable area selection
       showAreaSelect: false,
-      areaCoordinates: []
+      areaCoordinates: {
+        type: Array,
+        default: () => []
+      }
     },
     data () {
       return {
