@@ -174,6 +174,13 @@ class Nodule(models.Model):
     diameter = models.FloatField(null=True)
     density_feature = models.IntegerField(choices=enums.format_enum(enums.DensityFeature), null=True)
 
+    # by default set to match the predicted probability(candidate.probability_concerning)
+    # can be adjusted by user
+    probability_concerning = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(1.0)],
+                                               null=True)
+
+    note = models.TextField(max_length=5000, help_text="Any notes on the case", null=True)
+
 
 @receiver(post_save, sender=Candidate)
 def add_or_remove_nodule_once_candidate_reviewed(sender, instance, *args, **kwargs):

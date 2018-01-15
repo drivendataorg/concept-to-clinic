@@ -56,6 +56,8 @@ export default {
   components: { RadioInput, ConcernSlider },
   props: ['nodule', 'index'],
   data () {
+    const probabilityConcerning = this.nodule.probability_concerning || this.nodule.candidate.probability_concerning
+
     return {
       lungOrientationEnum: this.$constants.LUNG_ORIENTATION,
       densityEnum: this.$constants.DENSITY,
@@ -63,8 +65,8 @@ export default {
       density: this.nodule.density_feature,
       sizeChange: this.nodule.size_change,
       lungOrientation: this.nodule.lung_orientation,
-      concerning: 50,
-      note: ''
+      concerning: Math.round(probabilityConcerning * 100),
+      note: this.nodule.note
     }
   },
   created () {
@@ -75,7 +77,7 @@ export default {
       this.$store.dispatch('updateNodule', {
         url: nodule.url,
         lung_orientation: this.lungOrientation,
-        concerning: this.concerning,
+        probability_concerning: this.concerning * 0.01,
         size_change: this.sizeChange,
         density_feature: this.density,
         note: this.note
