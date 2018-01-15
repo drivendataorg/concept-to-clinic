@@ -32,6 +32,11 @@ const actions = {
       if (response.status === 200) commit('UPDATE_SPECIFIC_CANDIDATE', response.data)
     })
   },
+  updateNodule ({ commit }, nodule) {
+    axios.patch(nodule.url, nodule).then((response) => {
+      if (response.status === 200) commit('UPDATE_SPECIFIC_NODULE', response.data)
+    })
+  },
   async addCandidateToCaseInProgress ({commit}, candidate) {
     await axios.post(this.getters.endpoints.candidates, candidate)
       .then((response) => {
@@ -96,6 +101,12 @@ const store = new Vuex.Store({
       var index = candidates.findIndex(c => c.url === updated.url)
       candidates.splice(index, 1, updated)
       state.caseInProgress.candidates = candidates
+    },
+    UPDATE_SPECIFIC_NODULE (state, updated) {
+      var nodules = state.caseInProgress.nodules
+      var index = nodules.findIndex(c => c.url === updated.url)
+      nodules.splice(index, 1, updated)
+      state.caseInProgress.nodules = nodules
     }
   },
   actions

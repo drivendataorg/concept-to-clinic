@@ -71,7 +71,8 @@ export default {
   },
   methods: {
     update (nodule) {
-      this.$axios.patch(nodule.url, {
+      this.$store.dispatch('updateNodule', {
+        url: nodule.url,
         lung_orientation: this.lungOrientation,
         concerning: this.concerning,
         condition: this.condition,
