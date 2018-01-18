@@ -73,7 +73,7 @@ def predict(algorithm):
         response.update({'description': PREDICTORS[algorithm].__doc__})
 
     # make predictions on POST
-    elif request.method == 'POST':
+    else:
         payload = request.json
 
         try:
