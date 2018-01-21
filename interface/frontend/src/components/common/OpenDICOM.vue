@@ -3,6 +3,18 @@
     <div class="DICOM-description">{{ display }}</div>
     <div class="DICOM-toolbar" v-if="view.paths.length">
       <div v-if="showAreaSelect">
+        <div class="pull-right" v-if="scaledAreaCoordinates.length">
+          Copy selected area to
+          <button v-if="stack.currentImageIdIndex" class="btn btn-sm btn-secondary"
+              @click="copyAreaToOtherSlice(-1)">
+            Prev
+          </button>
+          <button v-if="stack.currentImageIdIndex < view.paths.length - 1" class="btn btn-sm btn-secondary"
+              @click="copyAreaToOtherSlice(1)">
+            Next
+          </button>
+          slice
+        </div>
         <label class="checkbox-inline"><input type="checkbox" v-model="imageNavigationEnabled">
           Image Navigation
         </label>
@@ -280,6 +292,13 @@
         let pixelDataAsString = window.atob(this.base64data)
         let pixelData = this.str2pixelData(pixelDataAsString)
         return pixelData
+      },
+      copyAreaToOtherSlice (step) {
+        let currentIndex = this.stack.currentImageIdIndex
+        let nextIndex = currentIndex + step
+
+        this.areaCoordinates[nextIndex] = JSON.parse(JSON.stringify(this.areaCoordinates[currentIndex]))
+        this.stack.currentImageIdIndex = nextIndex
       }
     }
   }
