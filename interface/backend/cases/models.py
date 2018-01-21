@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+from django.contrib.postgres.fields import JSONField
 
 from . import enums
 
@@ -180,6 +181,9 @@ class Nodule(models.Model):
                                                null=True)
 
     note = models.TextField(max_length=5000, help_text="Any notes on the case", null=True)
+
+    # holds list of 2D coordiantes of nodule area's vertices per each slice
+    selected_area = JSONField(null=True)
 
 
 @receiver(post_save, sender=Candidate)
