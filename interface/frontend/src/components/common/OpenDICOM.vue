@@ -58,7 +58,7 @@
     data () {
       return {
         stack: {
-          currentImageIdIndex: this.sliceIndex,
+          currentImageIdIndex: this.view.sliceIndex,
           imageIds: []
         },
 
@@ -134,7 +134,8 @@
       async display () {
         const element = this.$refs.DICOM
         const dicom = await this.dicom
-        if (!dicom) return ''
+
+        if (!dicom || !element) return ''
         else {
           cornerstone.registerImageLoader(this.view.type, () => {
             return {promise: new Promise((resolve) => { resolve(dicom) })}
