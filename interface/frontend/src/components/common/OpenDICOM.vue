@@ -2,6 +2,11 @@
   <div class="DICOM-container">
     <div class="DICOM-description">{{ display }}</div>
     <div class="DICOM-toolbar" v-if="view.paths.length">
+      <div v-if="showAreaSelect">
+        <label class="checkbox-inline"><input type="checkbox" v-model="imageNavigationEnabled">
+          Image Navigation
+        </label>
+      </div>
       <input
         class="DICOM-range"
         type="range"
@@ -15,9 +20,11 @@
     <div class="DICOM" oncontextmenu="return false" ref="DICOM"></div>
     <nodule-marker :marker="marker" :sliceIndex="stack.currentImageIdIndex"
                    :translation="translation"></nodule-marker>
-    <area-select v-if="showAreaSelect" @selection-changed="scaledNoduleCoordinatesChanged" 
-                  :areaCoordinates="scaledAreaCoordinates"></area-select>
+    <div :class="{ 'skip-events': imageNavigationEnabled }">
+      <area-select v-if="showAreaSelect" @selection-changed="scaledNoduleCoordinatesChanged" 
+                   :areaCoordinates="scaledAreaCoordinates"></area-select>
     </div>
+  </div>
 </template>
 
 <script>
@@ -62,6 +69,7 @@
           imageIds: []
         },
 
+        imageNavigationEnabled: !this.showAreaSelect,
         base64data: null,
         pool: [],
         translation: null,
@@ -290,6 +298,10 @@
     position:relative;
     display:inline-block;
     color:white;
+
+    .skip-events {
+      pointer-events: none;
+    }
   }
 
   .DICOM {
