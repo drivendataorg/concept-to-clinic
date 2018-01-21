@@ -61,12 +61,22 @@ export default {
       ]
     },
     viewerData () {
+      // preselect first slice with selected area
+      let firstSliceWithArea = 0
+
+      for (let [i, sliceArea] of this.areaCoordinates.entries()) {
+        if (sliceArea && sliceArea.length) {
+          firstSliceWithArea = i
+          break
+        }
+      }
+
       return {
         type: 'DICOM',
         prefixCS: ':/',
         prefixUrl: '/api/images/preview?dicom_location=',
         paths: this.$store.getters.imagePaths,
-        sliceIndex: this.nodules[this.selectedIndex].candidate.centroid.z || 0
+        sliceIndex: firstSliceWithArea
       }
     }
   },
