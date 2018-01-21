@@ -15,9 +15,9 @@
     <div class="DICOM" oncontextmenu="return false" ref="DICOM"></div>
     <nodule-marker :marker="marker" :sliceIndex="stack.currentImageIdIndex"
                    :translation="translation"></nodule-marker>
-    <area-select @selection-changed="areaSelectChange" v-if="showAreaSelect"
-                 :areaCoordinates="areaCoordinates"></area-select>
-  </div>
+    <area-select v-if="showAreaSelect" @selection-changed="scaledNoduleCoordinatesChanged" 
+                  :areaCoordinates="scaledAreaCoordinates"></area-select>
+    </div>
 </template>
 
 <script>
@@ -62,16 +62,12 @@
           imageIds: []
         },
 
-        // user should be able to zoom, pan, and navigate through slices in the image viewer
-        // TODO implement these features
-        zoomRate: 1.0,
-        offsetX: 0,
-        offsetY: 0,
-
         base64data: null,
         pool: [],
         translation: null,
-        csViewport: null
+        csViewport: null,
+        scaledAreaCoordinates: [],
+        lastCoordinates: null
       }
     },
     watch: {
@@ -80,6 +76,24 @@
       },
       'view.paths' (val) {
         this.updateViewer()
+      },
+      'stack.currentImageIdIndex' () {
+        this.scaleCurrentAreaCoordinates()
+      },
+      translation () {
+        this.scaleCurrentAreaCoordinates()
+      },
+      areaCoordinates (newCoordinates) {
+        if (newCoordinates === this.lastCoordinates) {
+          return
+        }
+
+        this.lastCoordinates = newCoordinates
+
+        this.scaleCurrentAreaCoordinates()
+      },
+      scaledAreaCoordinates (newCoords) {
+        this.scaledNoduleCoordinatesChanged(newCoords)
       }
     },
     computed: {
@@ -158,6 +172,23 @@
       this.updateViewer()
     },
     methods: {
+      // scaled nodule area coordinates for current slice
+      scaleCurrentAreaCoordinates () {
+        const currentCoordinates = this.areaCoordinates[this.stack.currentImageIdIndex] || []
+
+        // copy as a new object
+        const scaledCoordinates = JSON.parse(JSON.stringify(currentCoordinates))
+
+        // scale
+        if (this.translation) {
+          for (let point of scaledCoordinates) {
+            point[0] = point[0] * this.translation.scale + this.translation.offsetX
+            point[1] = point[1] * this.translation.scale + this.translation.offsetY
+          }
+        }
+
+        this.scaledAreaCoordinates = scaledCoordinates
+      },
       onImageRendered (e) {
         const img = cornerstone.getImage(e.target)
         const imgWidth = img.width
@@ -177,8 +208,19 @@
         // saving viewport to preserve it when navigating through slices
         this.csViewport = csViewport
       },
-      areaSelectChange (newCoords) {
-        console.log('areaSelectChanged', JSON.stringify(newCoords))
+      scaledNoduleCoordinatesChanged (newCoords) {
+        // copy as a new object
+        const unscaledCoordinates = JSON.parse(JSON.stringify(newCoords))
+
+        // unscale
+        if (this.translation) {
+          for (let point of unscaledCoordinates) {
+            point[0] = Math.round((point[0] - this.translation.offsetX) / this.translation.scale)
+            point[1] = Math.round((point[1] - this.translation.offsetY) / this.translation.scale)
+          }
+        }
+
+        this.areaCoordinates.splice(this.stack.currentImageIdIndex, 1, unscaledCoordinates)
       },
       rangeSlice (e) {
         this.stack.currentImageIdIndex = Number(e.target.value)
