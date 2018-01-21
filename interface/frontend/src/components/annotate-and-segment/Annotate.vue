@@ -54,7 +54,7 @@ import ConcernSlider from './ConcernSlider'
 
 export default {
   components: { RadioInput, ConcernSlider },
-  props: ['nodule', 'index'],
+  props: ['nodule', 'index', 'areaCoordinates'],
   data () {
     const probabilityConcerning = this.nodule.probability_concerning || this.nodule.candidate.probability_concerning
 
@@ -80,7 +80,8 @@ export default {
         probability_concerning: this.concerning * 0.01,
         size_change: this.sizeChange,
         density_feature: this.density,
-        note: this.note
+        note: this.note,
+        selected_area: this.areaCoordinates
       })
       .then((response) => {
         console.log(response)

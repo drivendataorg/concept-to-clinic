@@ -10,7 +10,8 @@
                     :selectedIndex="selectedIndex"
                     v-on:selected="selected"
                     :key="index">
-              <annotate v-if="annotate" :nodule="nodule" :index="index" slot="add-on-editor">
+              <annotate v-if="annotate" :nodule="nodule" :areaCoordinates="areaCoordinates" 
+                        :index="index" slot="add-on-editor">
               </annotate>
             </nodule>
           </template>
