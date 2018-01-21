@@ -49,16 +49,26 @@ export default {
       return this.nodules[this.selectedIndex]
     },
     areaCoordinates () {
-      // needs to be implemented, for now draw a 40 x 40 square at the centroid
-      var x = this.selectedNodule.candidate.centroid.x
-      var y = this.selectedNodule.candidate.centroid.y
+      const savedArea = this.selectedNodule.selected_area
+      const currentArea = savedArea || new Array(this.$store.getters.imagePaths.length)
 
-      return [
-        [x - 10, y - 10],
-        [x - 10, y + 10],
-        [x + 10, y + 10],
-        [x + 10, y - 10]
-      ]
+      if (!savedArea) {
+        const centroid = this.selectedNodule.candidate.centroid
+        const x = centroid.x
+        const y = centroid.y
+
+        // by default creating an area around current centroid
+        // but actually it should be predicted by backend
+        currentArea[centroid.z] = [
+          [x - 10, y - 10],
+          [x - 10, y + 10],
+          [x + 10, y + 10],
+          [x + 10, y - 10]
+        ]
+      }
+
+      // create a new detached object, user has to click Apply to save changes
+      return JSON.parse(JSON.stringify(currentArea))
     },
     viewerData () {
       // preselect first slice with selected area
