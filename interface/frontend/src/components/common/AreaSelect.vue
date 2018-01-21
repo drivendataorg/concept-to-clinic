@@ -33,7 +33,7 @@
     },
     watch: {
       areaCoordinates () {
-        this.redrawAndNotify()
+        this.redraw()
       }
     },
     created () {
@@ -140,6 +140,10 @@
         const {x, y} = this.getMouseLocation(e)
         this.lastMouseLocation = {x, y}
 
+        if (!lastLocation) {
+          return
+        }
+
         const dX = x - lastLocation.x
         const dY = y - lastLocation.y
 
@@ -178,10 +182,6 @@
         this.draggingPointIndex = -1
         this.draggingEntireArea = false
         this.anyMovesDetected = false
-      },
-      redrawAndNotify () {
-        this.redraw()
-        this.notify()
       },
       notify () {
         this.$emit('selection-changed', this.areaCoordinates)
