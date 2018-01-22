@@ -208,7 +208,6 @@ class CaseNet(nn.Module):
         """
         xsize = xlist.size()
         corrdsize = coordlist.size()
-        print(xsize)
         # xlist = xlist.view(-1,xsize[2],xsize[3],xsize[4],xsize[5])
         # coordlist = coordlist.view(-1,corrdsize[2],corrdsize[3],corrdsize[4],corrdsize[5])
 
