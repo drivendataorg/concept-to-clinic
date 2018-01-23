@@ -2,17 +2,18 @@
 This file contains logic to evaluate the prediction models.
 """
 import os
-import sys
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..', '..')))
 
 import numpy as np
 import pylidc as pl
-from config import Config
-from src.algorithms.classify import trained_model
 from tqdm import tqdm
-from src.preprocess.lung_segmentation import get_z_range
+from src.algorithms.classify import trained_model
 from src.algorithms.evaluation.metrics import get_accuracy, logloss
+from src.preprocess.lung_segmentation import get_z_range
+
+try:
+    from ....config import Config
+except ValueError:
+    from config import Config
 
 CONFIDENCE_THRESHOLD = 0.5
 

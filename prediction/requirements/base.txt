@@ -10,3 +10,4 @@ opencv-python==3.3.0.10
 pandas==0.20.3
 scikit-image==0.13.0
 SimpleITK==1.0.1
+tqdm==4.19.5
