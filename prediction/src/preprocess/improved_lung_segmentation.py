@@ -19,8 +19,21 @@ STEP = 64
 
 def region_growing(img, seed, minthr, maxthr, structure=None):
     """
-    code was taken from:
+    Region growing.
+
+    A numpy-style n-dimensional region growing algorithm.
+    Code was taken from:
     https://github.com/loli/medpy/wiki/Basic-image-manipulation
+
+    Args:
+        img: An image that is a numpy ndarray.
+        seed: A seed binary image of the same shape that contains a True-value at each seed point.
+        minthr: A minimal threshold value.
+        maxthr: A maximum threshold value.
+        structure: A structure element that describes the connectedness / neighbourhood
+
+    Returns:
+        region: The obtained segmentation region.
     """
     img[seed] = minthr
     thrimg = (img < maxthr) & (img >= minthr)
@@ -33,7 +46,8 @@ def region_growing(img, seed, minthr, maxthr, structure=None):
 
 
 def extract_bronchial(ct_slice, xy_spacing=1.):
-    """Detection the bronchi and the trachea on CT.
+    """
+    Detection the bronchi and the trachea on CT.
 
     The bronchi and the trachea have the following properties:
         (1) an average HU below −950,
@@ -43,12 +57,11 @@ def extract_bronchial(ct_slice, xy_spacing=1.):
         y-dimensions of the image away from the center of the slice.
 
     Args:
-        ct_slice;
-        xy_spacing (float);
+        ct_slice: A label of CT slice.
+        xy_spacing (float)
 
     Returns:
-        a label of the segmented bronchi and trachea on CT
-
+        A label of the segmented bronchi and trachea on CT.
     """
     labeled = skimage.measure.label(ct_slice < BRONCHIAL_THRESHOLD)
     areas = np.bincount(labeled.flatten())
@@ -70,13 +83,18 @@ def extract_bronchial(ct_slice, xy_spacing=1.):
 
 
 def select_bronchial(bronchial, ct_slices, levels):
-    """ Selection bronchi.
+    """
+    Selection bronchi.
 
     Args:
-        bronchial: a label of the pixels with the bronchi;
-        ct_slices: a label of CT;
-        levels: a number of slice with the bronchi.
+        bronchial: A label of the pixels with the bronchi.
+        ct_slices: A label of CT.
+        levels: A number of slice with the bronchi.
 
+    Returns:
+        bronchial: A label of the pixels with the bronchi.
+        ct_slices: A label of CT.
+        levels: A number of slice with the bronchi.
     """
     center = np.array(bronchial[0].shape) // 2
     coords = [(np.mean(np.where(bool_slice), axis=1), i)
@@ -86,31 +104,31 @@ def select_bronchial(bronchial, ct_slices, levels):
 
 
 def select_seeds(bronchial, ct_clice):
-    """Selection initial pixel.
+    """
+    Selection initial pixel.
 
     Args:
-        bronchial: a label of the pixels with the bronchi;
-        ct_clice
+        bronchial: A label of the pixels with the bronchi.
+        ct_clice: A label of CT slice.
 
     Returns:
-        area of the bronchi with minimal voxels
-
+        Area of the bronchi with minimal voxels
     """
     return (ct_clice * bronchial) == ct_clice[bronchial].min()
 
 
 def extract_seeds(patient):
-    """ Extraction initial region.
+    """
+    Extraction initial region.
 
     Starting at the top, the first 25 slices are examined for
     suitable regions.
 
     Args:
-        patient: a label of CT;
+        patient: A label of CT.
 
     Returns:
-        seeds: a initial region.
-
+        seeds: A initial region.
     """
     bronchials = list()
     bronch_cts = list()
@@ -142,7 +160,8 @@ def extract_seeds(patient):
 def growing_bronchis(patient, seeds, initial_threshold=INITIAL_THRESHOLD,
                      step=STEP,
                      full_extraction=True):
-    """Extraction of large airways.
+    """
+    Extraction of large airways.
 
     Before the lungs are segmented, the trachea and
     the bronchi are extracted using the technique of a region growing.
@@ -152,16 +171,15 @@ def growing_bronchis(patient, seeds, initial_threshold=INITIAL_THRESHOLD,
     When an explosion occurred, the increase in threshold was divided by 2.
 
     Args:
-        patient: a label of CT;
-        seeds: a initial region (pixel);
-        initial_threshold: an average HU;
+        patient: A label of CT.
+        seeds: A initial region (pixel).
+        initial_threshold: An average HU.
         step: In each iteration, the threshold was initially increased with 64 HU
-        full_extraction: full extraction of large airways.
+        full_extraction: Full extraction of large airways.
 
     Returns:
-        ret - a label of the bronchi at the previous stage.
-        seeds - a label of the bronchi.
-
+        ret: A label of the bronchi at the previous stage.
+        seeds: A label of the bronchi.
     """
 
     seeds = seeds.astype(np.bool_)
@@ -200,7 +218,9 @@ def growing_bronchis(patient, seeds, initial_threshold=INITIAL_THRESHOLD,
 
 
 def grow_lungs(patient, seeds):
-    """ Segmentation of lung regions.
+    """
+    Segmentation of lung regions.
+
     The lungs are segmented using region growing. As a
     seed point for the region growing, the voxel with the lowest
     HU within the airways is used.
@@ -209,12 +229,11 @@ def grow_lungs(patient, seeds):
     region growing operation, optimal thresholding is applied.
 
     Args:
-        patient: a label of CT
-        seeds
+        patient: a label of CT.
+        seeds: a area of trachea
 
     Returns:
-        a label of the segmented lungs.
-
+        A label of the segmented lungs.
     """
     lungs_seeds = patient * seeds == patient[seeds].min()
     lungs_seeds = lungs_seeds.astype(np.bool_)
@@ -228,28 +247,52 @@ def label_size(labeled_matrix, label):
 
 
 def remove_trash(labeled_matrix, label_num):
+    """
+    Args:
+        labeled_matrix
+
+    Returns:
+        int, the amount of colours in the re-labeled array
+    """
     skimage.segmentation.clear_border(labeled_matrix)
     max_label_size = 0
     new_label_num = 0
     for i in range(1, label_num + 1):
         if len(labeled_matrix[labeled_matrix == i]) > max_label_size:
             max_label_size = len(labeled_matrix[labeled_matrix == i])
+
     for i in range(1, label_num + 1):
         if label_size(labeled_matrix, i) < .2 * max_label_size:
             labeled_matrix[labeled_matrix == i] = 0
         else:
             new_label_num += 1
             labeled_matrix[labeled_matrix == i] = new_label_num
+
     return new_label_num
 
 
 def if_separate(mask):
+    """
+    Args:
+        mask (np.ndarray[int|bool])
+
+    Returns:
+        int, the amount of colours in the re-labeled array
+    """
     mask, count = skimage.measure.label(mask, connectivity=1, return_num=True)
     count = remove_trash(mask, count)
     return count != 1
 
 
 def define_lungs(labeled):
+    """
+    The left and right lungs are identified by their center of gravity.
+    Args:
+        labeled np.ndarray[int]
+
+    Returns:
+        labeld np.ndarray[int]
+    """
     labeld = labeled + 500
     labels = np.bincount(labeld.flatten()).argsort()[-3:-1]
     label0_rightest = np.max(np.where(labeld == labels[0])[1])
@@ -265,6 +308,14 @@ def define_lungs(labeled):
 
 
 def separate_lungs(label_matrix, layer_num):
+    """
+    Args:
+        label_matrix (np.ndarray[int])
+        layer_num
+
+    Returns:
+        label_matrix (np.ndarray[int])
+    """
     before_morph_open = label_matrix
     while not if_separate(label_matrix):
         label_matrix = scipy.ndimage.morphology.binary_erosion(label_matrix, structure=np.ones((7, 1)))
@@ -274,6 +325,15 @@ def separate_lungs(label_matrix, layer_num):
 
 
 def inverse_erosion(label_matrix, mask, slice_num):
+    """
+    Recontruct original morphological shape of `label_matrix`
+    by tracing masks of appropriate colours (labels).
+
+    Args:
+        label_matrix (np.ndarray[int])
+        mask (np.ndarray[int])
+        slice_num (int): Number of slice.
+    """
     xs, ys = np.where(label_matrix < mask)
     border_coords = list(zip(xs, ys))
     while len(border_coords):
@@ -305,12 +365,37 @@ def inverse_erosion(label_matrix, mask, slice_num):
 
 
 def separate_new_slice(new_slice, prev_slice, slice_num):
+    """
+    Computes inverse erosion over input data.
+
+    Args:
+        new_slice: A transverse slice of segmented lungs.
+        prev_slice: A previous transverse slice of segmented lungs.
+        slice_num: Number of slice.
+
+    Returns:
+        intersect (np.ndarray[int])
+    """
     intersect = new_slice * prev_slice
     inverse_erosion(intersect, new_slice, slice_num)
     return intersect
 
 
 def separate_lungs3d(file_):
+    """
+    The main idea of the algorithm is to select reference binary image
+    of the lungs in a one slice which further will be propagated over
+    all adjacent slices, that have not yet been visited, by comparison
+    of its complements. This process will be repeated, taking adjacent
+    slices from previous step, as new reference images until lungs are
+    not separated.
+
+    Args:
+        file_: A label of the segmented lungs.
+
+    Returns:
+        The masks of segmented and separated lungs.
+    """
     interval = np.int(file_.shape[1] * 0.1)
     start_slice_ind = -1
     start_slice = []
@@ -344,6 +429,15 @@ def separate_lungs3d(file_):
 
 
 def extract_lungs(separated):
+    """
+    Extract lungs.
+
+    Args:
+        separated: A mask of lungs.
+
+    Returns:
+        The masks of segmented and separated lungs.
+    """
     left_lung = separated.copy()
     left_lung[left_lung != 1] = 0
     right_lung = separated.copy()
@@ -354,10 +448,16 @@ def extract_lungs(separated):
 
 def lung_separation(lungs_seeds):
     """
+    Lung separation.
+
     code was taken from:
     https://github.com/vessemer/LungCancerDetection/blob/master/lung_segmentation/lung_separation_frontal.py
     https://github.com/vessemer/LungCancerDetection/blob/master/report.pdf
+    Args:
+        lungs_seeds: A label of the segmented lungs.
 
+    Returns:
+        The two largest areas on CT.
     """
     labeled = skimage.measure.label(lungs_seeds)[0]
     markers = np.bincount(labeled.flatten())
@@ -381,8 +481,7 @@ def lung_separation(lungs_seeds):
 
 
 def lungs_postprocessing(lungs_seeds):
-    """ Smoothing.
-
+    """
     First 3D hole filling is applied
     to include vessels and other high-density structures that were
     excluded by the threshold used in region growing, in the segmentation.
@@ -392,11 +491,10 @@ def lungs_postprocessing(lungs_seeds):
     the x-dimension of the image.
 
     Args:
-        lungs_seeds: a label with the segmented lungs before postprocessing
+        lungs_seeds: A label with the segmented lungs before postprocessing.
 
     Returns:
-        a label with the segmented lungs after binary_fill_holes
-
+        A label with the segmented lungs after binary_fill_holes.
     """
     for i in range(lungs_seeds.shape[1]):
         lungs_seeds[:, i] = scipy.ndimage.morphology.binary_fill_holes(lungs_seeds[:, i])
@@ -405,8 +503,7 @@ def lungs_postprocessing(lungs_seeds):
 
 
 def conventional_lung_segmentation(patient):
-    """ The lungs segmentation.
-
+    """
     The algorithm consists of the following steps:
         (1)Extraction of large airways;
         (2)Segmentation of lung regions;
@@ -417,12 +514,12 @@ def conventional_lung_segmentation(patient):
     flip_lung, grow_lungs, lungs_postprocessing.
 
     Args:
-        patient: a label of CT
+        patient: A label of CT.
 
     Returns:
-        lungs_seeds: a label with the segmented lungs.
-        left: a label with the segmented left lung.
-        right: a label with the segmented right lung.
+        lungs_seeds: A label with the segmented lungs.
+        left: A label with the segmented left lung.
+        right: A label with the segmented right lung.
     """
 
     seeds = extract_seeds(patient)
@@ -441,15 +538,15 @@ def conventional_lung_segmentation(patient):
 
 
 def cumulation(lung):
-    """The cumulative x-position inside a lung.
+    """
+    The cumulative x-position inside a lung.
 
     Args:
-        lung: The segmented lung (left or right)
+        lung: The segmented lung (left or right).
 
     Returns:
-        lung: cumulative x-position
-        z_coords: z-coordinates in lung
-
+        lung: Cumulative x-position.
+        z_coords: z-coordinates in lung.
     """
     z_coords, y_coords, x_coords = np.where(lung)
     current_volume = 0
@@ -461,7 +558,8 @@ def cumulation(lung):
 
 
 def ventricular_extraction(err_lung):
-    """ The extraction of the ventricle.
+    """
+    Extraction of a ventricle.
 
     On all CT there is a ventricle. In order for the algorithm
     doesn't define the ventricle as a segmentation error,
@@ -469,11 +567,10 @@ def ventricular_extraction(err_lung):
     size that corresponds to the ventricle.
 
     Args:
-        err_lung: the label of errors in the lung.
+        err_lung: The label of errors in the lung.
 
     Returns:
-        err_lung: the label of errors in the lung without the ventricle.
-
+        err_lung: The label of errors in the lung without the ventricle.
     """
     max_marker = -1
     z_max = -1
@@ -495,17 +592,20 @@ def ventricular_extraction(err_lung):
 
 
 def costal_surface(lung, z_coords, max_coor, combined):
-    """ The costal surface.
-
+    """
     The convexity is determined by comparing the costal lung surface
     in axial slices to the convex hull of this costal lung surface.
 
     Args:
-        lung: cumulative x-position in lung
-        z_coords: z-coordinates in lung
-        max_coor: threshold for the сostal surface for the lung
-        combined: segmented lung (left or right)
+        lung: Cumulative x-position in lung.
+        z_coords: z-coordinates in lung.
+        max_coor: Threshold for the сostal surface for the lung.
+        combined: Segmented lung (left or right).
 
+    Returns:
+        lung: Cumulative x-position in lung.
+        erroneus: Errors in lungs.
+        erroneus_erosion: Errors in lungs after mathematical morphology.
     """
     erroneus = np.zeros(lung.shape)
     for coord in np.unique(z_coords):
@@ -525,17 +625,17 @@ def costal_surface(lung, z_coords, max_coor, combined):
 
 
 def detection_lung_error(left, right):
-    """ Automatic error detection.
+    """
+    Automatic error detection.
 
     The function aggregates cumulation, costal_surface, ventricular_extraction.
     Args:
-        left: a mask of the left segmented lung
-        right: a mask of the right segmented lung
+        left: A mask of the left segmented lung.
+        right: A mask of the right segmented lung.
 
     Returns:
-        lung_l: the masks of the left segmented lung
-        lung_r: the masks of the right segmented lung
-
+        lung_l: A mask of the left segmented lung.
+        lung_r: A mask of the right segmented lung.
     """
 
     lung_right_c = right.astype(float)
@@ -559,6 +659,19 @@ def detection_lung_error(left, right):
 
 
 def improved_lung_segmentation(patient):
+    """
+    Improved lung segmentation.
+
+    Args:
+        patient: A label of CT.
+
+    Returns:
+        lungs: A mask of the segmented lungs
+        lung_left: A mask of the left segmented lung.
+        lung_right: A mask of the right segmented lung.
+        trachea: A mask of the trachea.
+    """
+
     right, left, trachea = conventional_lung_segmentation(patient)
     lung_left, lung_right = detection_lung_error(left, right)
     lungs = lung_left + lung_right
