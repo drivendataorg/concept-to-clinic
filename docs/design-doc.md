@@ -370,10 +370,27 @@ Task areas: `SEGMENTATION`
 
 #### Segment - Prediction service
 
+##### Behavior
+
 1.  Given a nodule centroid location tuple (X \# voxels from left, Y \#
     voxels from top, Z as slice number), return a 3D boolean mask with
     true values for voxels associated with that nodule and false values
     for other tissue or voids.
+    
+##### Training
+In order to train the segmentation model, the following steps are necessary:
+1.  Download the [LIDC dataset](https://wiki.cancerimagingarchive.net/display/Public/LIDC-IDRI).
+2.  Put it in `tests/assets/test_image_data/full` optionally using a symbolic link
+3.  [pylidc](https://github.com/pylidc/pylidc) wraps the LIDC dataset and provides information
+    such as annotated nodules, visualization methods etc. You must create a `.pylidrc` file that specifies
+    the path to your local LIDC dataset like [so](https://github.com/concept-to-clinic/concept-to-clinic/pull/147/files#diff-ff90b371f444f3305e167198719a5333)
+4.  Run [prepare_training_data](https://github.com/concept-to-clinic/concept-to-clinic/pull/147/files#diff-24a9ce10839958291d5e9180703e0d79R9)
+    to generate the binary segmentation masks in `prediction/src/algorithms/segment/assets`.
+5.  Finally, to train the model run:  
+    ```python
+    from src.algorithms.segment.src.training import train
+    train()
+    ```
 
 #### Segment - Interface API
 
