@@ -242,11 +242,7 @@ def grow_lungs(patient, seeds):
     return scipy.ndimage.morphology.binary_opening(lungs_seeds - scipy.ndimage.morphology.binary_opening(seeds))
 
 
-def label_size(labeled_matrix, label):
-    return len(labeled_matrix[labeled_matrix == label])
-
-
-def remove_trash(labeled_matrix, label_num):
+def remove_trash(labeled_matrix):
     """
     Args:
         labeled_matrix
@@ -255,20 +251,8 @@ def remove_trash(labeled_matrix, label_num):
         int, the amount of colours in the re-labeled array
     """
     skimage.segmentation.clear_border(labeled_matrix)
-    max_label_size = 0
-    new_label_num = 0
-    for i in range(1, label_num + 1):
-        if len(labeled_matrix[labeled_matrix == i]) > max_label_size:
-            max_label_size = len(labeled_matrix[labeled_matrix == i])
-
-    for i in range(1, label_num + 1):
-        if label_size(labeled_matrix, i) < .2 * max_label_size:
-            labeled_matrix[labeled_matrix == i] = 0
-        else:
-            new_label_num += 1
-            labeled_matrix[labeled_matrix == i] = new_label_num
-
-    return new_label_num
+    bins = np.bincount(labeled_matrix.flatten())[1:]
+    return (bins >= .2 * bins.max()).sum()
 
 
 def if_separate(mask):
@@ -280,8 +264,7 @@ def if_separate(mask):
         int, the amount of colours in the re-labeled array
     """
     mask, count = skimage.measure.label(mask, connectivity=1, return_num=True)
-    count = remove_trash(mask, count)
-    return count != 1
+    return remove_trash(mask) != 1
 
 
 def define_lungs(labeled):
