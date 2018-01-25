@@ -1,6 +1,8 @@
 import numpy as np
 import scipy.spatial
 
+SMOOTH = 1e-10
+
 
 def hausdorff_distance(ground_true, predicted):
     """Computes the Hausdorff distance, uses `scipy` implementation of 'an efficient algorithm for
@@ -19,7 +21,7 @@ def hausdorff_distance(ground_true, predicted):
     return hd
 
 
-def sensitivity(ground_true, predicted):
+def sensitivity(ground_true, predicted, smooth=SMOOTH):
     """Computes the sensitivity.
 
     Args:
@@ -30,11 +32,11 @@ def sensitivity(ground_true, predicted):
         double: The sensitivity.
     """
     P = np.sum(ground_true)
-    TP = np.sum(ground_true * predicted)
+    TP = np.sum(ground_true * predicted) + smooth
     return P / TP
 
 
-def specificity(ground_true, predicted):
+def specificity(ground_true, predicted, smooth=SMOOTH):
     """Computes the specificity.
 
     Args:
@@ -45,7 +47,7 @@ def specificity(ground_true, predicted):
         double: The specificity.
     """
     N = np.prod(ground_true.shape) - np.sum(ground_true)
-    TN = np.sum(np.logical_not(ground_true) * np.logical_not(predicted))
+    TN = np.sum(np.logical_not(ground_true) * np.logical_not(predicted)) + smooth
     return N / TN
 
 
@@ -63,7 +65,7 @@ def dice_coefficient(ground_true, predicted):
     return scipy.spatial.distance.dice(ground_true, predicted)
 
 
-def dice_coefficient_uns(ground_true, predicted, smooth=1e-1):
+def dice_coefficient_uns(ground_true, predicted, smooth=SMOOTH):
     """The analogy of Dice coefficient provided by one of participants of ultrasound
     nerve segmentation Kaggle challenge. The implementation was adopted from:
     https://github.com/jocicmarko/ultrasound-nerve-segmentation/blob/master/train.py
@@ -84,7 +86,7 @@ def dice_coefficient_uns(ground_true, predicted, smooth=1e-1):
     return np.mean(intersection / union)
 
 
-def evaluate(ground_true, predicted, threshold=0., uns_smooth=1e-1):
+def evaluate(ground_true, predicted, threshold=0., uns_smooth=SMOOTH):
     """The function to orchestrate the evaluations.
 
     Args:

@@ -36,14 +36,30 @@ def test_segment_evaluate_sensitivity(masks):
     combined_1, combined_2 = masks
     combined_1 = np.ravel(combined_1).astype(np.bool_)
     combined_2 = np.ravel(combined_2).astype(np.bool_)
-    assert 2. == evaluate.sensitivity(combined_1, combined_2)
+    assert np.isclose([evaluate.sensitivity(combined_1, combined_2)], [2.])
+
+
+def test_segment_evaluate_sensitivity_no_zero_division():
+    zeros1 = np.zeros((10, 10, 10))
+    zeros2 = np.zeros((10, 10, 10))
+    combined_1 = np.ravel(zeros1).astype(np.bool_)
+    combined_2 = np.ravel(zeros2).astype(np.bool_)
+    assert np.isclose([evaluate.sensitivity(combined_1, combined_2)], [0.])
 
 
 def test_segment_evaluate_specificity(masks):
     combined_1, combined_2 = masks
     combined_1 = np.ravel(combined_1).astype(np.bool_)
     combined_2 = np.ravel(combined_2).astype(np.bool_)
-    assert 2. == evaluate.specificity(combined_1, combined_2)
+    assert np.isclose([evaluate.specificity(combined_1, combined_2)], [2.])
+
+
+def test_segment_evaluate_specificity_no_zero_division():
+    zeros1 = np.zeros((10, 10, 10))
+    zeros2 = np.zeros((10, 10, 10))
+    combined_1 = np.ravel(zeros1).astype(np.bool_)
+    combined_2 = np.ravel(zeros2).astype(np.bool_)
+    assert np.isclose([evaluate.specificity(combined_1, combined_2)], [1.])
 
 
 def test_segment_evaluate_evaluate(masks):

@@ -11,8 +11,6 @@ try:
 except ValueError:
     from config import Config
 
-BEST_MODEL_PATH = os.path.join(Config.SEGMENT_ASSETS_DIR, 'best_model.hdf5')
-
 
 def get_full_dicom_paths():
     """
@@ -82,3 +80,4 @@ def train():
             output_data[index, :, :, :, :] = new_output_img
 
         model.fit(input_data, output_data)
+    model.save(Config.ALGO_SEGMENT_PATH)
