@@ -140,6 +140,7 @@ class PreprocessCT(Params):
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
                 voxel_data = scipy.ndimage.interpolation.zoom(voxel_data, zoom_fctr, order=self.order)
+        meta.spacing = self.spacing
 
         if self.dtype:
             voxel_data = voxel_data.astype(dtype=self.dtype, copy=False)
@@ -162,8 +163,12 @@ def mm_coordinates_to_voxel(coord, meta):
         coord = [coord]
 
     coord = np.array(coord)
+    print(coord)
     origin = scipy.ndimage._ni_support._normalize_sequence(meta.origin, len(coord))
     spacing = scipy.ndimage._ni_support._normalize_sequence(meta.spacing, len(coord))
-    coord = np.rint((coord - np.array(origin)) * np.array(spacing))
+    coord = np.rint((coord - np.array(origin)) / np.array(spacing))
+    print(origin)
+    print(spacing)
+    print(coord)
 
     return coord.astype(np.int)
