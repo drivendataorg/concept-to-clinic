@@ -138,13 +138,15 @@ def test_preprocess(metaimage_path):
     origin = np.array(image_itk.GetOrigin())[::-1]
     image = lum_trans(image)
     image = resample(image, spacing, np.array([1, 1, 1]), order=1)[0]
+    spacing = np.array([1, 1, 1])
     image = image.astype('uint8')
 
     crop = SimpleCrop()
 
     for nodule in nodule_list:
         nod_location = np.array([np.float32(nodule[s]) for s in ["z", "y", "x"]])
-        nod_location = (nod_location - origin) * spacing
+        # N-dimensional array coordinates for the point in real world should be computed in the way below:
+        nod_location = (nod_location - origin) / spacing
         cropped_image, coords = crop(image, nod_location)
 
     preprocess = preprocess_ct.PreprocessCT(clip_lower=-1200., clip_upper=600., min_max_normalize=True, scale=255,

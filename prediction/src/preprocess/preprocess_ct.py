@@ -16,7 +16,11 @@ class Params:
             If None is set (default), then no lower bound will applied.
         clip_upper (int | float): clip the voxels' value to be less or equal to clip_upper.
             If None is set (default), then no upper bound will applied.
-        spacing (boolean): If True, resample CT array according to the meta.spacing.
+        spacing (float | sequence[float]): re-sample CT array in order to satisfy
+            the desired spacing (voxel size along the axes).
+            If a float, `voxel_shape` is the same for each axis.
+            If a sequence, `voxel_shape` should contain one value for each axis.
+            If None is set (default), then no re-sampling will applied.
         order ({0, 1, 2, 3, 4}): the order of the spline interpolation used by re-sampling.
             The default value is 0.
         ndim (int): the dimension of CT array, should be greater than 1. The default value is 3.
@@ -135,11 +139,14 @@ class PreprocessCT(Params):
         if self.scale is not None:
             voxel_data *= self.scale
 
+        # `spacing` is the shape of a voxel in real-world units
         if self.spacing:
             zoom_fctr = meta.spacing / np.asarray(self.spacing)
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
                 voxel_data = scipy.ndimage.interpolation.zoom(voxel_data, zoom_fctr, order=self.order)
+
+        # No more need to store the redundant spacing in `meta`
         meta.spacing = self.spacing
 
         if self.dtype:
@@ -152,7 +159,7 @@ def mm_coordinates_to_voxel(coord, meta):
     """ Transfer coordinates in mm into voxel's location
 
     Args:
-        coord (scalar | list[scalar]): coordinates in mm.
+        coord (scalar | list[scalar]): coordinates in mm (real-world point).
         meta (src.preprocess.load_ct.MetaData): meta information of the CT scan.
 
     Returns:
@@ -165,6 +172,8 @@ def mm_coordinates_to_voxel(coord, meta):
     coord = np.array(coord)
     origin = scipy.ndimage._ni_support._normalize_sequence(meta.origin, len(coord))
     spacing = scipy.ndimage._ni_support._normalize_sequence(meta.spacing, len(coord))
+
+    # N-dimensional array coordinates for the point in real world should be computed in the way below:
     coord = np.rint((coord - np.array(origin)) / np.array(spacing))
 
     return coord.astype(np.int)
