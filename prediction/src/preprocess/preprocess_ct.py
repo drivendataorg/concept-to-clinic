@@ -163,12 +163,8 @@ def mm_coordinates_to_voxel(coord, meta):
         coord = [coord]
 
     coord = np.array(coord)
-    print(coord)
     origin = scipy.ndimage._ni_support._normalize_sequence(meta.origin, len(coord))
     spacing = scipy.ndimage._ni_support._normalize_sequence(meta.spacing, len(coord))
     coord = np.rint((coord - np.array(origin)) / np.array(spacing))
-    print(origin)
-    print(spacing)
-    print(coord)
 
     return coord.astype(np.int)

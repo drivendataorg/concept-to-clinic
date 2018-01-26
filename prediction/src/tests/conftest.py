@@ -103,6 +103,11 @@ def model_path(scope='session'):
 
 
 @pytest.fixture
+def models_dir_path(scope='session'):
+    yield path.join(Config.ALGOS_DIR, 'classify', 'assets')
+
+
+@pytest.fixture
 def content_type(scope='session'):
     yield 'application/json'
 

@@ -12,7 +12,6 @@ class ClassificationModel(abc.ABC):
         pull_size (int): maximum amount of batches allowed to be stored in RAM.
     """
 
-    @abc.abstractmethod
     def __init__(self, init_model=True, pull_size=10, batch_size=32, data_format=None):
         self.model = None
         if not isinstance(batch_size, int):
