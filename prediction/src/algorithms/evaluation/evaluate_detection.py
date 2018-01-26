@@ -230,7 +230,8 @@ def filter_detections(prediction, detection):
 # id,confidence,z,y,x,size
 # note: z index starts from 1 and unit of y, x, and size is px
 # output details in
-# ['Dataset', 'Patient', 'StudyInstanceUID', 'SeriesInstanceUID', 'Cancer (%)', 'Confidence', 'ImageNo','CenterX (px)','CenterY (px)','Diameter (mm)']
+# ['Dataset', 'Patient', 'StudyInstanceUID', 'SeriesInstanceUID', 'Cancer (%)', 
+# 'Confidence', 'ImageNo','CenterX (px)','CenterY (px)','Diameter (mm)']
 
 
 def get_detection_detail(prediction, detection, filepaths):
