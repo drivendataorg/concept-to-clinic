@@ -2,9 +2,10 @@ import keras
 import numpy as np
 import os
 from collections import defaultdict
+from keras import backend as K
+from src.algorithms.classify.src.classification_model import ClassificationModel
 from src.preprocess import preprocess_ct, load_ct, crop_patches, generators
 
-from src.algorithms.classify.src.classification_model import ClassificationModel
 from .architecture import net
 
 
@@ -307,3 +308,9 @@ class Model(ClassificationModel):
                 iter += 1
 
         return candidates
+
+    def clear(self):
+        del self.model
+        self.pull_ct.clear()
+        self.pull_patches.clear()
+        K.clear_session()
