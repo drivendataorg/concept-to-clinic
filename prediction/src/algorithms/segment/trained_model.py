@@ -12,6 +12,7 @@ import scipy.ndimage
 
 from ...algorithms.segment.src.models.simple_3d_model import Simple3DModel
 from ...preprocess.load_ct import load_ct, MetaData
+from ...preprocess.preprocess_ct import mm_coordinates_to_voxel
 from ...preprocess.lung_segmentation import DATA_SHAPE
 
 
@@ -48,7 +49,7 @@ def predict(dicom_path, centroids):
     input_data[0, :voxel_data.shape[0], :voxel_data.shape[1], :voxel_data.shape[2], 0] = voxel_data
     model = Simple3DModel().load_best()
     segment_path = model.predict(input_data)
-    volumes = calculate_volume(segment_path, centroids)
+    volumes = calculate_volume(segment_path, centroids, dicom_path)
     return {'binary_mask_path': segment_path, 'volumes': volumes}
 
 
@@ -72,16 +73,27 @@ def calculate_volume(segment_path, centroids, ct_path=None):
         list[float]: a list of volumes in cubic mm (if a ct_path has been provided)
             of a connected component for each centroid.
     """
+    if not centroids:
+        return[]
 
     mask = np.load(segment_path)
     mask, _ = scipy.ndimage.label(mask)
-    labels = [mask[centroid['x'], centroid['y'], centroid['z']] for centroid in centroids]
-    volumes = np.bincount(mask.flatten())
-    volumes = volumes[labels].tolist()
 
     if ct_path:
         meta = load_ct(ct_path, voxel=False)
         meta = MetaData(meta)
+
+    coords = [[centroid['z'], centroid['y'], centroid['x']] for centroid in centroids]
+
+    if ct_path:
+        coords = [mm_coordinates_to_voxel(coord, meta) for coord in coords]
+
+    labels = [mask[coord[0], coord[1], coord[2]] for coord in coords]
+
+    volumes = np.bincount(mask.flatten())
+    volumes = volumes[labels].tolist()
+
+    if ct_path:
         spacing = np.prod(meta.spacing)
         volumes = [volume * spacing for volume in volumes]
 
