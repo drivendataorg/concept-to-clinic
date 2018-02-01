@@ -117,3 +117,10 @@ class ClassificationModel(abc.ABC):
                                'p_concerning': float}}
         """
         pass
+
+    @abc.abstractmethod
+    def clear(self):
+        """
+        Clear all signs of backend models.
+        """
+        pass
