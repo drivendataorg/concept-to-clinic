@@ -18,7 +18,10 @@ try:
 except ValueError:
     from config import Config
 
-DATA_SHAPE = (512, 512, 1024, 1)
+# P{|282 - h| <= 66} ~= 0.997, according to the Table 2 from the research paper, DOI10.1097/HP.0b013e31823a13f1
+# Taking into an account the spacing on z-axis >= 0.9
+# (282 + 66) / 0.9 = 386 voxels. Therefore, 512 voxels for z-axis should be enough for all cases.
+DATA_SHAPE = (512, 512, 512, 1)
 
 
 def get_z_range(dicom_path):

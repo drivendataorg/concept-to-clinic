@@ -8,8 +8,8 @@ from ..algorithms.segment.trained_model import calculate_volume
 def centroids(scope='session'):
     yield [
         {'x': 0, 'y': 0, 'z': 0},
-        {'x': 32, 'y': 32, 'z': 28},
-        {'x': 45, 'y': 45, 'z': 12}]
+        {'x': 28, 'y': 32, 'z': 32},
+        {'x': 12, 'y': 45, 'z': 45}]
 
 
 @pytest.fixture
@@ -17,7 +17,15 @@ def centroids_alt(scope='session'):
     yield [
         {'x': 0, 'y': 0, 'z': 0},
         {'x': 0, 'y': 0, 'z': 0},
-        {'x': 45, 'y': 45, 'z': 12}]
+        {'x': 12, 'y': 45, 'z': 45}]
+
+
+@pytest.fixture
+def centroids_clt(scope='session'):
+    yield [
+        {'x': 0, 'y': 0, 'z': 0},
+        {'x': 0, 'y': 0, 'z': 0},
+        {'x': 8.3, 'y': 31.5, 'z': 113}]
 
 
 @pytest.fixture
@@ -40,7 +48,7 @@ def generate_mask(centroids, volumes, shape=(50, 50, 29)):
     mask = np.zeros(shape, dtype=np.bool_)
 
     for centroid, volume in zip(centroids, volumes):
-        centroid_ = np.asarray([centroid['x'], centroid['y'], centroid['z']])
+        centroid_ = np.asarray([centroid['z'], centroid['y'], centroid['x']])
         free_voxels = np.where(mask != -1)
         free_voxels = np.asarray(free_voxels).T
         free_voxels = sorted(free_voxels, key=lambda x: np.linalg.norm(x - centroid_, ord=2))
@@ -78,14 +86,14 @@ def test_overlapped_volume_calculation(tmpdir, centroids_alt, volumes_alt):
     assert calculated_volumes == volumes_alt
 
 
-def test_overlapped_dicom_volume_calculation(tmpdir, dicom_path, centroids_alt, volumes_alt):
+def test_overlapped_dicom_volume_calculation(tmpdir, dicom_path, centroids_alt, centroids_clt, volumes_alt):
     mask = generate_mask(centroids_alt, volumes_alt)
 
     # The balls area must be 100 + 30, since first ball have overlapped with the second one
     assert mask.sum() == 130
 
     path = get_mask_path(tmpdir, mask)
-    calculated_volumes = calculate_volume(str(path), centroids_alt, dicom_path)
+    calculated_volumes = calculate_volume(str(path), centroids_clt, dicom_path)
 
     # Despite they are overlapped, the amount of volumes must have preserved
     assert len(calculated_volumes) == len(volumes_alt)

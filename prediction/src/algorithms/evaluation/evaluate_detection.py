@@ -230,7 +230,7 @@ def filter_detections(prediction, detection):
 # id,confidence,z,y,x,size
 # note: z index starts from 1 and unit of y, x, and size is px
 # output details in
-# ['Dataset', 'Patient', 'StudyInstanceUID', 'SeriesInstanceUID', 'Cancer (%)', 
+# ['Dataset', 'Patient', 'StudyInstanceUID', 'SeriesInstanceUID', 'Cancer (%)',
 # 'Confidence', 'ImageNo','CenterX (px)','CenterY (px)','Diameter (mm)']
 
 
@@ -243,7 +243,7 @@ def get_detection_detail(prediction, detection, filepaths):
         spacing = np.load(os.path.join(prep_result_path, id + '_info.npy'))[1]
         rows, cols = np.where(filepaths == id)
         if rows.size == 0:
-            print id, 'not found'
+            print(id, 'not found')
             continue
         probability = round(get_prediction_probability(prediction, id) * 100, 2)
         filepath = filepaths[rows][0]
@@ -295,7 +295,7 @@ detection = df.as_matrix()
 if os.path.exists(filepath):
     filepaths = np.load(filepath)
     detection_detail = get_detection_detail(prediction, detection, filepaths)
-    print detection_detail
+    print(detection_detail)
     df = pandas.DataFrame(detection_detail)
     df.columns = [
         'Dataset',
@@ -311,13 +311,13 @@ if os.path.exists(filepath):
     df.to_csv(detection_detail_file, index=False)
 
 detections = filter_detections(prediction, detection)
-print 'number of detections:', len(detections)
+print('number of detections:', len(detections))
 
 annotations = load_annotations_OsiriX(annotation_path)
-print 'number of annotations:', len(annotations)
+print('number of annotations:', len(annotations))
 
 correct_detection = compare_results(detections, annotations)
-print 'number of correct_detection:', correct_detection
+print('number of correct_detection:', correct_detection)
 
 # calculate precision rate
 if len(detections) == 0:
@@ -337,6 +337,6 @@ if precision == 0 and recall == 0:
 else:
     fscore = 2 * precision * recall / (precision + recall)
 
-print 'precision rate:', correct_detection, '/', len(detections), '(', round(precision, 2), '% )'
-print 'recall rate:', correct_detection, '/', len(annotations), '(', round(recall, 2), '% )'
-print 'f-score:', round(fscore, 2), '%'
+print('precision rate:', correct_detection, '/', len(detections), '(', round(precision, 2), '% )')
+print('recall rate:', correct_detection, '/', len(annotations), '(', round(recall, 2), '% )')
+print('f-score:', round(fscore, 2), '%')

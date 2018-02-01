@@ -37,7 +37,6 @@ class Simple3DModel(SegmentationModel):
             return model
 
         self.input_shape = (128, 128, 256, 1)
-        self.scale_factor = 1 / 4.0
         self.model = simple_model_3d(input_shape=self.input_shape)
         self.best_model_path = super(Simple3DModel, self).get_best_model_path()
 
@@ -46,8 +45,14 @@ class Simple3DModel(SegmentationModel):
         X_rescaled = np.zeros((X.shape[0], *self.input_shape))
         y_rescaled = np.zeros((X.shape[0], *self.input_shape))
         for i in range(X.shape[0]):
-            X_rescaled[i, :, :, :, 0] = zoom(X[i, :, :, :, 0], self.scale_factor)
-            y_rescaled[i, :, :, :, 0] = zoom(y[i, :, :, :, 0], self.scale_factor)
+            X_rescaled[i, ..., 0] = zoom(
+                X[i, ..., 0],
+                np.array(self.input_shape[:-1]) / np.array(X.shape[1:-1])
+            )
+            y_rescaled[i, ..., 0] = zoom(
+                y[i, ..., 0],
+                np.array(self.input_shape[:-1]) / np.array(y.shape[1:-1])
+            )
         model_checkpoint = ModelCheckpoint(self.best_model_path, monitor='loss', verbose=1, save_best_only=True)
         self.model.fit(X_rescaled, y_rescaled, callbacks=[model_checkpoint], epochs=10)
 
@@ -56,8 +61,14 @@ class Simple3DModel(SegmentationModel):
 
         # Scale the bigger 3D input images to the desired smaller shape
         X_rescaled = np.zeros((1, *self.input_shape))
-        X_rescaled[0, :, :, :, 0] = zoom(X[0, :, :, :, 0], self.scale_factor)
+        X_rescaled[0, ..., 0] = zoom(
+            X[0, ..., 0],
+            np.array(self.input_shape[:-1]) / np.array(X.shape[1:-1])
+        )
 
         X_predicted = self.model.predict(X_rescaled)
-        y_predicted[0, :, :, :, 0] = zoom(X_predicted[0, :, :, :, 0], 1 / self.scale_factor)
+        y_predicted[0, ..., 0] = zoom(
+            X_predicted[0, ..., 0],
+            np.array(X.shape[1:-1]) / np.array(self.input_shape[:-1])
+        )
         return y_predicted
