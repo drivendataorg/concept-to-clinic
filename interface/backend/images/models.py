@@ -42,7 +42,7 @@ class ImageFile(models.Model):
                                 max_length=512)
 
     class Meta:
-        ordering = ['slice_location']
+        ordering = ('slice_location',)
 
     def save(self, *args, **kwargs):
         self._populate_dicom_properties()

@@ -8,7 +8,7 @@ import os
 
 from os import path
 
-LIDC_WILDCARD = ['LIDC-IDRI-*', '**', '**']
+LIDC_WILDCARD = ('LIDC-IDRI-*', '**', '**')
 
 
 class Config(object):
