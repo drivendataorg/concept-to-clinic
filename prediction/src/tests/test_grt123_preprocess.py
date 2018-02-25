@@ -128,7 +128,7 @@ def test_resample(metaimage_path):
 
 
 def test_preprocess(metaimage_path):
-    nodule_list = [{"z": 556, "y": 100, "x": 0}]
+    nodule_list = [{'z': 556, 'y': 100, 'x': 0}]
     image_itk = sitk.ReadImage(metaimage_path)
 
     image = sitk.GetArrayFromImage(image_itk)
@@ -142,7 +142,7 @@ def test_preprocess(metaimage_path):
     crop = SimpleCrop()
 
     for nodule in nodule_list:
-        nod_location = np.array([np.float32(nodule[s]) for s in ["z", "y", "x"]])
+        nod_location = np.array([np.float32(nodule[s]) for s in ['z', 'y', 'x']])
         # N-dimensional array coordinates for the point in real world should be computed in the way below:
         nod_location = (nod_location - origin) / spacing
         cropped_image, coords = crop(image, nod_location)
