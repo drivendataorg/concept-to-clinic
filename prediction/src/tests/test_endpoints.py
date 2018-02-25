@@ -65,7 +65,7 @@ def test_identify(client, dicom_path, content_type):
     assert data['prediction']
 
     for prediction in data['prediction']:
-        assert (0.5 <= prediction['p_nodule'] < 1.0)
+        assert 0.5 <= prediction['p_nodule'] < 1.0
         assert all(prediction[pos] > 0 for pos in ['x', 'y', 'z'])
 
 
