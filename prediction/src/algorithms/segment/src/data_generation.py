@@ -7,9 +7,12 @@ from tqdm import tqdm
 
 
 def prepare_training_data():
-    """Save a boolean mask of each DICOM scan at ../assets/segmented_lung_patient_{LIDC-ID}.npy that indicates whether
-    a pixel was annotate by an expert as at least intermediate malicious or not.
     """
+    Save a boolean mask of each DICOM scan at
+    ../assets/segmented_lung_patient_{LIDC-ID}.npy that indicates whether a
+    pixel was annotate by an expert as at least intermediate malicious or not.
+    """
+
     INTERMEDIATE_MALICIOUS = 3
     ASSETS_DIR = Config.SEGMENT_ASSETS_DIR
     IMAGES_FULL_DIR = 'images_full'

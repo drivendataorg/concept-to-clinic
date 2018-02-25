@@ -7,7 +7,8 @@ from . import load_ct
 
 
 class Params:
-    """Params for CT scan pre-processing.
+    """
+    Params for CT scan pre-processing.
 
     To ensure parameters integrity for a pre-processing class.
 
@@ -77,7 +78,8 @@ class Params:
 
 
 class PreprocessCT(Params):
-    """Pre-process the CT data.
+    """
+    Pre-process the CT data.
 
     To ensure parameters integrity for a pre-processing function.
 
@@ -156,7 +158,8 @@ class PreprocessCT(Params):
 
 
 def mm_coordinates_to_voxel(coord, meta):
-    """ Transfer coordinates in mm into voxel's location
+    """
+    Transfer coordinates in mm into voxel's location
 
     Args:
         coord (scalar | list[scalar]): coordinates in mm (real-world point).

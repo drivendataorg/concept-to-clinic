@@ -5,13 +5,18 @@ import numpy as np
 import pandas
 import csv
 
-# IoverU threshold to decide if two rectangles from adjacent slices can be merged into a box
+# IoverU threshold to decide if two rectangles from adjacent slices can be
+# merged into a box
 merge_rectangles_threshold = 0.4
+
 # confidence score threshold used to filter out false positives
 confidence_score_threshold = 4.0
+
 # IoverU threshold to determine if a detection is correct
 correct_detection_threshold = 0.4
-# whether to use the prediction results when we try to filter out false positives
+
+# Whether to use the prediction results when we try to filter out false
+# positives
 use_prediction_results = False
 
 
@@ -127,7 +132,7 @@ def group_rectangles(rectangles):
 
 
 def get_bounding_boxes(annotations):
-    # for each annotation/ROI, find its bounding rectangle
+    # For each annotation/ROI, find its bounding rectangle
     rectangles = []
     for annotation in annotations:
         num_of_points = int(annotation[19])

@@ -25,8 +25,8 @@ DATA_SHAPE = (512, 512, 512, 1)
 
 
 def get_z_range(dicom_path):
-    """Return the Z range of the images in the DICOM path
-    e.g. -379.0, -31.5
+    """
+    Return the Z range of the images in the DICOM path e.g. -379.0, -31.5
 
     Args:
         dicom_path: path that contains DICOM images
@@ -46,7 +46,9 @@ def get_z_range(dicom_path):
 
 
 def save_lung_segments(dicom_path, patient_id):
-    """Write the converted scan images and related lung masks to EXTRACTED_IMAGE_DIR.
+    """
+    Write the converted scan images and related lung masks to
+    EXTRACTED_IMAGE_DIR.
 
     Args:
         dicom_path: a path to a DICOM directory
@@ -91,7 +93,8 @@ def save_lung_segments(dicom_path, patient_id):
 
 
 def load_patient(src_dir):
-    """Load the DICOM slices of a patient sorted by their instance numbers
+    """
+    Load the DICOM slices of a patient sorted by their instance numbers.
 
     Args:
         src_dir: a path to a DICOM directory
@@ -140,14 +143,15 @@ def get_pixels_hu(slices):
 
 
 def normalize_hu(image):
-    """Rescale an image such that tissue with Houndsfield units between air and bone is scaled to between 0 and 1.
-    Tissue that is not that dense is clipped accordingly.
+    """
+    Rescale an image such that tissue with Houndsfield units between air and
+    bone is scaled to between 0 and 1.  Tissue that is not that dense is
+    clipped accordingly.
 
     Args:
         image: numpy.array
 
     Returns: numpy.array
-
     """
     MIN_BOUND = -1000.0  # Air
     MAX_BOUND = 400.0  # Bone

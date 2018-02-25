@@ -1,8 +1,5 @@
 """
-    prediction.src.tests.test_endpoints
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    Provides unit tests for the API endpoints.
+Provides unit tests for the API endpoints.
 """
 import json
 

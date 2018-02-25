@@ -1,9 +1,7 @@
 """
-    prediction.src.views
-    ~~~~~~~~~~~~~~~~~~~~
-
-    Provides main api endpoints
+Provides main api endpoints
 """
+
 from flask import Blueprint, jsonify, request
 
 from .algorithms.classify import trained_model as classify_trained_model
@@ -24,7 +22,9 @@ PREDICTORS = {
 
 @blueprint.route('/')
 def home():
-    """Shows the API info"""
+    """
+    Shows the API info.
+    """
     rkwargs = {
         'description': 'Shows API info',
         'message': 'Welcome to the lung cancer prediction API!',
@@ -37,7 +37,8 @@ def home():
 
 @blueprint.route('/<algorithm>/predict/', methods=['GET', 'POST'])
 def predict(algorithm):
-    """Performs various predictions for a path to a DICOM directory (folder of
+    """
+    Performs various predictions for a path to a DICOM directory (folder of
     scans).
 
     A GET request will give the documentation for the endpoint.

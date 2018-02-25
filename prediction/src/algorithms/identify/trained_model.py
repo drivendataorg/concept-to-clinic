@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-"""
-    algorithms.identify.trained_model
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    An API for a trained identification model to make predictions
-    for where the centroids of nodules are in the DICOM image.
 """
-from os import path
+An API for a trained identification model to make predictions for where the
+centroids of nodules are in the DICOM image.
+"""
 
 import SimpleITK as sitk
 
@@ -18,7 +15,8 @@ MODELS_DIR = path.join(Config.CURRENT_DIR, 'identify_models')
 
 
 def predict(dicom_path):
-    """ Predicts centroids of nodules in a DICOM image.
+    """
+    Predicts centroids of nodules in a DICOM image.
 
     Given an iterator of DICOM objects, this method will:
         (1) load the identification model from its serialized state
@@ -58,14 +56,16 @@ def predict(dicom_path):
 
 
 def run_prediction(patient_id, magnification=1, ext_name="luna_posnegndsb_v", version=1, holdout=1):
-    """Predict the nodules based on the extracted and transformed images using a specified model.
+    """
+    Predict the nodules based on the extracted and transformed images using a
+    specified model.
 
     Args:
-        patient_id: SeriesInstanceUID of the patient
-        magnification: what magnification to use, one of (1, 1.5, 2)
-        ext_name: external name of the model, one of ("luna16_fs", "luna_posnegndsb_v")
-        version: version of the model, only used if ext_name equals "luna_posnegndsb_v", one of (1, 2)
-        holdout: whether to use, only used if ext_name equals "luna_posnegndsb_v", one of (0, 1)
+        patient_id:     SeriesInstanceUID of the patient
+        magnification:  what magnification to use, one of (1, 1.5, 2)
+        ext_name:       external name of the model, one of ("luna16_fs", "luna_posnegndsb_v")
+        version:        version of the model, only used if ext_name equals "luna_posnegndsb_v", one of (1, 2)
+        holdout:        whether to use, only used if ext_name equals "luna_posnegndsb_v", one of (0, 1)
 
     Returns:
         list(dict): a list of centroids in the form::

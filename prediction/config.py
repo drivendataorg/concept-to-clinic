@@ -1,8 +1,5 @@
 """
-    prediction.config
-    ~~~~~~~~~~~~~~~~~
-
-    Provides the flask config options
+Provides the flask config options
 """
 import os
 

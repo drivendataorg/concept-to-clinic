@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-    algorithms.classify.trained_model
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    An API for a trained classification model to make predictions
-    for if nodules are concerning or not.
+An API for a trained classification model to make predictions for if nodules
+are concerning or not.
 """
 
 from src.algorithms.classify.src import gtr123_model
 
 
 def predict(dicom_path, centroids, model_path=None):
-    """ Predicts if centroids are concerning or not.
+    """
+    Predicts if centroids are concerning or not.
 
     Given path to a DICOM image and an iterator of centroids:
         (1) load the classification model from its serialized state

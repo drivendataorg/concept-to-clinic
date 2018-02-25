@@ -53,7 +53,8 @@ class Model(ClassificationModel):
         return net(channel_axis=self.channel_axis)
 
     def load_model(self, model_path):
-        """Load model method.
+        """
+        Load model method.
 
         Args:
             model_path (str): A path to the model.
@@ -104,7 +105,8 @@ class Model(ClassificationModel):
 
     @staticmethod
     def _sample_annotations(annotations, sampling_pure, sampling_cancerous):
-        """Train the model through the annotated CT scans
+        """
+        Train the model through the annotated CT scans
 
         Args:
             annotations (list[dict]): A list of centroids of the form::
@@ -149,21 +151,22 @@ class Model(ClassificationModel):
         return sampled
 
     def feed(self, annotations, sampling_pure=1., sampling_cancerous=1., train_mode=True):  # noqa: C901
-        """Train the model through the annotated CT scans
+        """
+        Train the model through the annotated CT scans.
 
-                Args:
-                    annotations (list[dict]): A list of centroids of the form::
-                         {'file_path': str,
-                          'centroids': [{'x': int,
-                                         'y': int,
-                                         'z': int,
-                                         'cancerous': bool}, ..]}.
-                    sampling_pure (float): coefficient of .
-                    sampling_cancerous (float): .
-                    train_mode (bool): Whether to use data augmentation and shuffling.
+        Args:
+            annotations (list[dict]): A list of centroids of the form::
+                 {'file_path': str,
+                  'centroids': [{'x': int,
+                                 'y': int,
+                                 'z': int,
+                                 'cancerous': bool}, ..]}.
+            sampling_pure (float): coefficient of .
+            sampling_cancerous (float): .
+            train_mode (bool): Whether to use data augmentation and shuffling.
 
-                Yields:
-                    list[np.ndarray]: list of patches.
+        Yields:
+            list[np.ndarray]: list of patches.
         """
         while True:
             sampled = annotations
@@ -218,7 +221,8 @@ class Model(ClassificationModel):
                         yield batch
 
     def train(self, annotations, validation_data=None, epochs=1, model_path=None, verbose=False):
-        """Train the model through the annotated CT scans
+        """
+        Train the model through the annotated CT scans
 
         Args:
             annotations (list[dict]): A list of centroids of the form::
@@ -272,7 +276,8 @@ class Model(ClassificationModel):
         return self.model
 
     def predict(self, candidates, model_path=None):
-        """ Predict cancerous of given candidates.
+        """
+        Predict cancerous of given candidates.
 
         Args:
             candidates (list[dict]): A list of centroids of the form::

@@ -433,9 +433,11 @@ def lung_separation(lungs_seeds):
     """
     Lung separation.
 
-    code was taken from:
-    https://github.com/vessemer/LungCancerDetection/blob/master/lung_segmentation/lung_separation_frontal.py
-    https://github.com/vessemer/LungCancerDetection/blob/master/report.pdf
+    Code was taken from:
+
+        https://github.com/vessemer/LungCancerDetection/blob/master/lung_segmentation/lung_separation_frontal.py
+        https://github.com/vessemer/LungCancerDetection/blob/master/report.pdf
+
     Args:
         lungs_seeds: A label of the segmented lungs.
 
@@ -465,13 +467,12 @@ def lung_separation(lungs_seeds):
 
 def lungs_postprocessing(lungs_seeds):
     """
-    First 3D hole filling is applied
-    to include vessels and other high-density structures that were
-    excluded by the threshold used in region growing, in the segmentation.
+    First 3D hole filling is applied to include vessels and other high-density
+    structures that were excluded by the threshold used in region growing, in
+    the segmentation.
 
-    Next, morphological closing with a spherical
-    kernel is applied. The diameter of the kernel is set to 2% of
-    the x-dimension of the image.
+    Next, morphological closing with a spherical kernel is applied. The
+    diameter of the kernel is set to 2% of the x-dimension of the image.
 
     Args:
         lungs_seeds: A label with the segmented lungs before postprocessing.
@@ -488,13 +489,14 @@ def lungs_postprocessing(lungs_seeds):
 def conventional_lung_segmentation(patient):
     """
     The algorithm consists of the following steps:
-        (1)Extraction of large airways;
-        (2)Segmentation of lung regions;
-        (3)Separation of the left and right lungs;
-        (4)Smoothing.
 
-    The function aggregates extract_seeds, growing_bronchis,
-    flip_lung, grow_lungs, lungs_postprocessing.
+        (1) Extraction of large airways;
+        (2) Segmentation of lung regions;
+        (3) Separation of the left and right lungs;
+        (4) Smoothing.
+
+    The function aggregates extract_seeds, growing_bronchis, flip_lung,
+    grow_lungs, lungs_postprocessing.
 
     Args:
         patient: A label of CT.
@@ -544,10 +546,9 @@ def ventricular_extraction(err_lung):
     """
     Extraction of a ventricle.
 
-    On all CT there is a ventricle. In order for the algorithm
-    doesn't define the ventricle as a segmentation error,
-    it is necessary to remove the error mask of the largest
-    size that corresponds to the ventricle.
+    On all CT there is a ventricle. In order for the algorithm doesn't define
+    the ventricle as a segmentation error, it is necessary to remove the error
+    mask of the largest size that corresponds to the ventricle.
 
     Args:
         err_lung: The label of errors in the lung.
@@ -576,8 +577,8 @@ def ventricular_extraction(err_lung):
 
 def costal_surface(lung, z_coords, max_coor, combined):
     """
-    The convexity is determined by comparing the costal lung surface
-    in axial slices to the convex hull of this costal lung surface.
+    The convexity is determined by comparing the costal lung surface in axial
+    slices to the convex hull of this costal lung surface.
 
     Args:
         lung: Cumulative x-position in lung.
@@ -612,6 +613,7 @@ def detection_lung_error(left, right):
     Automatic error detection.
 
     The function aggregates cumulation, costal_surface, ventricular_extraction.
+
     Args:
         left: A mask of the left segmented lung.
         right: A mask of the right segmented lung.

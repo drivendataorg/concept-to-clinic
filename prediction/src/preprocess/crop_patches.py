@@ -6,8 +6,9 @@ from src.preprocess.preprocess_ct import mm_coordinates_to_voxel
 
 
 def crop_patch(ct_array, patch_shape=None, centroids=None, stride=None, pad_value=0):
-    """ Generator yield a patch of a desired shape for each centroid
-    from a given a CT scan.
+    """
+    Generator yield a patch of a desired shape for each centroid from a given a
+    CT scan.
 
     Args:
         ct_array (np.ndarray): a numpy ndarray representation of a CT scan
@@ -20,6 +21,7 @@ def crop_patch(ct_array, patch_shape=None, centroids=None, stride=None, pad_valu
         stride (int): stride for patch coordinates meshgrid.
             If None is set (default), then no meshgrid will be returned.
         pad_value (int): value with which an array padding will be performed.
+
     Yields:
         np.ndarray: cropped patch from a CT scan.
         np.ndarray | None: meshgrid of a patch.
@@ -63,8 +65,9 @@ def crop_patch(ct_array, patch_shape=None, centroids=None, stride=None, pad_valu
 
 
 def patches_from_ct(ct_array, meta, patch_shape=None, centroids=None, stride=None, pad_value=0):
-    """ Given a CT scan, and a list of centroids return the list of patches
-    of the desired patch shape.
+    """
+    Given a CT scan, and a list of centroids return the list of patches of the
+    desired patch shape.
 
     This is just a wrapper over crop_patch generator.
 

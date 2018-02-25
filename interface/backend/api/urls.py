@@ -21,8 +21,10 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 
 class RelativeUrlRootView(routers.APIRootView):
-    """ Provides relative URLs for the available endpoints.
     """
+    Provides relative URLs for the available endpoints.
+    """
+
     def get(self, request, *args, **kwargs):
         # Return a plain {"name": "hyperlink"} response.
         ret = OrderedDict()

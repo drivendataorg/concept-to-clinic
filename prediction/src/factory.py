@@ -1,8 +1,5 @@
 """
-    prediction.factory
-    ~~~~~~~~~~~~~~~~~~
-
-    Provides the flask application
+Provides the flask application
 """
 
 from flask import Flask
@@ -14,7 +11,8 @@ except ValueError:
 
 
 def create_app(config_mode='Production', config_file=None):
-    """Flask app creator that accepts configuration modes
+    """
+    Flask app creator that accepts configuration modes
 
     Kwargs:
         config_mode (str): Configuration mode. Must be one of 'Production',
@@ -27,7 +25,7 @@ def create_app(config_mode='Production', config_file=None):
     Returns:
         (obj): A Flask app
 
-    Examples:
+    Example:
         >>> from src.factory import create_app
         >>> app = create_app(config_mode='Test')
     """

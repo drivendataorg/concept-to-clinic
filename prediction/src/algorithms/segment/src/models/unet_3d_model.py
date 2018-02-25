@@ -14,10 +14,14 @@ class Simple3DModel(SegmentationModel):
                           initial_learning_rate=0.01, deconvolution=False):
             """
             Builds the 3D U-Net Keras model.
-            The [U-Net](https://arxiv.org/abs/1505.04597) uses a fully-convolutional architecture consisting of an
-            encoder and a decoder. The encoder is able to capture contextual information while the decoder enables
-            precise localization. Due to the large amount of parameters, the input shape has to be small since for e.g.
-            images of shape 144x144x144 the model already consumes 32 GB of memory.
+
+            The [U-Net](https://arxiv.org/abs/1505.04597) uses a
+            fully-convolutional architecture consisting of an encoder and a
+            decoder. The encoder is able to capture contextual information
+            while the decoder enables precise localization. Due to the large
+            amount of parameters, the input shape has to be small since for
+            e.g. images of shape 144x144x144 the model already consumes 32 GB
+            of memory.
 
             :param input_shape: Shape of the input data (x_size, y_size, z_size, n_channels).
             :param downsize_filters_factor: Factor to which to reduce the number of filters. Making this value larger
@@ -86,8 +90,10 @@ class Simple3DModel(SegmentationModel):
 
 def compute_level_output_shape(filters, depth, pool_size, image_shape):
     """
-    Each level has a particular output shape based on the number of filters used in that level and the depth or number
-    of max pooling operations that have been done on the data at that point.
+    Each level has a particular output shape based on the number of filters
+    used in that level and the depth or number of max pooling operations that
+    have been done on the data at that point.
+
     :param image_shape: shape of the 3d image.
     :param pool_size: the pool_size parameter used in the max pooling operation.
     :param filters: Number of filters used by the last node in a given level.

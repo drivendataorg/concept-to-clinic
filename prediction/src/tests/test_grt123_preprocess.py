@@ -12,8 +12,6 @@ Code adapted from https://github.com/lfz/DSB2017
 
 
 class SimpleCrop(object):
-    """ """
-
     def __init__(self):
         self.crop_size = [96, 96, 96]
         self.scaleLim = [0.85, 1.15]

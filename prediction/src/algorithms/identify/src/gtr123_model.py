@@ -11,7 +11,7 @@ from config import Config
 from src.preprocess import preprocess_ct, load_ct
 from src.preprocess.extract_lungs import extract_lungs
 
-""""
+"""
 Detector model from team gtr123
 Code adapted from https://github.com/lfz/DSB2017
 """
@@ -40,8 +40,6 @@ __all__ = ["Net", "GetPBB", "SplitComb"]
 
 
 class PostRes(nn.Module):
-    """ """
-
     def __init__(self, n_in, n_out, stride=1):
         super(PostRes, self).__init__()
         self.conv1 = nn.Conv3d(n_in, n_out, kernel_size=3, stride=stride, padding=1)
@@ -81,12 +79,16 @@ class PostRes(nn.Module):
 
 
 class Net(nn.Module):
-    """The identification algorithm from Team grt123. Part of the winning algorithm."""
+    """
+    The identification algorithm from Team grt123. Part of the winning
+    algorithm.
+    """
 
     def __init__(self):
         super(Net, self).__init__()
-        # The first few layers consumes the most memory, so use simple convolution to save memory.
-        # Call these layers preBlock, i.e., before the residual blocks of later layers.
+        # The first few layers consumes the most memory, so use simple
+        # convolution to save memory.  Call these layers preBlock, i.e., before
+        # the residual blocks of later layers.
         self.preBlock = nn.Sequential(
             nn.Conv3d(1, 24, kernel_size=3, padding=1),
             nn.BatchNorm3d(24),
@@ -186,8 +188,6 @@ class Net(nn.Module):
 
 
 class GetPBB(object):
-    """ """
-
     def __init__(self, stride=4, anchors=(10.0, 30.0, 60.)):
         self.stride = stride
         self.anchors = np.asarray(anchors)
@@ -217,8 +217,6 @@ class GetPBB(object):
 
 
 class SplitComb(object):
-    """ """
-
     def __init__(self, side_len, max_stride, stride, margin, pad_value):
         self.side_len = side_len
         self.max_stride = max_stride
@@ -350,16 +348,14 @@ class SplitComb(object):
 
 
 def split_data(imgs, split_comber, stride=4):
-    """Image tends to be too big to fit on even very large memory systems. This function splits it up into manageable
-    chunks.
+    """
+    Image tends to be too big to fit on even very large memory systems. This
+    function splits it up into manageable chunks.
 
     Args:
       imgs: param split_comber:
       stride: return: (Default value = 4)
       split_comber:
-
-    Returns:
-
     """
     nz, nh, nw = imgs.shape[1:]
     pz = int(np.ceil(float(nz) / stride)) * stride

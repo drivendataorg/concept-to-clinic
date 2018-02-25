@@ -41,7 +41,8 @@ class ClassificationModel(abc.ABC):
 
     @abc.abstractmethod
     def load_model(self, model_path):
-        """Load model method.
+        """
+        Load model method.
 
         Args:
             model_path (str): A path to the model.
@@ -61,7 +62,8 @@ class ClassificationModel(abc.ABC):
 
     @abc.abstractmethod
     def feed(self, annotations, sampling_pure, sampling_cancerous):
-        """Train the model through the annotated CT scans
+        """
+        Train the model through the annotated CT scans
 
                 Args:
                     annotations (list[dict]): A list of centroids of the form::
@@ -80,7 +82,8 @@ class ClassificationModel(abc.ABC):
 
     @abc.abstractmethod
     def train(self, annotations, train_val_split):
-        """Train the model through the annotated CT scans
+        """
+        Train the model through the annotated CT scans
 
         Args:
             annotations (list[dict]): A list of centroids of the form::
@@ -97,7 +100,8 @@ class ClassificationModel(abc.ABC):
 
     @abc.abstractmethod
     def predict(self, candidates, model_path=None):
-        """ Predict cancerous of given candidates.
+        """
+        Predict cancerous of given candidates.
 
         Args:
             candidates (list[dict]): A list of centroids of the form::

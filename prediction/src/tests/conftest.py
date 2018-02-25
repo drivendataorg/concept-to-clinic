@@ -112,7 +112,10 @@ def content_type(scope='session'):
     yield 'application/json'
 
 
-"""Adapted from https://stackoverflow.com/questions/46766899/pytest-timeout-fail-test-instead-killing-whole-test-run"""
+"""
+Adapted from
+https://stackoverflow.com/questions/46766899/pytest-timeout-fail-test-instead-killing-whole-test-run
+"""
 
 
 class TimeoutExit(BaseException):

@@ -12,9 +12,9 @@ from src.preprocess.load_ct import load_ct
 from src.preprocess.preprocess_ct import PreprocessCT
 
 
-""""
-Classification model from team gtr123
-Code adapted from https://github.com/lfz/DSB2017
+"""
+Classification model from team gtr123. Code adapted from
+https://github.com/lfz/DSB2017
 """
 config = {}
 
@@ -38,8 +38,6 @@ config['anchors'] = [10, 30, 60]
 
 
 class PostRes(nn.Module):
-    """ """
-
     def __init__(self, n_in, n_out, stride=1):
         super(PostRes, self).__init__()
         self.conv1 = nn.Conv3d(n_in, n_out, kernel_size=3, stride=stride, padding=1)
@@ -72,8 +70,6 @@ class PostRes(nn.Module):
 
 
 class Net(nn.Module):
-    """ """
-
     def __init__(self):
         super(Net, self).__init__()
         # The first few layers consumes the most memory, so use simple
@@ -184,7 +180,10 @@ class Net(nn.Module):
 
 
 class CaseNet(nn.Module):
-    """The classification Net from the gtr123 team - part of the Winning algorithm for DSB2017"""
+    """
+    The classification Net from the gtr123 team - part of the Winning algorithm
+    for DSB2017.
+    """
 
     def __init__(self):
         super(CaseNet, self).__init__()

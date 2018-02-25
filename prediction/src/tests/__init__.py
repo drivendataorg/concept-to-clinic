@@ -9,8 +9,11 @@ sys.path.append(os.path.join(os.path.dirname(__file__),
 
 def get_timeout():
     """
-    If RUN_SLOW_TESTS is set to True, all tests should be run. Thus, no timeout is desired and this returns 0.
+    If RUN_SLOW_TESTS is set to True, all tests should be run. Thus, no timeout
+    is desired and this returns 0.
+
     Otherwise the content of TESTS_TIMEOUT is returned.
+
     :return: Time limit after which certain tests should be stopped
     """
     DEFAULT_TIMEOUT = 15

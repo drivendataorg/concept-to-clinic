@@ -5,25 +5,30 @@ from .load_ct import read_dicom_files
 
 def crop_dicom(path_to_dicom, begin, end, output=None):
     """
-    This function crops a dicom series in the x-, y- and z-dimension. If an output path is provided, it will save the
-    new series at that location.
+    This function crops a dicom series in the x-, y- and z-dimension. If an
+    output path is provided, it will save the new series at that location.
 
-    Examples for how to specify cropping mask using the begin- and end-parameter:
+    Examples for how to specify cropping mask using the begin- and
+    end-parameter:
 
-        The given DICOM series contains images with the resolution of 512x512 pixels and 133 images
-        starting at a depth of -10 mm to a depth of -340 mm. Using begin = [0, 0, -10] and end = [512, 512, -340] would
-        give you back the full series. Using begin = [100, 200, -160] and end = [120, 220, -170] would give you a
-        new series with 5 images of size 20x20 pixels.
+        The given DICOM series contains images with the resolution of 512x512
+        pixels and 133 images starting at a depth of -10 mm to a depth of -340
+        mm. Using begin = [0, 0, -10] and end = [512, 512, -340] would give you
+        back the full series. Using begin = [100, 200, -160] and end = [120,
+        220, -170] would give you a new series with 5 images of size 20x20
+        pixels.
 
     Args:
-        path_to_dicom: String containing the path containing the DICOM-series
-        begin: List containing three numbers representing the starting point for cropping. See examples above.
-        end: List containing three numbers representing the starting point for cropping. See examples above.
-        output: (optional) String containing the path to where to save the cropped series.
+        path_to_dicom:  String containing the path containing the DICOM-series
+        begin:          List containing three numbers representing the starting
+                        point for cropping. See examples above.
+        end:            List containing three numbers representing the starting
+                        point for cropping. See examples above.
+        output:         (optional) String containing the path to where to save
+                        the cropped series.
 
     Returns:
         A list of pydicom Dataset-objects representing the cropped series.
-
     """
 
     cropped_series = []

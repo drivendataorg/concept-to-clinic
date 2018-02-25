@@ -14,7 +14,8 @@ except ValueError:
 
 def get_full_dicom_paths():
     """
-    Return the folder paths to the LIDC images e.g. ['/images_full/LIDC-IDRI-0307/1.3.6..../1.3.4.../']
+    Return the folder paths to the LIDC images e.g.
+    ['/images_full/LIDC-IDRI-0307/1.3.6..../1.3.4.../']
     """
     dicom_paths = Config.FULL_DICOM_PATHS
     return glob.glob(os.path.join(dicom_paths, "**/**/**/"))
@@ -22,8 +23,9 @@ def get_full_dicom_paths():
 
 def get_lidc_id_index(path):
     """
-    This method is necessary since the model should be trained outside of the docker container which results in
-    different paths to the full LIDC images.
+    This method is necessary since the model should be trained outside of the
+    docker container which results in different paths to the full LIDC images.
+
     Args:
         path: absolute path to a LIDC directory
 
@@ -37,7 +39,9 @@ def get_lidc_id_index(path):
 
 
 def train():
-    """Load the training masks from the asset folder and train a keras model"""
+    """
+    Load the training masks from the asset folder and train a keras model.
+    """
     CUBOID_IMAGE_SHAPE = DATA_SHAPE
     CUBOID_BATCH = 4  # How many training pairs should be passed to model.fit in one batch
 

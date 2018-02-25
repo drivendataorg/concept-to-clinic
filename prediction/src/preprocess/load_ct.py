@@ -35,14 +35,19 @@ def _extract_voxel_data(datasets):
 
 
 def load_dicom(path, voxel=True):
-    """Function that orchestrates the loading of dicom datafiles of a dicom series into a numpy-array.
+    """
+    Function that orchestrates the loading of dicom datafiles of a dicom series
+    into a numpy-array.
 
     Args:
-        path (str): contains the path to the folder containing the dcm-files of a series.
-        voxel (bool): whether to return or not to return voxel data of the CT scan
+        path (str): contains the path to the folder containing the dcm-files of
+                    a series.
+        voxel (bool): whether to return or not to return voxel data of the CT
+                      scan
 
     Returns:
-        voxel_data (np.ndarray): numpy-array containing the 3D-representation of the DICOM-series.
+        voxel_data (np.ndarray): numpy-array containing the 3D-representation
+                                 of the DICOM-series.
         files (list[dicom.dataset.FileDataset]): DICOM-meta data.
     """
 
@@ -57,7 +62,8 @@ def load_dicom(path, voxel=True):
 
 
 def load_metaimage(path, voxel=True):
-    """Function that load a MetaImage files.
+    """
+    Function that load a MetaImage files.
 
     Args:
         path (str): the path directly to the .mhd file itself, .raw
@@ -79,7 +85,9 @@ def load_metaimage(path, voxel=True):
 
 
 def load_ct(path, voxel=True):
-    """Function that orchestrates the loading of DICOM or MetaImage datafiles into a numpy-array.
+    """
+    Function that orchestrates the loading of DICOM or MetaImage datafiles into
+    a numpy-array.
 
     Args:
         path (str): contains the path to the folder containing either dcm-files of a series
@@ -111,10 +119,11 @@ def load_ct(path, voxel=True):
 
 
 class MetaData:
-    """The standardised way to store meta information of CT.
+    """
+    The standardised way to store meta information of CT.
 
-    CT may be extracted from either DICOM or MetaImage file each of which has its own format
-    for meta data (such as slice_thikness, spacing, etc.).
+    CT may be extracted from either DICOM or MetaImage file each of which has
+    its own format for meta data (such as slice_thikness, spacing, etc.).
 
 
     Args:
