@@ -107,7 +107,7 @@ class ImageFile(models.Model):
                 else:
                     d1[k] = v
 
-        metadata = dict()
+        metadata = {}
         for dicom_prop, model_attribute in cls.DICOM_PROPERTIES.items():
             if callable(model_attribute):
                 try:

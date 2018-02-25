@@ -202,7 +202,7 @@ class Model(ClassificationModel):
                 allowed_iterations = len(self.pull_patches) // self.batch_size
 
                 for _ in range(allowed_iterations):
-                    batch = list()
+                    batch = []
                     for _ in range(self.batch_size):
                         batch.append(self.pull_patches.pop())
 

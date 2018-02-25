@@ -24,7 +24,7 @@ class ClassificationModel(abc.ABC):
         if pull_size < 1:
             raise ValueError('`pull_size` should be grater or equal to 1')
         self.pull_ct = collections.deque(maxlen=pull_size)
-        self.pull_patches = list()
+        self.pull_patches = []
 
         self.data_format = data_format
         self.set_params()

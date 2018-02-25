@@ -130,9 +130,9 @@ def extract_seeds(patient):
     Returns:
         seeds: A initial region.
     """
-    bronchials = list()
-    bronch_cts = list()
-    levels = list()
+    bronchials = []
+    bronch_cts = []
+    levels = []
     for i in range(25):
         bronchial = extract_bronchial(patient[i])
         if bronchial is not None:
