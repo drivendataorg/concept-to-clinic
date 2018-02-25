@@ -94,7 +94,8 @@ def resample(imgs, spacing, new_spacing, order=2):
             imgs = zoom(imgs, resize_factor, mode='nearest', order=order)
 
         return imgs, true_spacing
-    elif len(imgs.shape) == 4:
+
+    if len(imgs.shape) == 4:
         n = imgs.shape[-1]
         newimg = []
 
@@ -106,8 +107,8 @@ def resample(imgs, spacing, new_spacing, order=2):
         newimg = np.transpose(np.array(newimg), [1, 2, 3, 0])
 
         return newimg, true_spacing
-    else:
-        raise ValueError('wrong shape')
+
+    raise ValueError('wrong shape')
 
 
 def test_lum_trans(metaimage_path):

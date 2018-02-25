@@ -23,5 +23,5 @@ def get_timeout():
 
     if run_slow_tests:
         return 0
-    else:
-        return int(os.environ.get('TESTS_TIMEOUT', DEFAULT_TIMEOUT))
+
+    return int(os.environ.get('TESTS_TIMEOUT', DEFAULT_TIMEOUT))

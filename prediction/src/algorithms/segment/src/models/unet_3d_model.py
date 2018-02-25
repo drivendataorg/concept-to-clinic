@@ -111,18 +111,18 @@ def compute_level_output_shape(filters, depth, pool_size, image_shape):
 
 def get_upconv(depth, nb_filters, pool_size, image_shape, kernel_size=(2, 2, 2), strides=(2, 2, 2),
                deconvolution=False):
-    if deconvolution:
-        try:
-            from keras_contrib.layers import Deconvolution3D
-        except ImportError:
-            raise ImportError("Install keras_contrib in order to use deconvolution. Otherwise set deconvolution=False.")
-
-        return Deconvolution3D(filters=nb_filters, kernel_size=kernel_size,
-                               output_shape=compute_level_output_shape(filters=nb_filters, depth=depth,
-                                                                       pool_size=pool_size, image_shape=image_shape),
-                               strides=strides, input_shape=compute_level_output_shape(filters=nb_filters,
-                                                                                       depth=depth + 1,
-                                                                                       pool_size=pool_size,
-                                                                                       image_shape=image_shape))
-    else:
+    if not deconvolution:
         return UpSampling3D(size=pool_size)
+
+    try:
+        from keras_contrib.layers import Deconvolution3D
+    except ImportError:
+        raise ImportError("Install keras_contrib in order to use deconvolution. Otherwise set deconvolution=False.")
+
+    return Deconvolution3D(filters=nb_filters, kernel_size=kernel_size,
+                           output_shape=compute_level_output_shape(filters=nb_filters, depth=depth,
+                                                                   pool_size=pool_size, image_shape=image_shape),
+                           strides=strides, input_shape=compute_level_output_shape(filters=nb_filters,
+                                                                                   depth=depth + 1,
+                                                                                   pool_size=pool_size,
+                                                                                   image_shape=image_shape))

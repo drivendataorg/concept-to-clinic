@@ -49,12 +49,11 @@ class PostRes(nn.Module):
         self.conv2 = nn.Conv3d(n_out, n_out, kernel_size=3, padding=1)
         self.bn2 = nn.BatchNorm3d(n_out)
 
+        self.shortcut = None
         if stride != 1 or n_out != n_in:
             self.shortcut = nn.Sequential(
                 nn.Conv3d(n_in, n_out, kernel_size=1, stride=stride),
                 nn.BatchNorm3d(n_out))
-        else:
-            self.shortcut = None
 
     def forward(self, x):
         """
