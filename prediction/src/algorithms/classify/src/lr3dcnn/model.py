@@ -1,8 +1,8 @@
+import collections
 import keras
 import numpy as np
 import os
-from collections import defaultdict
-from keras import backend as K
+
 from src.algorithms.classify.src.classification_model import ClassificationModel
 from src.preprocess import preprocess_ct, load_ct, crop_patches, generators
 
@@ -140,7 +140,7 @@ class Model(ClassificationModel):
         coeff = int(np.ceil(sampling_pure * len(pure)))
         sampled.extend([pure[idx] for idx in np.random.choice(len(pure), coeff)])
         np.random.shuffle(sampled)
-        resulted = defaultdict(list)
+        resulted = collections.defaultdict(list)
         for file_path, sample in sampled:
             resulted[file_path] += [sample]
         return [{'file_path': key, 'centroids': el} for key, el in resulted.items()]
@@ -318,4 +318,4 @@ class Model(ClassificationModel):
         del self.model
         self.pull_ct.clear()
         self.pull_patches.clear()
-        K.clear_session()
+        keras.backend.clear_session()

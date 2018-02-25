@@ -1,5 +1,5 @@
 import os
-from glob import glob
+import glob
 
 import SimpleITK
 import dicom
@@ -10,7 +10,7 @@ from .errors import EmptyDicomSeriesException
 
 def read_dicom_files(file_pattern):
     try:
-        files = [dicom.read_file(fn) for fn in glob(file_pattern)]
+        files = [dicom.read_file(fn) for fn in glob.glob(file_pattern)]
 
         if len(files) == 0:
             raise EmptyDicomSeriesException
@@ -102,9 +102,9 @@ def load_ct(path, voxel=True):
             of a MetaImage file or DICOM-series in its original format.
     """
     dicom_pattern = os.path.join(path, '*.dcm')
-    dicom_pattern = glob(dicom_pattern)
+    dicom_pattern = glob.glob(dicom_pattern)
     mhd_pattern = os.path.join(path, '*.mhd')
-    mhd_pattern = [path] + glob(mhd_pattern)
+    mhd_pattern = [path] + glob.glob(mhd_pattern)
     mhd_pattern = next(filter(lambda x: x[-4:].lower() == '.mhd', mhd_pattern), None)
 
     if dicom_pattern:

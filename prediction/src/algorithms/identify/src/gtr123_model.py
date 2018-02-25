@@ -1,5 +1,4 @@
-from os import path
-
+import os
 import numpy as np
 import torch
 
@@ -477,8 +476,8 @@ def predict(ct_path, model_path=None):
 
     """
     if not model_path:
-        INDENTIFY_DIR = path.join(Config.ALGOS_DIR, 'identify')
-        model_path = path.join(INDENTIFY_DIR, 'assets', 'dsb2017_detector.ckpt')
+        INDENTIFY_DIR = os.path.join(Config.ALGOS_DIR, 'identify')
+        model_path = os.path.join(INDENTIFY_DIR, 'assets', 'dsb2017_detector.ckpt')
 
     ct_array, meta = load_ct.load_ct(ct_path)
     meta = load_ct.MetaData(meta)

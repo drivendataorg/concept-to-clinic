@@ -5,13 +5,15 @@ An API for a trained identification model to make predictions for where the
 centroids of nodules are in the DICOM image.
 """
 
+import os
+
 import SimpleITK as sitk
 
 from config import Config
 from . import prediction
 from .src import gtr123_model
 
-MODELS_DIR = path.join(Config.CURRENT_DIR, 'identify_models')
+MODELS_DIR = os.path.join(Config.CURRENT_DIR, 'identify_models')
 
 
 def predict(dicom_path):
@@ -41,7 +43,7 @@ def predict(dicom_path):
     """
     reader = sitk.ImageSeriesReader()
     if dicom_path.endswith('.mhd'):
-        if not path.isfile(dicom_path):
+        if not os.path.isfile(dicom_path):
             message = "The path {} does not exist"
             raise ValueError(message.format(dicom_path))
     else:
@@ -94,12 +96,12 @@ def run_prediction(patient_id, magnification=1, ext_name="luna_posnegndsb_v", ve
             raise ValueError('holdout must be one of {} but was {}'.format(holdout_choices, holdout))
 
     if ext_name == 'luna16_fs':
-        model_path = path.join(MODELS_DIR, 'model_luna16_full__fs_best.hd5')
+        model_path = os.path.join(MODELS_DIR, 'model_luna16_full__fs_best.hd5')
         ext = 'luna16_fs'
         results_df = prediction.predict_cubes(model_path, patient_id, magnification=magnification, ext_name=ext)
     else:
         model = 'model_luna_posnegndsb_v{}__fs_h{}_end.hd5'
-        model_path = path.join(MODELS_DIR, model.format(version, holdout))
+        model_path = os.path.join(MODELS_DIR, model.format(version, holdout))
         ext = 'luna_posnegndsb_v{}'.format(version)
         results_df = prediction.predict_cubes(model_path, patient_id, magnification=magnification, ext_name=ext)
 

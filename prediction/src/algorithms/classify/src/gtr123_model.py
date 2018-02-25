@@ -1,5 +1,4 @@
-from os import path
-
+import os
 import numpy as np
 import torch
 
@@ -241,8 +240,8 @@ def predict(ct_path, nodule_list, model_path=None):
 
     """
     if not model_path:
-        CLASSIFY_DIR = path.join(Config.ALGOS_DIR, 'classify')
-        model_path = path.join(CLASSIFY_DIR, 'assets', 'gtr123_model.ckpt')
+        CLASSIFY_DIR = os.path.join(Config.ALGOS_DIR, 'classify')
+        model_path = os.path.join(CLASSIFY_DIR, 'assets', 'gtr123_model.ckpt')
 
     if not nodule_list:
         return []
