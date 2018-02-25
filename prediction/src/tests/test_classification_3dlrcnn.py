@@ -38,6 +38,5 @@ def test_classify_real_nodule_full_dicom(dicom_paths, models_dir_path):
     )
     candidates = [{'file_path': dicom_paths[0], 'centroids': [{'x': 222, 'y': 259, 'z': 225}]}]
     predicted = model.predict(candidates)
-    print(predicted)
     assert .3 <= predicted[0]['centroids'][0]['p_concerning'] <= 1
     model.clear()
