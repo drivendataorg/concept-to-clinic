@@ -174,13 +174,13 @@ class ImageSeries(models.Model):
                                  it had to be created
         """
 
-        # get all the images in the folder that are valid dicom extensions
+        # Get all the images in the folder that are valid dicom extensions
         files = [
             f for f in os.listdir(uri)
             if os.path.splitext(f)[-1] in settings.IMAGE_EXTENSIONS
         ]
 
-        # load series-level metadata from the first dicom file
+        # Load series-level metadata from the first dicom file
         plan = dicom.read_file(safe_join(uri, files[0]))
 
         patient_id = plan.PatientID

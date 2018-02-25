@@ -142,9 +142,10 @@ def pytest_runtest_protocol(item, nextitem):
         found_timeout_marker |= (k == "stop_timeout")
 
     if timeout == 0 or not found_timeout_marker:
-        # All slow tests should be run or the test does not have a stop_timeout marker
-        # The hook needs to yield exactly once, otherwise there'll be an error. Without the return it would yield twice,
-        # without the yield it wouldn't yield at all.
+        # All slow tests should be run or the test does not have a stop_timeout
+        # marker.  The hook needs to yield exactly once, otherwise there'll be
+        # an error. Without the return it would yield twice, without the yield
+        # it wouldn't yield at all.
         yield
         return
 
@@ -155,6 +156,6 @@ def pytest_runtest_protocol(item, nextitem):
         # Run the setup, test body, and teardown stages.
         yield
     finally:
-        # Disable the alarm when the test passes or fails.
-        # I.e. when we get into the framework's body.
+        # Disable the alarm when the test passes or fails. i.e. when we get
+        # into the framework's body.
         signal.alarm(0)

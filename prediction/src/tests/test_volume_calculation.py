@@ -75,7 +75,8 @@ def test_volume_calculation(tmpdir, centroids, volumes):
 def test_overlapped_volume_calculation(tmpdir, centroids_alt, volumes_alt):
     mask = generate_mask(centroids_alt, volumes_alt)
 
-    # The balls area must be 100 + 30, since first ball have overlapped with the second one
+    # The balls area must be 100 + 30, since first ball have overlapped with
+    # the second one
     assert mask.sum() == 130
 
     path = get_mask_path(tmpdir, mask)
@@ -89,7 +90,8 @@ def test_overlapped_volume_calculation(tmpdir, centroids_alt, volumes_alt):
 def test_overlapped_dicom_volume_calculation(tmpdir, dicom_path, centroids_alt, centroids_clt, volumes_alt):
     mask = generate_mask(centroids_alt, volumes_alt)
 
-    # The balls area must be 100 + 30, since first ball have overlapped with the second one
+    # The balls area must be 100 + 30, since first ball have overlapped with
+    # the second one
     assert mask.sum() == 130
 
     path = get_mask_path(tmpdir, mask)
