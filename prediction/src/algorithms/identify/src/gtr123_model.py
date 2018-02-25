@@ -28,7 +28,7 @@ config = {
     'num_hard': 2,
     'bound_size': 12,
     'reso': 1,
-    'sizelim': 6.  # mm,
+    'sizelim': 6.0,  # mm,
     'sizelim2': 30,
     'sizelim3': 40,
     'aug_scale': True,
