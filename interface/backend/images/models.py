@@ -37,17 +37,20 @@ class ImageFile(models.Model):
     columns = models.IntegerField(null=True)
     pixel_spacing_col = models.FloatField(null=True)
     pixel_spacing_row = models.FloatField(null=True)
-    path = models.FilePathField(path=settings.DATASOURCE_DIR,
-                                recursive=True,
-                                allow_files=True,
-                                allow_folders=False,
-                                max_length=512)
+    path = models.FilePathField(
+        path=settings.DATASOURCE_DIR,
+        recursive=True,
+        allow_files=True,
+        allow_folders=False,
+        max_length=512,
+    )
 
     class Meta:
         ordering = ('slice_location',)
 
     def save(self, *args, **kwargs):
         self._populate_dicom_properties()
+
         super().save(*args, **kwargs)
 
     def _populate_dicom_properties(self):
@@ -59,11 +62,10 @@ class ImageFile(models.Model):
         logger = logging.getLogger(__name__)
         for k, v in self.load_dicom_data_from_disk(self.path)['metadata'].items():
             # check that the field is a property on the object
-            if not hasattr(self.__class__, k):
-                logger.warning(f"Property '{k}' not a field on ImageFile, discarding value '{v}'.")
-
-            else:
+            if hasattr(self.__class__, k):
                 self.__setattr__(k, v)
+            else:
+                logger.warning(f"Property '{k}' not a field on ImageFile, discarding value '{v}'.")
 
     @classmethod
     def load_dicom_data_from_disk(cls, filepath, parse_metadata=True, encode_image_data=False):
@@ -141,6 +143,7 @@ class ImageFile(models.Model):
         Returning base64 encoded string for a dicom image
         """
         rescaled = cls._pixel_data2str(ds.pixel_array)
+
         return base64.b64encode(rescaled.tobytes())
 
 
@@ -170,9 +173,12 @@ class ImageSeries(models.Model):
             (ImageSeries, bool): the looked up ImageSeries instance and whether
                                  it had to be created
         """
+
         # get all the images in the folder that are valid dicom extensions
-        files = [f for f in os.listdir(uri)
-                 if os.path.splitext(f)[-1] in settings.IMAGE_EXTENSIONS]
+        files = [
+            f for f in os.listdir(uri)
+            if os.path.splitext(f)[-1] in settings.IMAGE_EXTENSIONS
+        ]
 
         # load series-level metadata from the first dicom file
         plan = dicom.read_file(safe_join(uri, files[0]))
@@ -180,13 +186,15 @@ class ImageSeries(models.Model):
         patient_id = plan.PatientID
         series_instance_uid = plan.SeriesInstanceUID
 
-        series, created = ImageSeries.objects.get_or_create(patient_id=patient_id,
-                                                            series_instance_uid=series_instance_uid,
-                                                            uri=uri)
+        series, created = ImageSeries.objects.get_or_create(
+            patient_id=patient_id,
+            series_instance_uid=series_instance_uid,
+            uri=uri,
+        )
 
-        # create models that point to each of the individual image files
-        for f in files:
-            image, _ = ImageFile.objects.get_or_create(path=safe_join(uri, f), series=series)
+        # Create models that point to each of the individual image files
+        for x in files:
+            image, _ = ImageFile.objects.get_or_create(path=safe_join(uri, x), series=series)
 
         return series, created
 

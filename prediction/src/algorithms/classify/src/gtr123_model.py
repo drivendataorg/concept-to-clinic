@@ -72,6 +72,7 @@ class PostRes(nn.Module):
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
+
         # The first few layers consumes the most memory, so use simple
         # convolution to save memory. Call these layers preBlock, i.e., before
         # the residual blocks of later layers.
@@ -273,7 +274,11 @@ def predict(ct_path, nodule_list, model_path=None):
         coords = Variable(torch.from_numpy(coords[np.newaxis]).float())
         coords.volatile = True
         _, pred, _ = casenet(cropped_image, coords)
-        results.append(
-            {"x": nodule["x"], "y": nodule["y"], "z": nodule["z"], "p_concerning": float(pred.data.cpu().numpy())})
+        results.append({
+            'x': nodule['x'],
+            'y': nodule['y'],
+            'z': nodule['z'],
+            'p_concerning': float(pred.data.cpu().numpy()),
+        })
 
     return results

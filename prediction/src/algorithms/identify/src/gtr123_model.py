@@ -42,6 +42,7 @@ __all__ = ['Net', 'GetPBB', 'SplitComb']
 class PostRes(nn.Module):
     def __init__(self, n_in, n_out, stride=1):
         super(PostRes, self).__init__()
+
         self.conv1 = nn.Conv3d(n_in, n_out, kernel_size=3, stride=stride, padding=1)
         self.bn1 = nn.BatchNorm3d(n_out)
         self.relu = nn.ReLU(inplace=True)
@@ -145,10 +146,12 @@ class Net(nn.Module):
             nn.ReLU(inplace=True))
 
         self.drop = nn.Dropout3d(p=0.2, inplace=False)
-        self.output = nn.Sequential(nn.Conv3d(self.featureNum_back[0], 64, kernel_size=1),
-                                    nn.ReLU(),
-                                    # nn.Dropout3d(p = 0.3),
-                                    nn.Conv3d(64, 5 * len(config['anchors']), kernel_size=1))
+        self.output = nn.Sequential(
+            nn.Conv3d(self.featureNum_back[0], 64, kernel_size=1),
+            nn.ReLU(),
+            # nn.Dropout3d(p = 0.3),
+            nn.Conv3d(64, 5 * len(config['anchors']), kernel_size=1),
+        )
 
     def forward(self, x, coord):
         """

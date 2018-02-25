@@ -20,6 +20,7 @@
 import os
 import sys
 import django
+
 from recommonmark.transform import AutoStructify
 
 DOCS_DIR = os.getcwd()

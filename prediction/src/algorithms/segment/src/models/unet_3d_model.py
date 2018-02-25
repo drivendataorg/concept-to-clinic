@@ -105,6 +105,7 @@ def compute_level_output_shape(filters, depth, pool_size, image_shape):
         output_image_shape = np.divide(image_shape, np.multiply(pool_size, depth)).tolist()
     else:
         output_image_shape = image_shape
+
     return tuple([None, filters] + [int(x) for x in output_image_shape])
 
 

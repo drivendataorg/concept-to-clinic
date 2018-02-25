@@ -104,6 +104,7 @@ def resample(imgs, spacing, new_spacing, order=2):
             newimg.append(newslice)
 
         newimg = np.transpose(np.array(newimg), [1, 2, 3, 0])
+
         return newimg, true_spacing
     else:
         raise ValueError('wrong shape')

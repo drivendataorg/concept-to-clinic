@@ -16,9 +16,11 @@ def get_timeout():
 
     :return: Time limit after which certain tests should be stopped
     """
+
     DEFAULT_TIMEOUT = 15
     run_slow_tests_variable = os.environ.get('RUN_SLOW_TESTS', '')
     run_slow_tests = (run_slow_tests_variable.lower() in {'1', 'true'})
+
     if run_slow_tests:
         return 0
     else:
