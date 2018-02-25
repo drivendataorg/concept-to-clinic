@@ -15,25 +15,26 @@ from src.preprocess.preprocess_ct import PreprocessCT
 Classification model from team gtr123. Code adapted from
 https://github.com/lfz/DSB2017
 """
-config = {}
 
-config['crop_size'] = [96, 96, 96]
-config['scaleLim'] = [0.85, 1.15]
-config['radiusLim'] = [6, 100]
+config = {
+    'crop_size': [96, 96, 96],
+    'scaleLim': [0.85, 1.15],
+    'radiusLim': [6, 100],
 
-config['stride'] = 4
+    'stride': 4,
 
-config['detect_th'] = 0.05
-config['conf_th'] = -1
-config['nms_th'] = 0.05
-config['filling_value'] = 160
+    'detect_th': 0.05,
+    'conf_th': -1,
+    'nms_th': 0.05,
+    'filling_value': 160,
 
-config['startepoch'] = 20
-config['lr_stage'] = np.array([50, 100, 140, 160])
-config['lr'] = [0.01, 0.001, 0.0001, 0.00001]
-config['miss_ratio'] = 1
-config['miss_thresh'] = 0.03
-config['anchors'] = [10, 30, 60]
+    'startepoch': 20,
+    'lr_stage': np.array([50, 100, 140, 160]),
+    'lr': [0.01, 0.001, 0.0001, 0.00001],
+    'miss_ratio': 1,
+    'miss_thresh': 0.03,
+    'anchors': [10, 30, 60],
+}
 
 
 class PostRes(nn.Module):

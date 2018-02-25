@@ -15,27 +15,28 @@ Detector model from team gtr123
 Code adapted from https://github.com/lfz/DSB2017
 """
 
-config = {}
-config['anchors'] = [10.0, 30.0, 60.]
-config['channel'] = 1
-config['crop_size'] = [128, 128, 128]
-config['stride'] = 4
-config['max_stride'] = 16
-config['num_neg'] = 800
-config['th_neg'] = 0.02
-config['th_pos_train'] = 0.5
-config['th_pos_val'] = 1
-config['num_hard'] = 2
-config['bound_size'] = 12
-config['reso'] = 1
-config['sizelim'] = 6.  # mm
-config['sizelim2'] = 30
-config['sizelim3'] = 40
-config['aug_scale'] = True
-config['r_rand_crop'] = 0.3
-config['pad_value'] = 170
+config = {
+    'anchors': [10.0, 30.0, 60.],
+    'channel': 1,
+    'crop_size': [128, 128, 128],
+    'stride': 4,
+    'max_stride': 16,
+    'num_neg': 800,
+    'th_neg': 0.02,
+    'th_pos_train': 0.5,
+    'th_pos_val': 1,
+    'num_hard': 2,
+    'bound_size': 12,
+    'reso': 1,
+    'sizelim': 6.  # mm,
+    'sizelim2': 30,
+    'sizelim3': 40,
+    'aug_scale': True,
+    'r_rand_crop': 0.3,
+    'pad_value': 170,
+}
 
-__all__ = ["Net", "GetPBB", "SplitComb"]
+__all__ = ['Net', 'GetPBB', 'SplitComb']
 
 
 class PostRes(nn.Module):
