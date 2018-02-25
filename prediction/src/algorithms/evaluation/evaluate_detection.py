@@ -90,10 +90,10 @@ def groups_to_boxes(rectangles, groups):
         for rect in group:
             points.append(rect[0:3])
             points.append([rect[0], rect[1] + rect[3] - 1, rect[2] + rect[4] - 1])
-        min = np.min(points, axis=0)
-        max = np.max(points, axis=0)
+        min_ = np.min(points, axis=0)
+        max_ = np.max(points, axis=0)
         # save the box as [x, y, z, width, height, depth]
-        box = [min[1], min[2], min[0], max[1] - min[1] + 1, max[2] - min[2] + 1, max[0] - min[0] + 1]
+        box = [min_[1], min_[2], min_[0], max_[1] - min_[1] + 1, max_[2] - min_[2] + 1, max_[0] - min_[0] + 1]
         boxes.append(box)
 
     # deal with rectangles that haven't been added into any group
@@ -143,11 +143,11 @@ def get_bounding_boxes(annotations):
             points.append([float(annotation[23 + i * 5]), float(annotation[24 + i * 5])])
 
         # find minimum and maximum of on both x and y axes
-        min = np.min(points, axis=0)
-        max = np.max(points, axis=0)
+        min_ = np.min(points, axis=0)
+        max_ = np.max(points, axis=0)
 
         # save the rectangle as [z-index, x, y, width, height]
-        rectangle = [image_no, min[0], min[1], max[0] - min[0] + 1, max[1] - min[1] + 1]
+        rectangle = [image_no, min_[0], min_[1], max_[0] - min_[0] + 1, max_[1] - min_[1] + 1]
         rectangles.append(rectangle)
 
     # group bounding rectangles into 3D bounding boxes

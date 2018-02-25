@@ -41,11 +41,11 @@ def crop_dicom(path_to_dicom, begin, end, output=None):
     upper_z = begin[2] if begin[2] > end[2] else end[2]
     lower_z = begin[2] if begin[2] < end[2] else end[2]
 
-    for file in files:
-        if file.SliceLocation > upper_z or file.SliceLocation < lower_z:
+    for x in files:
+        if x.SliceLocation > upper_z or x.SliceLocation < lower_z:
             continue
 
-        new_file = file
+        new_file = x
         new_file.PixelData = new_file.pixel_array[begin[0]:end[0], begin[1]:end[1]].tostring()
         new_file.Rows = new_dim_xy[0]
         new_file.Columns = new_dim_xy[1]
