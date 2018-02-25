@@ -1,6 +1,6 @@
 import os
-
 import numpy as np
+
 from keras import backend as K
 from keras.models import load_model
 

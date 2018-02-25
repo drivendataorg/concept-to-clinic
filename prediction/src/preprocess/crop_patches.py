@@ -1,7 +1,7 @@
 import itertools
-
 import numpy as np
 import scipy.ndimage
+
 from src.preprocess.preprocess_ct import mm_coordinates_to_voxel
 
 

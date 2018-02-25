@@ -1,6 +1,7 @@
 """
 Provides the flask config options
 """
+
 import os
 
 from os import path

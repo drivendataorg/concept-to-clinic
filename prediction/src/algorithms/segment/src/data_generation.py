@@ -1,7 +1,7 @@
 import os
-
 import numpy as np
 import pylidc as pl
+
 from config import Config
 from tqdm import tqdm
 
