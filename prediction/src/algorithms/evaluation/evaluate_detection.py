@@ -135,10 +135,10 @@ def get_bounding_boxes(annotations):
     # For each annotation/ROI, find its bounding rectangle
     rectangles = []
     for annotation in annotations:
-        num_of_points = int(annotation[19])
+        num_points = int(annotation[19])
         image_no = int(annotation[0])
         points = []
-        for i in range(num_of_points):
+        for i in range(num_points):
             # get pxX and pxY
             points.append([float(annotation[23 + i * 5]), float(annotation[24 + i * 5])])
 

@@ -268,8 +268,8 @@ def annotate(model, predict_volume, patient_img, patient_mask):
         of each found nodule.
     """
 
-    done_count = 0
-    skipped_count = 0
+    num_done = 0
+    num_skipped = 0
     annotation_index = 0
 
     batch_list = []
@@ -287,12 +287,12 @@ def annotate(model, predict_volume, patient_img, patient_mask):
                                  y * STEP: y * STEP + CROP_SIZE,
                                  x * STEP: x * STEP + CROP_SIZE]
 
-        done_count += 1
-        if done_count % 10000 == 0:
-            logging.info("Done: ", done_count, " skipped:", skipped_count)
+        num_done += 1
+        if num_done % 10000 == 0:
+            logging.info("Done: ", num_done, " skipped:", num_skipped)
 
         if cube_mask.sum() < 2000:
-            skipped_count += 1
+            num_skipped += 1
             continue
 
         if CROP_SIZE != CUBE_SIZE:
