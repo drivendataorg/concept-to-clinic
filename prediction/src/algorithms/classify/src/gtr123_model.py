@@ -254,8 +254,6 @@ def predict(ct_path, nodule_list, model_path=None):
 
     if torch.cuda.is_available():
         casenet = torch.nn.DataParallel(casenet).cuda()
-    # else:
-    #     casenet = torch.nn.parallel.DistributedDataParallel(casenet)
 
     preprocess = PreprocessCT(clip_lower=-1200., clip_upper=600., spacing=True, order=1,
                               min_max_normalize=True, scale=255, dtype='uint8')
