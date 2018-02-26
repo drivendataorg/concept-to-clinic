@@ -536,7 +536,7 @@ class DataGenerator(object):
         x = np.asarray(x, dtype=K.floatx())
         if x.ndim != 5:
             raise ValueError('Input to `.fit()` should have rank 5. '
-                             'Got array with shape: ' + str(x.shape))
+                             'Got array with shape: {}'.format(x.shape))
 
         if seed is not None:
             np.random.seed(seed)

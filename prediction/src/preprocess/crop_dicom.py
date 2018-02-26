@@ -52,6 +52,6 @@ def crop_dicom(path_to_dicom, begin, end, output=None):
         cropped_series.append(new_file)
 
         if output:
-            new_file.save_as(output + "/" + str(new_file.SliceLocation) + ".dcm")
+            new_file.save_as(os.path.join(output, '{}.dcm'.format(new_file.SliceLocation)))
 
     return cropped_series

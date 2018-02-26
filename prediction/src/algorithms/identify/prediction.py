@@ -219,7 +219,7 @@ def predict_cubes(model_path, patient_id, magnification=1, ext_name=""):
     dst_dir = NODULE_DETECTION_DIR
     os.makedirs(dst_dir, exist_ok=True)
 
-    dst_dir = os.path.join(dst_dir, "predictions" + str(int(magnification * 10)) + "_" + ext_name)
+    dst_dir = os.path.join(dst_dir, "predictions{}_{}".format(int(magnification * 10), ext_name))
     os.makedirs(dst_dir, exist_ok=True)
 
     model = get_net(input_shape=(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, 1),
@@ -276,7 +276,7 @@ def annotate(model, predict_volume, patient_img, patient_mask):
     batch_list_coords = []
     patient_predictions_csv = []
 
-    logging.info("Predicted Volume Shape:" + str(predict_volume.shape))
+    logging.info("Predicted Volume Shape: {}".format(predict_volume.shape))
 
     for z, y, x in np.ndindex(predict_volume.shape[:3]):
         # if cube_img is None:

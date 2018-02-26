@@ -211,7 +211,7 @@ def filter_detections(prediction, detection):
     for detect in detection:
         id = detect[0]
         # spacing: [slice_thickness, pixel_spacing_x, pixel_spacing_y]
-        spacing = np.load(os.path.join(prep_result_path, id + '_info.npy'))[1]
+        spacing = np.load(os.path.join(prep_result_path, '{}_info.npy'.format(id)))[1]
 
         if use_prediction_results:
             confidence = detect[1] * get_prediction_probability(prediction, id)
@@ -245,7 +245,7 @@ def get_detection_detail(prediction, detection, filepaths):
     for detect in detection:
         id = detect[0]
         # spacing: [slice_thickness, pixel_spacing_x, pixel_spacing_y]
-        spacing = np.load(os.path.join(prep_result_path, id + '_info.npy'))[1]
+        spacing = np.load(os.path.join(prep_result_path, '{}_info.npy'.format(id)))[1]
         rows, cols = np.where(filepaths == id)
         if rows.size == 0:
             print(id, 'not found')
@@ -284,12 +284,12 @@ def compare_results(detections, annotations):
 
 
 dataset = 'LUSC'
-prediction_file = 'prediction_' + dataset + '.csv'
-detection_file = 'detection_' + dataset + '.csv'
-annotation_path = 'TCIA_annotation/TCGA-' + dataset
+prediction_file = 'prediction_{}.csv'.format(dataset)
+detection_file = 'detection_{}.csv'.format(dataset)
+annotation_path = 'TCIA_annotation/TCGA-{}'.format(dataset)
 # for more details of detections
-detection_detail_file = 'detection_detail_' + dataset + '.csv'
-filepath = 'TCGA-' + dataset + '_filepath.npy'
+detection_detail_file = 'detection_detail_{}.csv'.format(dataset)
+filepath = 'TCGA-{}_filepath.npy'.format(dataset)
 
 df = pandas.read_csv(prediction_file)
 prediction = df.as_matrix()

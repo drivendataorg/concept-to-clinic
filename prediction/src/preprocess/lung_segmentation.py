@@ -80,7 +80,7 @@ def save_lung_segments(dicom_path, patient_id):
     for index, org_img in enumerate(image):
         patient_dir = target_dir
         os.makedirs(patient_dir, exist_ok=True)
-        img_path = patient_dir + "img_" + str(index).rjust(4, '0') + "_i.png"
+        img_path = '{}img_{}_i.png'.format(patient_dir, str(index).rjust(4, '0'))
         # if there exists slope,rotation image with corresponding degree
         if cos_degree > 0.0:
             org_img = cv_flip(org_img, org_img.shape[1], org_img.shape[0], cos_degree)

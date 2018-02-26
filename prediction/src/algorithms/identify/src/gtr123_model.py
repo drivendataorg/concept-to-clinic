@@ -112,7 +112,7 @@ class Net(nn.Module):
                     blocks.append(PostRes(self.featureNum_forw[i], self.featureNum_forw[i + 1]))
                 else:
                     blocks.append(PostRes(self.featureNum_forw[i + 1], self.featureNum_forw[i + 1]))
-            setattr(self, 'forw' + str(i + 1), nn.Sequential(*blocks))
+            setattr(self, 'forw{}'.format(i + 1), nn.Sequential(*blocks))
 
         for i in range(len(num_blocks_back)):
             blocks = []
@@ -126,7 +126,7 @@ class Net(nn.Module):
                                           self.featureNum_back[i]))
                 else:
                     blocks.append(PostRes(self.featureNum_back[i], self.featureNum_back[i]))
-            setattr(self, 'back' + str(i + 2), nn.Sequential(*blocks))
+            setattr(self, 'back{}'.format(i + 2), nn.Sequential(*blocks))
 
         self.maxpool1 = nn.MaxPool3d(kernel_size=2, stride=2, return_indices=True)
         self.maxpool2 = nn.MaxPool3d(kernel_size=2, stride=2, return_indices=True)
