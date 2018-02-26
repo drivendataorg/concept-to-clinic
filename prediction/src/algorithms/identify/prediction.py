@@ -217,12 +217,10 @@ def predict_cubes(model_path, patient_id, magnification=1, ext_name=""):
     """
 
     dst_dir = NODULE_DETECTION_DIR
-    if not os.path.exists(dst_dir):
-        os.makedirs(dst_dir)
+    os.makedirs(dst_dir, exist_ok=True)
 
     dst_dir = os.path.join(dst_dir, "predictions" + str(int(magnification * 10)) + "_" + ext_name)
-    if not os.path.exists(dst_dir):
-        os.makedirs(dst_dir)
+    os.makedirs(dst_dir, exist_ok=True)
 
     model = get_net(input_shape=(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, 1),
                     load_weight_path=model_path)
