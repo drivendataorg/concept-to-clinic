@@ -73,5 +73,5 @@ def test_segment_evaluate_evaluate(masks):
     calculated = evaluate.evaluate(combined_1, combined_2)
 
     for key, output in desired_behaviour.items():
-        assert np.abs(output - calculated[key]) < 1e-4, 'The output of function {} is {}, while {} was expected.'.format(
+        assert np.abs(output - calculated[key]) < 1e-4, 'The output of function {} is {} while {} was expected.'.format(
                                                         key, calculated, output)
