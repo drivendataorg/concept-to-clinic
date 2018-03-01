@@ -1,6 +1,6 @@
-
 class EmptyDicomSeriesException(Exception):
-    """Exception that is raised when the given folder does not contain dcm-files.
+    """
+    Exception that is raised when the given folder does not contain dcm-files.
     """
 
     def __init__(self, *args):

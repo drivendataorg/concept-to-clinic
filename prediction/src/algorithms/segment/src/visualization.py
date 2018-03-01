@@ -1,11 +1,16 @@
-"""This file contains methods that help to visualize the training cubes of annotations"""
+"""
+This file contains methods that help to visualize the training cubes of
+annotations.
+"""
 
 import matplotlib.pyplot as plt
+
 from matplotlib.widgets import Slider
 
 
 def cuboid_show_slider(cuboid, axis=2, is_mask=False, **kwargs):
-    """Display a 3D ndarray with a slider to move along the third dimension.
+    """
+    Display a 3D ndarray with a slider to move along the third dimension.
 
     Extra keyword arguments are passed to imshow
     (Kudos to http://nbarbey.github.io/2011/07/08/matplotlib-slider.html)
@@ -40,7 +45,7 @@ def cuboid_show_slider(cuboid, axis=2, is_mask=False, **kwargs):
     axcolor = 'lightgoldenrodyellow'
     ax = fig.add_axes([0.25, 0.1, 0.65, 0.03], axisbg=axcolor)
 
-    slider = Slider(ax, 'Axis %i index' % axis, 0, cuboid.shape[axis] - 1, valinit=0, valfmt='%i')
+    slider = Slider(ax, 'Axis {} index'.format(axis), 0, cuboid.shape[axis] - 1, valinit=0, valfmt='%i')
 
     def update(val):
         if is_mask:
@@ -60,7 +65,9 @@ def cuboid_show_slider(cuboid, axis=2, is_mask=False, **kwargs):
 
 
 def display_training_pair(input_cuboid, output_cuboid, axis=2, **kwargs):
-    """Display both given three-dimensional input images with a slider for the third dimension.
+    """
+    Display both given three-dimensional input images with a slider for the
+    third dimension.
 
     Args:
         input_cuboid: three-dimensional array that contains the scan
@@ -91,7 +98,7 @@ def display_training_pair(input_cuboid, output_cuboid, axis=2, **kwargs):
     axcolor = 'lightgoldenrodyellow'
     ax = fig.add_axes([0.25, 0.1, 0.65, 0.03], axisbg=axcolor)
 
-    slider = Slider(ax, 'Axis %i index' % axis, 0, input_cuboid.shape[axis] - 1, valinit=0, valfmt='%i')
+    slider = Slider(ax, 'Axis {} index'.format(axis), 0, input_cuboid.shape[axis] - 1, valinit=0, valfmt='%i')
 
     def update(val):
         subplot_output.imshow(output_cuboid[:, :, int(val)])

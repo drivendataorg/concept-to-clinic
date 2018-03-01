@@ -15,11 +15,13 @@ from backend.images.models import (
 
 
 class ImageFileSerializer(serializers.ModelSerializer):
-    """ Serializes an ImageFile model object.
-
-        In addition to the properties on the object, it returns a `preview_url` which
-        will return the dicom image data encoded in base64.
     """
+    Serializes an ImageFile model object.
+
+    In addition to the properties on the object, it returns a `preview_url`
+    which will return the dicom image data encoded in base64.
+    """
+
     class Meta:
         model = ImageFile
         fields = '__all__'
@@ -31,11 +33,13 @@ class ImageFileSerializer(serializers.ModelSerializer):
 
 
 class ImageSeriesSerializer(serializers.HyperlinkedModelSerializer):
-    """ Serializes an ImageSeries model object.
-
-        Will also contain an `images` property with all of the serialized
-        image files in this series.
     """
+    Serializes an ImageSeries model object.
+
+    Will also contain an `images` property with all of the serialized image
+    files in this series.
+    """
+
     class Meta:
         model = ImageSeries
         fields = '__all__'
@@ -97,12 +101,13 @@ class NoduleSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CaseSerializer(serializers.HyperlinkedModelSerializer):
-    """ Serializes a Case model object
-
-        Case is the top level of the object hierarchy, and it contains
-        the image series, candidates, and nodules for the currently active
-        case.
     """
+    Serializes a Case model object
+
+    Case is the top level of the object hierarchy, and it contains the
+    image series, candidates, and nodules for the currently active case.
+    """
+
     class Meta:
         model = Case
         fields = '__all__'

@@ -12,9 +12,11 @@ from django.utils._os import safe_join
 
 
 class ImageFile(models.Model):
-    """ Model for an individual file for an image--that is, a single DICOM slice
-        as it is represented on disk.
     """
+    Model for an individual file for an image--that is, a single DICOM slice as
+    it is represented on disk.
+    """
+
     # Explicitly map all the dicom properties that we need to parse and their
     # model equivalents; create a lambda that returns a dict for any type conversions
     # or one-to-many relationships
@@ -35,42 +37,47 @@ class ImageFile(models.Model):
     columns = models.IntegerField(null=True)
     pixel_spacing_col = models.FloatField(null=True)
     pixel_spacing_row = models.FloatField(null=True)
-    path = models.FilePathField(path=settings.DATASOURCE_DIR,
-                                recursive=True,
-                                allow_files=True,
-                                allow_folders=False,
-                                max_length=512)
+    path = models.FilePathField(
+        path=settings.DATASOURCE_DIR,
+        recursive=True,
+        allow_files=True,
+        allow_folders=False,
+        max_length=512,
+    )
 
     class Meta:
-        ordering = ['slice_location']
+        ordering = ('slice_location',)
 
     def save(self, *args, **kwargs):
         self._populate_dicom_properties()
+
         super().save(*args, **kwargs)
 
     def _populate_dicom_properties(self):
-        """ Parse DICOM properties from the file and store the relevant ones
-            on the object.
         """
+        Parse DICOM properties from the file and store the relevant ones on the
+        object.
+        """
+
         logger = logging.getLogger(__name__)
         for k, v in self.load_dicom_data_from_disk(self.path)['metadata'].items():
             # check that the field is a property on the object
-            if not hasattr(self.__class__, k):
-                logger.warning(f"Property '{k}' not a field on ImageFile, discarding value '{v}'.")
-
-            else:
+            if hasattr(self.__class__, k):
                 self.__setattr__(k, v)
+            else:
+                logger.warning(f"Property '{k}' not a field on ImageFile, discarding value '{v}'.")
 
     @classmethod
     def load_dicom_data_from_disk(cls, filepath, parse_metadata=True, encode_image_data=False):
-        """ Loads the dicom properties that we care about from disk.
+        """
+        Loads the dicom properties that we care about from disk.
 
-            For the values we load, see ImageFile.DICOM_PROPERTIES
+        For the values we load, see ImageFile.DICOM_PROPERTIES
 
-            Args:
-                filepath (str): the path to the file (so this can be used if ImageFile is not in database yet)
-                parse_metadata (bool, optional): weather or not to parse any metadata from the file (skip for just img)
-                encode_image_data (bool, optional): Base64 encode image data and return it.
+        Args:
+            filepath (str): the path to the file (so this can be used if ImageFile is not in database yet)
+            parse_metadata (bool, optional): weather or not to parse any metadata from the file (skip for just img)
+            encode_image_data (bool, optional): Base64 encode image data and return it.
         """
         if not os.path.abspath(filepath).startswith(settings.DATASOURCE_DIR):
             raise PermissionDenied
@@ -87,8 +94,9 @@ class ImageFile(models.Model):
 
     @classmethod
     def _parse_metadata(cls, dcm_data, filepath):
-        """ Parses metadata from dicom file and creates a dictionary
-            which we can use to populate the ImageFile object
+        """
+        Parses metadata from dicom file and creates a dictionary which we can
+        use to populate the ImageFile object
         """
         logger = logging.getLogger(__name__)
 
@@ -101,7 +109,7 @@ class ImageFile(models.Model):
                 else:
                     d1[k] = v
 
-        metadata = dict()
+        metadata = {}
         for dicom_prop, model_attribute in cls.DICOM_PROPERTIES.items():
             if callable(model_attribute):
                 try:
@@ -117,7 +125,9 @@ class ImageFile(models.Model):
         return metadata
 
     def get_image_data(self):
-        """ Shortcut for just the encoded image from `load_dicom_properties_from_disk`.
+        """
+        Shortcut for just the encoded image from
+        `load_dicom_properties_from_disk`.
         """
         return self.load_dicom_data_from_disk(self.path, parse_metadata=False, encode_image_data=True)['image']
 
@@ -133,6 +143,7 @@ class ImageFile(models.Model):
         Returning base64 encoded string for a dicom image
         """
         rescaled = cls._pixel_data2str(ds.pixel_array)
+
         return base64.b64encode(rescaled.tobytes())
 
 
@@ -147,33 +158,43 @@ class ImageSeries(models.Model):
     @classmethod
     def get_or_create(cls, uri):
         """
-        Return the ImageSeries instance with the same PatientID and SeriesInstanceUID as the DICOM images in the
-        given directory. If none exists so far, create one.
-        Return a tuple of (ImageSeries, created), where created is a boolean specifying whether the object was created.
+        Return the ImageSeries instance with the same PatientID and
+        SeriesInstanceUID as the DICOM images in the given directory. If none
+        exists so far, create one.
+
+        Returns a tuple of (ImageSeries, created), where created is a boolean
+        specifying whether the object was created.
 
         Args:
-            uri (str): absolute URI to a directory with DICOM images of a patient
+            uri (str): absolute URI to a directory with DICOM images of a
+                       patient
 
         Returns:
-            (ImageSeries, bool): the looked up ImageSeries instance and whether it had to be created
+            (ImageSeries, bool): the looked up ImageSeries instance and whether
+                                 it had to be created
         """
-        # get all the images in the folder that are valid dicom extensions
-        files = [f for f in os.listdir(uri)
-                 if os.path.splitext(f)[-1] in settings.IMAGE_EXTENSIONS]
 
-        # load series-level metadata from the first dicom file
+        # Get all the images in the folder that are valid dicom extensions
+        files = [
+            f for f in os.listdir(uri)
+            if os.path.splitext(f)[-1] in settings.IMAGE_EXTENSIONS
+        ]
+
+        # Load series-level metadata from the first dicom file
         plan = dicom.read_file(safe_join(uri, files[0]))
 
         patient_id = plan.PatientID
         series_instance_uid = plan.SeriesInstanceUID
 
-        series, created = ImageSeries.objects.get_or_create(patient_id=patient_id,
-                                                            series_instance_uid=series_instance_uid,
-                                                            uri=uri)
+        series, created = ImageSeries.objects.get_or_create(
+            patient_id=patient_id,
+            series_instance_uid=series_instance_uid,
+            uri=uri,
+        )
 
-        # create models that point to each of the individual image files
-        for f in files:
-            image, _ = ImageFile.objects.get_or_create(path=safe_join(uri, f), series=series)
+        # Create models that point to each of the individual image files
+        for x in files:
+            image, _ = ImageFile.objects.get_or_create(path=safe_join(uri, x), series=series)
 
         return series, created
 
@@ -183,8 +204,9 @@ class ImageSeries(models.Model):
 
 class ImageLocation(models.Model):
     """
-    Model representing a certain voxel location on certain image
+    Model representing a certain voxel location on certain image.
     """
+
     x = models.PositiveSmallIntegerField(help_text='Voxel index for X axis, zero-index, from top left')
     y = models.PositiveSmallIntegerField(help_text='Voxel index for Y axis, zero-index, from top left')
     z = models.PositiveSmallIntegerField(help_text='Slice index for Z axis, zero-index')

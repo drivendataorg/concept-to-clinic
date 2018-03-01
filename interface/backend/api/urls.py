@@ -1,4 +1,4 @@
-from collections import OrderedDict
+import collections
 
 from backend.api.views import (
     CaseViewSet,
@@ -21,11 +21,13 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 
 class RelativeUrlRootView(routers.APIRootView):
-    """ Provides relative URLs for the available endpoints.
     """
+    Provides relative URLs for the available endpoints.
+    """
+
     def get(self, request, *args, **kwargs):
         # Return a plain {"name": "hyperlink"} response.
-        ret = OrderedDict()
+        ret = collections.OrderedDict()
         namespace = request.resolver_match.namespace
         for key, url_name in self.api_root_dict.items():
             if namespace:

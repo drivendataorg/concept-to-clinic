@@ -12,8 +12,6 @@ Code adapted from https://github.com/lfz/DSB2017
 
 
 class SimpleCrop(object):
-    """ """
-
     def __init__(self):
         self.crop_size = [96, 96, 96]
         self.scaleLim = [0.85, 1.15]
@@ -96,7 +94,8 @@ def resample(imgs, spacing, new_spacing, order=2):
             imgs = zoom(imgs, resize_factor, mode='nearest', order=order)
 
         return imgs, true_spacing
-    elif len(imgs.shape) == 4:
+
+    if len(imgs.shape) == 4:
         n = imgs.shape[-1]
         newimg = []
 
@@ -106,9 +105,10 @@ def resample(imgs, spacing, new_spacing, order=2):
             newimg.append(newslice)
 
         newimg = np.transpose(np.array(newimg), [1, 2, 3, 0])
+
         return newimg, true_spacing
-    else:
-        raise ValueError('wrong shape')
+
+    raise ValueError('wrong shape')
 
 
 def test_lum_trans(metaimage_path):
@@ -130,7 +130,7 @@ def test_resample(metaimage_path):
 
 
 def test_preprocess(metaimage_path):
-    nodule_list = [{"z": 556, "y": 100, "x": 0}]
+    nodule_list = [{'z': 556, 'y': 100, 'x': 0}]
     image_itk = sitk.ReadImage(metaimage_path)
 
     image = sitk.GetArrayFromImage(image_itk)
@@ -144,7 +144,7 @@ def test_preprocess(metaimage_path):
     crop = SimpleCrop()
 
     for nodule in nodule_list:
-        nod_location = np.array([np.float32(nodule[s]) for s in ["z", "y", "x"]])
+        nod_location = np.array([np.float32(nodule[s]) for s in ['z', 'y', 'x']])
         # N-dimensional array coordinates for the point in real world should be computed in the way below:
         nod_location = (nod_location - origin) / spacing
         cropped_image, coords = crop(image, nod_location)

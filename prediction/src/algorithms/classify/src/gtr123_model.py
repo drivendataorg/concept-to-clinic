@@ -1,5 +1,4 @@
-from os import path
-
+import os
 import numpy as np
 import torch
 
@@ -12,34 +11,33 @@ from src.preprocess.load_ct import load_ct
 from src.preprocess.preprocess_ct import PreprocessCT
 
 
-""""
-Classification model from team gtr123
-Code adapted from https://github.com/lfz/DSB2017
 """
-config = {}
+Classification model from team gtr123. Code adapted from
+https://github.com/lfz/DSB2017
+"""
 
-config['crop_size'] = [96, 96, 96]
-config['scaleLim'] = [0.85, 1.15]
-config['radiusLim'] = [6, 100]
+config = {
+    'crop_size': [96, 96, 96],
+    'scaleLim': [0.85, 1.15],
+    'radiusLim': [6, 100],
 
-config['stride'] = 4
+    'stride': 4,
 
-config['detect_th'] = 0.05
-config['conf_th'] = -1
-config['nms_th'] = 0.05
-config['filling_value'] = 160
+    'detect_th': 0.05,
+    'conf_th': -1,
+    'nms_th': 0.05,
+    'filling_value': 160,
 
-config['startepoch'] = 20
-config['lr_stage'] = np.array([50, 100, 140, 160])
-config['lr'] = [0.01, 0.001, 0.0001, 0.00001]
-config['miss_ratio'] = 1
-config['miss_thresh'] = 0.03
-config['anchors'] = [10, 30, 60]
+    'startepoch': 20,
+    'lr_stage': np.array([50, 100, 140, 160]),
+    'lr': [0.01, 0.001, 0.0001, 0.00001],
+    'miss_ratio': 1,
+    'miss_thresh': 0.03,
+    'anchors': [10, 30, 60],
+}
 
 
 class PostRes(nn.Module):
-    """ """
-
     def __init__(self, n_in, n_out, stride=1):
         super(PostRes, self).__init__()
         self.conv1 = nn.Conv3d(n_in, n_out, kernel_size=3, stride=stride, padding=1)
@@ -48,12 +46,11 @@ class PostRes(nn.Module):
         self.conv2 = nn.Conv3d(n_out, n_out, kernel_size=3, padding=1)
         self.bn2 = nn.BatchNorm3d(n_out)
 
+        self.shortcut = None
         if stride != 1 or n_out != n_in:
             self.shortcut = nn.Sequential(
                 nn.Conv3d(n_in, n_out, kernel_size=1, stride=stride),
                 nn.BatchNorm3d(n_out))
-        else:
-            self.shortcut = None
 
     def forward(self, x):
         residual = x
@@ -72,10 +69,9 @@ class PostRes(nn.Module):
 
 
 class Net(nn.Module):
-    """ """
-
     def __init__(self):
         super(Net, self).__init__()
+
         # The first few layers consumes the most memory, so use simple
         # convolution to save memory. Call these layers preBlock, i.e., before
         # the residual blocks of later layers.
@@ -103,7 +99,7 @@ class Net(nn.Module):
                 else:
                     blocks.append(PostRes(self.featureNum_forw[i + 1], self.featureNum_forw[i + 1]))
 
-            setattr(self, 'forw' + str(i + 1), nn.Sequential(*blocks))
+            setattr(self, 'forw{}'.format(i + 1), nn.Sequential(*blocks))
 
         for i in range(len(num_blocks_back)):
             blocks = []
@@ -120,7 +116,7 @@ class Net(nn.Module):
                 else:
                     blocks.append(PostRes(self.featureNum_back[i], self.featureNum_back[i]))
 
-            setattr(self, 'back' + str(i + 2), nn.Sequential(*blocks))
+            setattr(self, 'back{}'.format(i + 2), nn.Sequential(*blocks))
 
         self.maxpool1 = nn.MaxPool3d(kernel_size=2, stride=2, return_indices=True)
         self.maxpool2 = nn.MaxPool3d(kernel_size=2, stride=2, return_indices=True)
@@ -184,7 +180,10 @@ class Net(nn.Module):
 
 
 class CaseNet(nn.Module):
-    """The classification Net from the gtr123 team - part of the Winning algorithm for DSB2017"""
+    """
+    The classification Net from the gtr123 team - part of the Winning algorithm
+    for DSB2017.
+    """
 
     def __init__(self):
         super(CaseNet, self).__init__()
@@ -242,8 +241,8 @@ def predict(ct_path, nodule_list, model_path=None):
 
     """
     if not model_path:
-        CLASSIFY_DIR = path.join(Config.ALGOS_DIR, 'classify')
-        model_path = path.join(CLASSIFY_DIR, 'assets', 'gtr123_model.ckpt')
+        CLASSIFY_DIR = os.path.join(Config.ALGOS_DIR, 'classify')
+        model_path = os.path.join(CLASSIFY_DIR, 'assets', 'gtr123_model.ckpt')
 
     if not nodule_list:
         return []
@@ -254,8 +253,6 @@ def predict(ct_path, nodule_list, model_path=None):
 
     if torch.cuda.is_available():
         casenet = torch.nn.DataParallel(casenet).cuda()
-    # else:
-    #     casenet = torch.nn.parallel.DistributedDataParallel(casenet)
 
     preprocess = PreprocessCT(clip_lower=-1200., clip_upper=600., spacing=True, order=1,
                               min_max_normalize=True, scale=255, dtype='uint8')
@@ -274,7 +271,11 @@ def predict(ct_path, nodule_list, model_path=None):
         coords = Variable(torch.from_numpy(coords[np.newaxis]).float())
         coords.volatile = True
         _, pred, _ = casenet(cropped_image, coords)
-        results.append(
-            {"x": nodule["x"], "y": nodule["y"], "z": nodule["z"], "p_concerning": float(pred.data.cpu().numpy())})
+        results.append({
+            'x': nodule['x'],
+            'y': nodule['y'],
+            'z': nodule['z'],
+            'p_concerning': float(pred.data.cpu().numpy()),
+        })
 
     return results

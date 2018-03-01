@@ -115,10 +115,12 @@ class ViewTest(APITestCase):
 
 
 class SerializerTest(TestCase):
-    """ Tests the serializers that perform any custom logic.
-
-        In general, create logic is tested by posting in the ViewTest test cases.
     """
+    Tests the serializers that perform any custom logic.
+
+    In general, create logic is tested by posting in the ViewTest test cases.
+    """
+
     def test_image_file_serializer(self):
         image_file = ImageFile(path='/my_path')
         serialized = ImageFileSerializer(image_file)

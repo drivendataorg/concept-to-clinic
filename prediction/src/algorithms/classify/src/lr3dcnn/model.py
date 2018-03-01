@@ -1,8 +1,8 @@
+import collections
 import keras
 import numpy as np
 import os
-from collections import defaultdict
-from keras import backend as K
+
 from src.algorithms.classify.src.classification_model import ClassificationModel
 from src.preprocess import preprocess_ct, load_ct, crop_patches, generators
 
@@ -53,7 +53,8 @@ class Model(ClassificationModel):
         return net(channel_axis=self.channel_axis)
 
     def load_model(self, model_path):
-        """Load model method.
+        """
+        Load model method.
 
         Args:
             model_path (str): A path to the model.
@@ -104,7 +105,8 @@ class Model(ClassificationModel):
 
     @staticmethod
     def _sample_annotations(annotations, sampling_pure, sampling_cancerous):
-        """Train the model through the annotated CT scans
+        """
+        Train the model through the annotated CT scans
 
         Args:
             annotations (list[dict]): A list of centroids of the form::
@@ -138,7 +140,7 @@ class Model(ClassificationModel):
         coeff = int(np.ceil(sampling_pure * len(pure)))
         sampled.extend([pure[idx] for idx in np.random.choice(len(pure), coeff)])
         np.random.shuffle(sampled)
-        resulted = defaultdict(list)
+        resulted = collections.defaultdict(list)
         for file_path, sample in sampled:
             resulted[file_path] += [sample]
         return [{'file_path': key, 'centroids': el} for key, el in resulted.items()]
@@ -149,21 +151,22 @@ class Model(ClassificationModel):
         return sampled
 
     def feed(self, annotations, sampling_pure=1., sampling_cancerous=1., train_mode=True):  # noqa: C901
-        """Train the model through the annotated CT scans
+        """
+        Train the model through the annotated CT scans.
 
-                Args:
-                    annotations (list[dict]): A list of centroids of the form::
-                         {'file_path': str,
-                          'centroids': [{'x': int,
-                                         'y': int,
-                                         'z': int,
-                                         'cancerous': bool}, ..]}.
-                    sampling_pure (float): coefficient of .
-                    sampling_cancerous (float): .
-                    train_mode (bool): Whether to use data augmentation and shuffling.
+        Args:
+            annotations (list[dict]): A list of centroids of the form::
+                 {'file_path': str,
+                  'centroids': [{'x': int,
+                                 'y': int,
+                                 'z': int,
+                                 'cancerous': bool}, ..]}.
+            sampling_pure (float): coefficient of .
+            sampling_cancerous (float): .
+            train_mode (bool): Whether to use data augmentation and shuffling.
 
-                Yields:
-                    list[np.ndarray]: list of patches.
+        Yields:
+            list[np.ndarray]: list of patches.
         """
         while True:
             sampled = annotations
@@ -199,7 +202,7 @@ class Model(ClassificationModel):
                 allowed_iterations = len(self.pull_patches) // self.batch_size
 
                 for _ in range(allowed_iterations):
-                    batch = list()
+                    batch = []
                     for _ in range(self.batch_size):
                         batch.append(self.pull_patches.pop())
 
@@ -218,7 +221,8 @@ class Model(ClassificationModel):
                         yield batch
 
     def train(self, annotations, validation_data=None, epochs=1, model_path=None, verbose=False):
-        """Train the model through the annotated CT scans
+        """
+        Train the model through the annotated CT scans
 
         Args:
             annotations (list[dict]): A list of centroids of the form::
@@ -272,7 +276,8 @@ class Model(ClassificationModel):
         return self.model
 
     def predict(self, candidates, model_path=None):
-        """ Predict cancerous of given candidates.
+        """
+        Predict cancerous of given candidates.
 
         Args:
             candidates (list[dict]): A list of centroids of the form::
@@ -313,4 +318,4 @@ class Model(ClassificationModel):
         del self.model
         self.pull_ct.clear()
         self.pull_patches.clear()
-        K.clear_session()
+        keras.backend.clear_session()

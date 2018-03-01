@@ -1,5 +1,4 @@
-from os import path
-
+import os
 import numpy as np
 import torch
 
@@ -11,51 +10,50 @@ from config import Config
 from src.preprocess import preprocess_ct, load_ct
 from src.preprocess.extract_lungs import extract_lungs
 
-""""
+"""
 Detector model from team gtr123
 Code adapted from https://github.com/lfz/DSB2017
 """
 
-config = {}
-config['anchors'] = [10.0, 30.0, 60.]
-config['channel'] = 1
-config['crop_size'] = [128, 128, 128]
-config['stride'] = 4
-config['max_stride'] = 16
-config['num_neg'] = 800
-config['th_neg'] = 0.02
-config['th_pos_train'] = 0.5
-config['th_pos_val'] = 1
-config['num_hard'] = 2
-config['bound_size'] = 12
-config['reso'] = 1
-config['sizelim'] = 6.  # mm
-config['sizelim2'] = 30
-config['sizelim3'] = 40
-config['aug_scale'] = True
-config['r_rand_crop'] = 0.3
-config['pad_value'] = 170
+config = {
+    'anchors': [10.0, 30.0, 60.],
+    'channel': 1,
+    'crop_size': [128, 128, 128],
+    'stride': 4,
+    'max_stride': 16,
+    'num_neg': 800,
+    'th_neg': 0.02,
+    'th_pos_train': 0.5,
+    'th_pos_val': 1,
+    'num_hard': 2,
+    'bound_size': 12,
+    'reso': 1,
+    'sizelim': 6.0,  # mm,
+    'sizelim2': 30,
+    'sizelim3': 40,
+    'aug_scale': True,
+    'r_rand_crop': 0.3,
+    'pad_value': 170,
+}
 
-__all__ = ["Net", "GetPBB", "SplitComb"]
+__all__ = ['Net', 'GetPBB', 'SplitComb']
 
 
 class PostRes(nn.Module):
-    """ """
-
     def __init__(self, n_in, n_out, stride=1):
         super(PostRes, self).__init__()
+
         self.conv1 = nn.Conv3d(n_in, n_out, kernel_size=3, stride=stride, padding=1)
         self.bn1 = nn.BatchNorm3d(n_out)
         self.relu = nn.ReLU(inplace=True)
         self.conv2 = nn.Conv3d(n_out, n_out, kernel_size=3, padding=1)
         self.bn2 = nn.BatchNorm3d(n_out)
 
+        self.shortcut = None
         if stride != 1 or n_out != n_in:
             self.shortcut = nn.Sequential(
                 nn.Conv3d(n_in, n_out, kernel_size=1, stride=stride),
                 nn.BatchNorm3d(n_out))
-        else:
-            self.shortcut = None
 
     def forward(self, x):
         """
@@ -81,12 +79,16 @@ class PostRes(nn.Module):
 
 
 class Net(nn.Module):
-    """The identification algorithm from Team grt123. Part of the winning algorithm."""
+    """
+    The identification algorithm from Team grt123. Part of the winning
+    algorithm.
+    """
 
     def __init__(self):
         super(Net, self).__init__()
-        # The first few layers consumes the most memory, so use simple convolution to save memory.
-        # Call these layers preBlock, i.e., before the residual blocks of later layers.
+        # The first few layers consumes the most memory, so use simple
+        # convolution to save memory.  Call these layers preBlock, i.e., before
+        # the residual blocks of later layers.
         self.preBlock = nn.Sequential(
             nn.Conv3d(1, 24, kernel_size=3, padding=1),
             nn.BatchNorm3d(24),
@@ -109,7 +111,7 @@ class Net(nn.Module):
                     blocks.append(PostRes(self.featureNum_forw[i], self.featureNum_forw[i + 1]))
                 else:
                     blocks.append(PostRes(self.featureNum_forw[i + 1], self.featureNum_forw[i + 1]))
-            setattr(self, 'forw' + str(i + 1), nn.Sequential(*blocks))
+            setattr(self, 'forw{}'.format(i + 1), nn.Sequential(*blocks))
 
         for i in range(len(num_blocks_back)):
             blocks = []
@@ -123,7 +125,7 @@ class Net(nn.Module):
                                           self.featureNum_back[i]))
                 else:
                     blocks.append(PostRes(self.featureNum_back[i], self.featureNum_back[i]))
-            setattr(self, 'back' + str(i + 2), nn.Sequential(*blocks))
+            setattr(self, 'back{}'.format(i + 2), nn.Sequential(*blocks))
 
         self.maxpool1 = nn.MaxPool3d(kernel_size=2, stride=2, return_indices=True)
         self.maxpool2 = nn.MaxPool3d(kernel_size=2, stride=2, return_indices=True)
@@ -143,10 +145,12 @@ class Net(nn.Module):
             nn.ReLU(inplace=True))
 
         self.drop = nn.Dropout3d(p=0.2, inplace=False)
-        self.output = nn.Sequential(nn.Conv3d(self.featureNum_back[0], 64, kernel_size=1),
-                                    nn.ReLU(),
-                                    # nn.Dropout3d(p = 0.3),
-                                    nn.Conv3d(64, 5 * len(config['anchors']), kernel_size=1))
+        self.output = nn.Sequential(
+            nn.Conv3d(self.featureNum_back[0], 64, kernel_size=1),
+            nn.ReLU(),
+            # nn.Dropout3d(p = 0.3),
+            nn.Conv3d(64, 5 * len(config['anchors']), kernel_size=1),
+        )
 
     def forward(self, x, coord):
         """
@@ -186,8 +190,6 @@ class Net(nn.Module):
 
 
 class GetPBB(object):
-    """ """
-
     def __init__(self, stride=4, anchors=(10.0, 30.0, 60.)):
         self.stride = stride
         self.anchors = np.asarray(anchors)
@@ -217,8 +219,6 @@ class GetPBB(object):
 
 
 class SplitComb(object):
-    """ """
-
     def __init__(self, side_len, max_stride, stride, margin, pad_value):
         self.side_len = side_len
         self.max_stride = max_stride
@@ -350,16 +350,14 @@ class SplitComb(object):
 
 
 def split_data(imgs, split_comber, stride=4):
-    """Image tends to be too big to fit on even very large memory systems. This function splits it up into manageable
-    chunks.
+    """
+    Image tends to be too big to fit on even very large memory systems. This
+    function splits it up into manageable chunks.
 
     Args:
       imgs: param split_comber:
       stride: return: (Default value = 4)
       split_comber:
-
-    Returns:
-
     """
     nz, nh, nw = imgs.shape[1:]
     pz = int(np.ceil(float(nz) / stride)) * stride
@@ -481,8 +479,8 @@ def predict(ct_path, model_path=None):
 
     """
     if not model_path:
-        INDENTIFY_DIR = path.join(Config.ALGOS_DIR, 'identify')
-        model_path = path.join(INDENTIFY_DIR, 'assets', 'dsb2017_detector.ckpt')
+        INDENTIFY_DIR = os.path.join(Config.ALGOS_DIR, 'identify')
+        model_path = os.path.join(INDENTIFY_DIR, 'assets', 'dsb2017_detector.ckpt')
 
     ct_array, meta = load_ct.load_ct(ct_path)
     meta = load_ct.MetaData(meta)

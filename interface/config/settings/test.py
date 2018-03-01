@@ -55,6 +55,7 @@ PASSWORD_HASHERS = [
 # ------------------------------------------------------------------------------
 # Keep templates in memory so tests run faster
 TEMPLATES[0].pop('APP_DIRS', None)
+
 TEMPLATES[0]['OPTIONS']['loaders'] = [
     ['django.template.loaders.cached.Loader', [
         'django.template.loaders.filesystem.Loader',

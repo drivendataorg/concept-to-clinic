@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-    algorithms.segment.trained_model
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    An API for a trained segmentation model to predict nodule boundaries and
-    descriptive statistics.
+An API for a trained segmentation model to predict nodule boundaries and
+descriptive statistics.
 """
 
 import numpy as np
@@ -17,7 +14,8 @@ from ...preprocess.lung_segmentation import DATA_SHAPE
 
 
 def predict(dicom_path, centroids):
-    """ Predicts nodule boundaries.
+    """
+    Predicts nodule boundaries.
 
     Given a path to DICOM images and a list of centroids
         (1) load the segmentation model from its serialized state
@@ -54,12 +52,15 @@ def predict(dicom_path, centroids):
 
 
 def calculate_volume(segment_path, centroids, ct_path=None):
-    """ Calculates tumor volume in cubic mm if a ct_path has been provided.
+    """
+    Calculates tumor volume in cubic mm if a ct_path has been provided.
 
     Given the path to the serialized mask and a list of centroids
+
         (1) For each centroid, calculate the volume of the tumor.
         (2) DICOM has voxels' sizes in mm therefore the volume should be in real
         measurements (not pixels).
+
     Args:
         segment_path (str): a path to a mask file
         centroids (list[dict]): A list of centroids of the form::

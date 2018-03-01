@@ -1,4 +1,5 @@
 import numpy as np
+
 from keras.callbacks import ModelCheckpoint
 from keras.engine import Input, Model
 from keras.layers import Conv3D, MaxPooling3D, UpSampling3D, Activation
@@ -14,6 +15,7 @@ class Simple3DModel(SegmentationModel):
                             initial_learning_rate=0.01):
             """
             Builds a simple 3D classification model.
+
             :param input_shape: Shape of the input data (x_size, y_size, z_size, n_channels).
             :param downsize_filters_factor: Factor to which to reduce the number of filters. Making this value larger
             will reduce the amount of memory the model will need during training.

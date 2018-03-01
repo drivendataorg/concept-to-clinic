@@ -1,14 +1,10 @@
 """
-    prediction.src.tests.test_endpoints
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    Provides unit tests for the API endpoints.
+Provides unit tests for the API endpoints.
 """
+
 import json
-
-from functools import partial
-
 import pytest
+import functools
 
 from flask import url_for
 from src.algorithms import classify, identify, segment
@@ -28,7 +24,7 @@ def client(request):
     app = create_app(config_mode='Test')
     client = app.test_client()
     headers = {'Accept': 'application/json'}
-    client.get = partial(client.get, headers=headers)
+    client.get = functools.partial(client.get, headers=headers)
 
     def client_url_for(base, **kwargs):
         with app.test_request_context():
@@ -69,7 +65,7 @@ def test_identify(client, dicom_path, content_type):
     assert data['prediction']
 
     for prediction in data['prediction']:
-        assert (0.5 <= prediction['p_nodule'] < 1.0)
+        assert 0.5 <= prediction['p_nodule'] < 1.0
         assert all(prediction[pos] > 0 for pos in ['x', 'y', 'z'])
 
 

@@ -1,9 +1,11 @@
 """
-Based on the https://github.com/fchollet/keras/blob/master/keras/preprocessing/image.py
+Based on the
+https://github.com/fchollet/keras/blob/master/keras/preprocessing/image.py
 
-Fairly basic set of tools for real-time data augmentation on the volumetric data.
-Extended for 3D objects augmentation.
+Fairly basic set of tools for real-time data augmentation on the volumetric
+data. Extended for 3D objects augmentation.
 """
+
 import os
 import threading
 import warnings
@@ -18,7 +20,8 @@ from six.moves import range
 
 def random_rotation(x, rgs, channel_axis=0,
                     fill_mode='nearest', cval=0., order=0):
-    """Performs a random rotation of a Numpy image tensor.
+    """
+    Performs a random rotation of a Numpy image tensor.
 
     # Arguments
         x: Input tensor. Must be 4D.
@@ -61,7 +64,8 @@ def random_rotation(x, rgs, channel_axis=0,
 
 def random_shift(x, rgs, channel_axis=0,
                  fill_mode='nearest', cval=0.):
-    """Performs a random spatial shift of a Numpy image tensor.
+    """
+    Performs a random spatial shift of a Numpy image tensor.
 
     # Arguments
         x: Input tensor. Must be 4D.
@@ -91,7 +95,8 @@ def random_shift(x, rgs, channel_axis=0,
 
 def random_shear(x, intensity, channel_axis=0,
                  fill_mode='nearest', cval=0.):
-    """Performs a random spatial shear of a Numpy image tensor.
+    """
+    Performs a random spatial shear of a Numpy image tensor.
 
     # Arguments
         x: Input tensor. Must be 4D.
@@ -122,7 +127,8 @@ def random_shear(x, intensity, channel_axis=0,
 
 def random_zoom(x, zoom_lower, zoom_upper, independent, channel_axis=0,
                 fill_mode='nearest', cval=0.):
-    """Performs a random spatial zoom of a Numpy image tensor.
+    """
+    Performs a random spatial zoom of a Numpy image tensor.
 
     # Arguments
         x: Input tensor. Must be 4D.
@@ -192,7 +198,8 @@ def apply_transform(x, transform_matrix,
                     channel_axis=0,
                     fill_mode='nearest',
                     cval=0., order=0):
-    """Apply the image transformation specified by a matrix.
+    """
+    Apply the image transformation specified by a matrix.
 
     # Arguments
         x: 4D numpy array, single patch.
@@ -230,7 +237,8 @@ def flip_axis(x, axis):
 
 
 class DataGenerator(object):
-    """Generate minibatches of image data with real-time data augmentation.
+    """
+    Generate minibatches of image data with real-time data augmentation.
 
     # Arguments
         featurewise_center: set input mean to 0 over the dataset.
@@ -357,7 +365,8 @@ class DataGenerator(object):
             save_prefix=save_prefix)
 
     def standardize(self, x):  # noqa: C901
-        """Apply the normalization configuration to a batch of inputs.
+        """
+        Apply the normalization configuration to a batch of inputs.
 
         # Arguments
             x: batch of inputs to be normalized.
@@ -405,7 +414,8 @@ class DataGenerator(object):
         return x
 
     def random_transform(self, x, seed=None):  # noqa: C901
-        """Randomly augment a single image tensor.
+        """
+        Randomly augment a single image tensor.
 
         # Arguments
             x: 4D tensor, single patch.
@@ -504,7 +514,8 @@ class DataGenerator(object):
         return x
 
     def fit(self, x, augment=False, rounds=1, seed=None):
-        """Fits internal statistics to some sample data.
+        """
+        Fits internal statistics to some sample data.
 
         Required for featurewise_center, featurewise_std_normalization
         and zca_whitening.
@@ -525,7 +536,7 @@ class DataGenerator(object):
         x = np.asarray(x, dtype=K.floatx())
         if x.ndim != 5:
             raise ValueError('Input to `.fit()` should have rank 5. '
-                             'Got array with shape: ' + str(x.shape))
+                             'Got array with shape: {}'.format(x.shape))
 
         if seed is not None:
             np.random.seed(seed)
@@ -561,7 +572,8 @@ class DataGenerator(object):
 
 
 class Iterator(Sequence):
-    """Abstract base class for image data iterators.
+    """
+    Abstract base class for image data iterators.
 
     # Arguments
         n: Integer, total number of samples in the dataset to loop over.
@@ -636,7 +648,8 @@ class Iterator(Sequence):
 
 
 class NumpyArrayIterator(Iterator):
-    """Iterator yielding data from a Numpy array.
+    """
+    Iterator yielding data from a Numpy array.
 
     # Arguments
         x: Numpy array of input data.
@@ -707,15 +720,17 @@ class NumpyArrayIterator(Iterator):
         return batch_x, batch_y
 
     def next(self):
-        """For python 2.x.
+        """
+        For Python 2.x.
 
         # Returns
             The next batch.
         """
-        # Keeps under lock only the mechanism which advances
-        # the indexing of each batch.
+        # Keeps under lock only the mechanism which advances the indexing of
+        # each batch.
         with self.lock:
             index_array = next(self.index_generator)
-        # The transformation of images is not under thread lock
-        # so it can be done in parallel
+
+        # The transformation of images is not under thread lock so it can be
+        # done in parallel
         return self._get_batches_of_transformed_samples(index_array)

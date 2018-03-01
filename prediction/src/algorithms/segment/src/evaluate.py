@@ -5,13 +5,16 @@ SMOOTH = 1e-10
 
 
 def hausdorff_distance(ground_true, predicted):
-    """Computes the Hausdorff distance, uses `scipy` implementation of 'an efficient algorithm for
-    calculating the exact Hausdorff distance.' provided by A. A. Taha et al.
+    """
+    Computes the Hausdorff distance, uses `scipy` implementation of 'an
+    efficient algorithm for calculating the exact Hausdorff distance.' provided
+    by A. A. Taha et al.
 
     Args:
         ground_true ground_true (np.ndarray[bool]): ground true mask to be compared with predicted one.
         predicted predicted (np.ndarray[bool]): predicted mask, allowed values are from {True, False}.
             Should be the same dimension as `ground_true`.
+
     Returns:
         double: The directed Hausdorff distance.
     """
@@ -22,12 +25,14 @@ def hausdorff_distance(ground_true, predicted):
 
 
 def sensitivity(ground_true, predicted, smooth=SMOOTH):
-    """Computes the sensitivity.
+    """
+    Computes the sensitivity.
 
     Args:
         ground_true ground_true (np.ndarray[bool]): ground true mask to be compared with predicted one.
         predicted predicted (np.ndarray[bool]): predicted mask.
             Should be the same dimension as `ground_true`.
+
     Returns:
         double: The sensitivity.
     """
@@ -37,27 +42,32 @@ def sensitivity(ground_true, predicted, smooth=SMOOTH):
 
 
 def specificity(ground_true, predicted, smooth=SMOOTH):
-    """Computes the specificity.
+    """
+    Computes the specificity.
 
     Args:
         ground_true ground_true (np.ndarray[bool]): ground true mask to be compared with predicted one.
         predicted predicted (np.ndarray[bool]): predicted mask.
             Should be the same dimension as `ground_true`.
+
     Returns:
         double: The specificity.
     """
     N = np.prod(ground_true.shape) - np.sum(ground_true)
     TN = np.sum(np.logical_not(ground_true) * np.logical_not(predicted)) + smooth
+
     return N / TN
 
 
 def dice_coefficient(ground_true, predicted):
-    """Computes the Dice dissimilarity coefficient via `scipy` implementation.
+    """
+    Computes the Dice dissimilarity coefficient via `scipy` implementation.
 
     Args:
         ground_true ground_true (np.ndarray[bool]): 1-dimensional raveled ground true mask
             to be compared with predicted one.
         predicted predicted (np.ndarray[bool]): 1-dimensional raveled predicted mask.
+
     Returns:
         double: The Dice dissimilarity.
     """
@@ -66,8 +76,11 @@ def dice_coefficient(ground_true, predicted):
 
 
 def dice_coefficient_uns(ground_true, predicted, smooth=SMOOTH):
-    """The analogy of Dice coefficient provided by one of participants of ultrasound
-    nerve segmentation Kaggle challenge. The implementation was adopted from:
+    """
+    The analogy of Dice coefficient provided by one of participants of
+    ultrasound nerve segmentation Kaggle challenge. The implementation was
+    adopted from:
+
     https://github.com/jocicmarko/ultrasound-nerve-segmentation/blob/master/train.py
 
     Args:
@@ -76,6 +89,7 @@ def dice_coefficient_uns(ground_true, predicted, smooth=SMOOTH):
             in {True, False}. Should be the same dimension as `ground_true`.
         smooth (float): differs of the default value from the original implementation, was
             caused by the difference of ordinary mask volume.
+
     Returns:
         double: The analogy of Dice coefficient
     """
@@ -87,7 +101,8 @@ def dice_coefficient_uns(ground_true, predicted, smooth=SMOOTH):
 
 
 def evaluate(ground_true, predicted, threshold=0., uns_smooth=SMOOTH):
-    """The function to orchestrate the evaluations.
+    """
+    The function to orchestrate the evaluations.
 
     Args:
         ground_true (np.ndarray[bool]): ground true mask to be compared with predicted one.
@@ -97,6 +112,7 @@ def evaluate(ground_true, predicted, threshold=0., uns_smooth=SMOOTH):
             The default value is 0.
         uns_smooth (float): used by a Dice coefficient analogy provided by one of participants of
             ultrasound nerve segmentation Kaggle challenge.
+
     Returns:
         dictionary contained magnitudes of the metrics of type ::
             {hausdorff_distance (double)

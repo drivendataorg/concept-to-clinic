@@ -1,6 +1,5 @@
-from os import path, listdir
-from tempfile import TemporaryDirectory
-
+import os
+import tempfile
 import numpy as np
 
 from ..preprocess.crop_dicom import crop_dicom
@@ -10,11 +9,11 @@ from ..preprocess.preprocess_ct import PreprocessCT
 
 
 def test_crop_dicom(dicom_path):
-    with TemporaryDirectory() as test_path:
+    with tempfile.TemporaryDirectory() as test_path:
         uncropped_series = crop_dicom(dicom_path, [0, 0, -95], [512, 512, -132.5], test_path)
-        assert path.exists(path.join(test_path, '-95.000000.dcm'))
-        assert path.exists(path.join(test_path, '-120.000000.dcm'))
-        assert len([name for name in listdir(test_path) if path.isfile(path.join(test_path, name))]) == 16
+        assert os.path.exists(os.path.join(test_path, '-95.000000.dcm'))
+        assert os.path.exists(os.path.join(test_path, '-120.000000.dcm'))
+        assert len([name for name in os.listdir(test_path) if os.path.isfile(os.path.join(test_path, name))]) == 16
         assert len(uncropped_series) == 16
         assert uncropped_series[0].Rows == 512
         assert uncropped_series[0].Columns == 512

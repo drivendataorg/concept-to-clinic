@@ -1,4 +1,4 @@
-# limit memory usage..
+# Limit memory usage.
 import glob
 import logging
 import os
@@ -6,7 +6,8 @@ import os
 import cv2
 import numpy as np
 import pandas
-# limit memory usage..
+
+# Limit memory usage.
 from keras import backend as K
 from keras.layers import Input, Convolution3D, MaxPooling3D, Flatten, AveragePooling3D
 from keras.metrics import binary_accuracy, binary_crossentropy, mean_absolute_error
@@ -24,7 +25,7 @@ CUBE_SIZE = 32
 CROP_SIZE = 32
 MEAN_PIXEL_VALUE = 41
 EXTRACTED_IMAGE_DIR = Config.EXTRACTED_IMAGE_DIR
-NODULE_DETECTION_DIR = "data/detections/"
+NODULE_DETECTION_DIR = os.path.join('data', 'detections')
 K.set_image_dim_ordering("tf")
 POS_WEIGHT = 2
 NEGS_PER_POS = 20
@@ -110,7 +111,9 @@ def filter_patient_nodules_predictions(df_nodule_predictions: pandas.DataFrame, 
 
 
 def get_net(input_shape=(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, 1), load_weight_path=None) -> Model:
-    """Load the pre-trained 3D ConvNet that should be used to predict a nodule and its malignancy.
+    """
+    Load the pre-trained 3D ConvNet that should be used to predict a nodule and
+    its malignancy.
 
     Args:
         input_shape: shape of the input layer. Defaults to (CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, 1).
@@ -157,7 +160,8 @@ def get_net(input_shape=(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, 1), load_weight_path=N
 
 
 def prepare_data(patient_id, magnification=1):
-    """By a given patient ID prepare_data returns three np.ndarray:
+    """
+    By a given patient ID prepare_data returns three np.ndarray:
     a 3D image array, a mask and a placeholder for a predict values.
 
     Args:
@@ -193,13 +197,15 @@ def prepare_data(patient_id, magnification=1):
 
 
 def predict_cubes(model_path, patient_id, magnification=1, ext_name=""):
-    """Return a DataFrame including position, diameter and chance of abnormal tissue to be a nodule.
+    """
+    Return a DataFrame including position, diameter and chance of abnormal
+    tissue to be a nodule.
 
     Args:
-        model_path: path to the pre-trained model that should be used for the prediction
-        patient_id: SeriesInstanceUID of the patient
-        magnification: what magnification for the model to use, one of (1, 1.5, 2)
-        ext_name: external name of the model, one of ("luna16_fs", "luna_posnegndsb_v")
+        model_path:     path to the pre-trained model that should be used for the prediction
+        patient_id:     SeriesInstanceUID of the patient
+        magnification:  what magnification for the model to use, one of (1, 1.5, 2)
+        ext_name:       external name of the model, one of ("luna16_fs", "luna_posnegndsb_v")
 
     Returns:
         dict: a dictionary containing anno_index, coord_x, coord_y, coord_z, diameter, nodule_chance, diameter_mm
@@ -211,12 +217,10 @@ def predict_cubes(model_path, patient_id, magnification=1, ext_name=""):
     """
 
     dst_dir = NODULE_DETECTION_DIR
-    if not os.path.exists(dst_dir):
-        os.makedirs(dst_dir)
+    os.makedirs(dst_dir, exist_ok=True)
 
-    dst_dir = os.path.join(dst_dir, "predictions" + str(int(magnification * 10)) + "_" + ext_name)
-    if not os.path.exists(dst_dir):
-        os.makedirs(dst_dir)
+    dst_dir = os.path.join(dst_dir, "predictions{}_{}".format(int(magnification * 10), ext_name))
+    os.makedirs(dst_dir, exist_ok=True)
 
     model = get_net(input_shape=(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, 1),
                     load_weight_path=model_path)
@@ -249,8 +253,9 @@ def predict_cubes(model_path, patient_id, magnification=1, ext_name=""):
 
 
 def annotate(model, predict_volume, patient_img, patient_mask):
-    """Return a DataFrame including position, diameter and chance of abnormal tissue to be a nodule.
-    By a given model and a volumetric data.
+    """
+    Return a DataFrame including position, diameter and chance of abnormal
+    tissue to be a nodule.  By a given model and a volumetric data.
 
     Args:
         model: 3D ConvNet that should be used to predict a nodule and its malignancy.
@@ -263,15 +268,15 @@ def annotate(model, predict_volume, patient_img, patient_mask):
         of each found nodule.
     """
 
-    done_count = 0
-    skipped_count = 0
+    num_done = 0
+    num_skipped = 0
     annotation_index = 0
 
     batch_list = []
     batch_list_coords = []
     patient_predictions_csv = []
 
-    logging.info("Predicted Volume Shape:" + str(predict_volume.shape))
+    logging.info("Predicted Volume Shape: {}".format(predict_volume.shape))
 
     for z, y, x in np.ndindex(predict_volume.shape[:3]):
         # if cube_img is None:
@@ -282,12 +287,12 @@ def annotate(model, predict_volume, patient_img, patient_mask):
                                  y * STEP: y * STEP + CROP_SIZE,
                                  x * STEP: x * STEP + CROP_SIZE]
 
-        done_count += 1
-        if done_count % 10000 == 0:
-            logging.info("Done: ", done_count, " skipped:", skipped_count)
+        num_done += 1
+        if num_done % 10000 == 0:
+            logging.info("Done: ", num_done, " skipped:", num_skipped)
 
         if cube_mask.sum() < 2000:
-            skipped_count += 1
+            num_skipped += 1
             continue
 
         if CROP_SIZE != CUBE_SIZE:
@@ -311,8 +316,9 @@ def annotate(model, predict_volume, patient_img, patient_mask):
 
 
 def stats_from_batch(p, p_shape, predict_volume, batch_list_coords, annotation_index):
-    """Return a list of DataFrame including position, diameter and chance of abnormal tissue to be a nodule
-    for each nodule in a batch.
+    """
+    Return a list of DataFrame including position, diameter and chance of
+    abnormal tissue to be a nodule for each nodule in a batch.
 
     Args:
         p : an output from th 3D ConvNet, length of p[0] is equal to a batch size.

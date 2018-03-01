@@ -1,7 +1,6 @@
 import os
-
-from glob import glob
-from tempfile import NamedTemporaryFile
+import glob
+import tempfile
 
 import SimpleITK
 import dicom
@@ -22,7 +21,7 @@ def test_read_files(dicom_path):
     assert len(files) > 0
     assert isinstance(files[0], dicom.dataset.Dataset)
 
-    with NamedTemporaryFile() as not_a_dcm:
+    with tempfile.NamedTemporaryFile() as not_a_dcm:
         with pytest.raises(dicom.errors.InvalidDicomError):
             read_dicom_files(not_a_dcm.name)
 
@@ -50,13 +49,13 @@ def test_load_dicom(dicom_path):
 
 
 def test_load_metaimage(ct_path, dicom_path):
-    path = glob(os.path.join(ct_path, '*.mhd'))[0]
+    path = glob.glob(os.path.join(ct_path, '*.mhd'))[0]
     ct_array, meta = load_metaimage(path)
 
     assert isinstance(ct_array, np.ndarray)
     assert isinstance(meta, SimpleITK.SimpleITK.Image)
 
-    path = glob(os.path.join(dicom_path, '*.dcm'))
+    path = glob.glob(os.path.join(dicom_path, '*.dcm'))
 
     try:
         load_metaimage(path)

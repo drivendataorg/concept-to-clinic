@@ -1,11 +1,11 @@
 """
 This file contains logic to evaluate the prediction models.
 """
+import collections
 import glob
 import os
 from tqdm import tqdm
 import sys
-from collections import defaultdict
 
 import numpy as np
 import pylidc as pl
@@ -85,7 +85,7 @@ def evaluate_segmentation(model=None):
     lidc_id_index = get_lidc_id_index(dicom_paths[0])
 
     input_image_shaped = np.zeros((1, *DATA_SHAPE))
-    score_sums = defaultdict(lambda: 0)
+    score_sums = collections.defaultdict(lambda: 0)
     count = 0
 
     for path in tqdm(dicom_paths):

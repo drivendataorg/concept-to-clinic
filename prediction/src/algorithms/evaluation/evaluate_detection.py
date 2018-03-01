@@ -5,13 +5,18 @@ import numpy as np
 import pandas
 import csv
 
-# IoverU threshold to decide if two rectangles from adjacent slices can be merged into a box
+# IoverU threshold to decide if two rectangles from adjacent slices can be
+# merged into a box
 merge_rectangles_threshold = 0.4
+
 # confidence score threshold used to filter out false positives
 confidence_score_threshold = 4.0
+
 # IoverU threshold to determine if a detection is correct
 correct_detection_threshold = 0.4
-# whether to use the prediction results when we try to filter out false positives
+
+# Whether to use the prediction results when we try to filter out false
+# positives
 use_prediction_results = False
 
 
@@ -85,10 +90,10 @@ def groups_to_boxes(rectangles, groups):
         for rect in group:
             points.append(rect[0:3])
             points.append([rect[0], rect[1] + rect[3] - 1, rect[2] + rect[4] - 1])
-        min = np.min(points, axis=0)
-        max = np.max(points, axis=0)
+        min_ = np.min(points, axis=0)
+        max_ = np.max(points, axis=0)
         # save the box as [x, y, z, width, height, depth]
-        box = [min[1], min[2], min[0], max[1] - min[1] + 1, max[2] - min[2] + 1, max[0] - min[0] + 1]
+        box = [min_[1], min_[2], min_[0], max_[1] - min_[1] + 1, max_[2] - min_[2] + 1, max_[0] - min_[0] + 1]
         boxes.append(box)
 
     # deal with rectangles that haven't been added into any group
@@ -127,22 +132,22 @@ def group_rectangles(rectangles):
 
 
 def get_bounding_boxes(annotations):
-    # for each annotation/ROI, find its bounding rectangle
+    # For each annotation/ROI, find its bounding rectangle
     rectangles = []
     for annotation in annotations:
-        num_of_points = int(annotation[19])
+        num_points = int(annotation[19])
         image_no = int(annotation[0])
         points = []
-        for i in range(num_of_points):
+        for i in range(num_points):
             # get pxX and pxY
             points.append([float(annotation[23 + i * 5]), float(annotation[24 + i * 5])])
 
         # find minimum and maximum of on both x and y axes
-        min = np.min(points, axis=0)
-        max = np.max(points, axis=0)
+        min_ = np.min(points, axis=0)
+        max_ = np.max(points, axis=0)
 
         # save the rectangle as [z-index, x, y, width, height]
-        rectangle = [image_no, min[0], min[1], max[0] - min[0] + 1, max[1] - min[1] + 1]
+        rectangle = [image_no, min_[0], min_[1], max_[0] - min_[0] + 1, max_[1] - min_[1] + 1]
         rectangles.append(rectangle)
 
     # group bounding rectangles into 3D bounding boxes
@@ -206,7 +211,7 @@ def filter_detections(prediction, detection):
     for detect in detection:
         id = detect[0]
         # spacing: [slice_thickness, pixel_spacing_x, pixel_spacing_y]
-        spacing = np.load(os.path.join(prep_result_path, id + '_info.npy'))[1]
+        spacing = np.load(os.path.join(prep_result_path, '{}_info.npy'.format(id)))[1]
 
         if use_prediction_results:
             confidence = detect[1] * get_prediction_probability(prediction, id)
@@ -240,7 +245,7 @@ def get_detection_detail(prediction, detection, filepaths):
     for detect in detection:
         id = detect[0]
         # spacing: [slice_thickness, pixel_spacing_x, pixel_spacing_y]
-        spacing = np.load(os.path.join(prep_result_path, id + '_info.npy'))[1]
+        spacing = np.load(os.path.join(prep_result_path, '{}_info.npy'.format(id)))[1]
         rows, cols = np.where(filepaths == id)
         if rows.size == 0:
             print(id, 'not found')
@@ -279,12 +284,12 @@ def compare_results(detections, annotations):
 
 
 dataset = 'LUSC'
-prediction_file = 'prediction_' + dataset + '.csv'
-detection_file = 'detection_' + dataset + '.csv'
-annotation_path = 'TCIA_annotation/TCGA-' + dataset
+prediction_file = 'prediction_{}.csv'.format(dataset)
+detection_file = 'detection_{}.csv'.format(dataset)
+annotation_path = 'TCIA_annotation/TCGA-{}'.format(dataset)
 # for more details of detections
-detection_detail_file = 'detection_detail_' + dataset + '.csv'
-filepath = 'TCGA-' + dataset + '_filepath.npy'
+detection_detail_file = 'detection_detail_{}.csv'.format(dataset)
+filepath = 'TCGA-{}_filepath.npy'.format(dataset)
 
 df = pandas.read_csv(prediction_file)
 prediction = df.as_matrix()

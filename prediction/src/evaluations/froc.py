@@ -166,7 +166,7 @@ def make_plot(fps, sens, fps_bs_itp, sens_bs_mean, sens_bs_lb, sens_bs_up,
         plt.figure()
         ax = plt.gca()
         clr = 'b'
-        plt.plot(fps_itp, sens_itp, color=clr, label="%s" % CADSystemName, lw=2)
+        plt.plot(fps_itp, sens_itp, color=clr, label="{}".format(CADSystemName), lw=2)
         if numberOfBootstrapSamples:
             plt.plot(fps_bs_itp, sens_bs_mean, color=clr, ls='--')
             plt.plot(fps_bs_itp, sens_bs_lb, color=clr, ls=':')  # , label = "lb")
@@ -179,7 +179,7 @@ def make_plot(fps, sens, fps_bs_itp, sens_bs_mean, sens_bs_lb, sens_bs_up,
         plt.xlabel('Average number of false positives per scan')
         plt.ylabel('Sensitivity')
         plt.legend(loc='lower right')
-        plt.title('FROC performance - %s' % (CADSystemName))
+        plt.title('FROC performance - {}'.format(CADSystemName))
 
         plt.xscale('log', basex=2)
         ax.xaxis.set_major_formatter(FixedFormatter(cpm_xpoints))
@@ -190,7 +190,7 @@ def make_plot(fps, sens, fps_bs_itp, sens_bs_mean, sens_bs_lb, sens_bs_up,
         plt.grid(b=True, which='both')
         plt.tight_layout()
 
-        plt.savefig(os.path.join(outputDir, "froc_%s.png" % CADSystemName), bbox_inches=0, dpi=300)
+        plt.savefig(os.path.join(outputDir, "froc_{}.png".format(CADSystemName)), bbox_inches=0, dpi=300)
 
 
 def competition_performance_metric(annotations_path, annotations_excluded_path,

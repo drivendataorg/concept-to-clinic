@@ -1,6 +1,6 @@
 import os
-
 import numpy as np
+
 from keras import backend as K
 from keras.models import load_model
 
@@ -13,12 +13,17 @@ except ValueError:
 
 
 class SegmentationModel(object):
-    """Each segmentation model receives the rescaled DICOM images as input with the shape given by DATA_SHAPE
-    and predicts a boolean mask with the same shape that indicates whether a voxel pixel contains malicious tissue"""
+    """
+    Each segmentation model receives the rescaled DICOM images as input with
+    the shape given by DATA_SHAPE and predicts a boolean mask with the same
+    shape that indicates whether a voxel pixel contains malicious tissue
+    """
 
     def fit(self, X, y):
-        """Fit the model using a matrix containing the rescaled DICOM images of shape (n, DATA_SHAPE) and the labels
-        which are the boolean masks of the same shape.
+        """
+        Fit the model using a matrix containing the rescaled DICOM images of
+        shape (n, DATA_SHAPE) and the labels which are the boolean masks of the
+        same shape.
 
         Args:
             X: Rescaled DICOM scans of shape (n, DATA_SHAPE)
@@ -35,13 +40,13 @@ class SegmentationModel(object):
         raise NotImplementedError("Must implement '_fit()'")
 
     def predict(self, X):
-        """Predict a boolean mask given the rescaled input scan.
+        """
+        Predict a boolean mask given the rescaled input scan.
 
         Args:
             X: Rescaled DICOM scan of shape DATA_SHAPE
 
         Returns: Path to the segmented scan
-
         """
         assert X.shape == (1, *DATA_SHAPE)
         y_predicted = self._predict(X)
@@ -69,7 +74,9 @@ class SegmentationModel(object):
 
     @classmethod
     def dice_coef(cls, y_true, y_pred, smooth=1.):
-        """Calculates the Dice coefficient which equals 2TP/(2TP + FP + FN) between two tensors.
+        """
+        Calculates the Dice coefficient which equals 2TP/(2TP + FP + FN)
+        between two tensors.
 
         Args:
             y_true: True labels. TensorFlow tensor.
@@ -77,7 +84,6 @@ class SegmentationModel(object):
             smooth: Smoothing value that prevents division by zero
 
         Returns: single tensor value
-
         """
         y_true_f = K.flatten(y_true)
         y_pred_f = K.flatten(y_pred)
@@ -86,7 +92,9 @@ class SegmentationModel(object):
 
     @classmethod
     def dice_coef_loss(cls, y_true, y_pred):
-        """ Calculates the negated dice coefficient (since losses should be minimized)
+        """
+        Calculates the negated dice coefficient (since losses should be
+        minimized)
 
         Args:
             y_true: True labels. TensorFlow tensor.

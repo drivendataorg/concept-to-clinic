@@ -45,9 +45,14 @@ def test_nodule_segmentation(dicom_path, nodule_001):
 
 @pytest.mark.stop_timeout
 def test_lung_segmentation(dicom_paths):
-    """Test whether the annotations of the LIDC images are inside the segmented lung masks.
-    Iterate over all local LIDC images, fetch the annotations, compute their positions within the masks and check that
-    at this point the lung masks are set to 255."""
+    """
+    Test whether the annotations of the LIDC images are inside the segmented
+    lung masks.
+
+    Iterate over all local LIDC images, fetch the annotations, compute their
+    positions within the masks and check that at this point the lung masks are
+    set to 255.
+    """
 
     for path in dicom_paths:
         min_z, max_z = get_z_range(path)
