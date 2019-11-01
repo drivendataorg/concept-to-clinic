@@ -9,7 +9,7 @@ django-dotenv==1.4.1
 django-environ==0.4.3
 
 # Images
-Pillow==4.2.1
+Pillow==6.2.0
 pydicom==0.9.9
 
 # Data
