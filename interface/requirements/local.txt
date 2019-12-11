@@ -4,6 +4,6 @@
 coverage
 factory_boy==2.8.1
 --pre ipython==6.1.0
-werkzeug==0.12.2
+werkzeug==0.15.3
 django-debug-toolbar==1.7
 django-extensions==1.7.8
