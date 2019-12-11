@@ -109,7 +109,7 @@
     "vue-test-utils": "^1.0.0-beta.6",
     "vuex": "^3.0.1",
     "webpack": "^2.6.1",
-    "webpack-bundle-analyzer": "^2.2.1",
+    "webpack-bundle-analyzer": "^3.6.0",
     "webpack-dev-middleware": "^1.10.0",
     "webpack-hot-middleware": "^2.19.1",
     "webpack-merge": "^4.1.0"
