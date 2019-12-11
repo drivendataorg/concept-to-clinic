@@ -115,7 +115,7 @@ def load_patient(src_dir):
 
     try:
         slice_thickness = numpy.abs(slices[0].ImagePositionPatient[2] - slices[1].ImagePositionPatient[2])
-    except IndexError as e:
+    except IndexError:
         slice_thickness = numpy.abs(slices[0].SliceLocation - slices[1].SliceLocation)
 
     for s in slices:

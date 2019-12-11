@@ -99,7 +99,7 @@ class ImagePreviewApiView(APIView):
         path = request.GET['dicom_location']
         try:
             return Response(ImageFile.load_dicom_data_from_disk(path, encode_image_data=True))
-        except IOError as err:
+        except IOError:
             raise NotFound(f"DICOM file not found on disk with path '{path}'")
 
 
